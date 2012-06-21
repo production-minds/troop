@@ -40,6 +40,7 @@
         addConstant: $properties.addConstant,
         addMethod: $properties.addMethod,
         addPrivate: $properties.addPrivate,
+        addPrivateConstant: $properties.addPrivateConstant,
         addPublic: $properties.addPublic
     }, false, false, false);
 

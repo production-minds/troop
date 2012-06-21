@@ -5,7 +5,10 @@
  */
 /*global troop */
 (function () {
-    var $properties = troop.properties = {
+    var PRIVATE_PREFIX = 'p_',
+        $properties;
+
+    $properties = troop.properties = {
         /**
          * Adds properties to object with the specified attributes.
          * @this {object}
@@ -50,7 +53,7 @@
         },
 
         //////////////////////////////
-        // Instance-level
+        // Class and instance-level
 
         /**
          * Adds public writable members to class or instance.
@@ -67,7 +70,7 @@
          * @param properties {object} Properties and methods.
          */
         addPrivate: function (properties) {
-            return $properties.add.call(this, properties, true, false, false, 'p_');
+            return $properties.add.call(this, properties, true, false, false, PRIVATE_PREFIX);
         },
 
         /**
@@ -77,6 +80,15 @@
          */
         addConstant: function (properties) {
             return $properties.add.call(this, properties, false, true, false);
+        },
+
+        /**
+         * Adds private constant (read-only & non-enumerable) members to instance.
+         * @this {troop.base} Instance object.
+         * @param properties {object} Constant properties.
+         */
+        addPrivateConstant: function (properties) {
+            return $properties.add.call(this, properties, false, false, false, PRIVATE_PREFIX);
         }
     };
 }());
