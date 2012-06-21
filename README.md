@@ -10,6 +10,18 @@ Troop provides *base class* and a set of *tools* to build a close approximation 
 
 The price to pay for all this is there are no real privates in Troop. Pseudo-privates are supported, which are accessible from the outside, but not enumerable.
 
+Base class
+----------
+
+Class `troop.base` offers the following methods:
+
+- `.extend(methods)`: Extends class optionally with supplied methods.
+- `.create(...)`: Creates an instance of the class. Calls user-defined `.init` method internally.
+- `.addMethod`, `.addConstant`, `.addPublic`, `.addPrivate`: Adds non-removable properties and methods to class or instance.
+  - Methods and constants are read-only.
+  - Public and private variables are writable.
+  - All except privates are enumerable.
+
 Example
 -------
 
