@@ -49,7 +49,13 @@
          * @param methods {object} Methods.
          */
         addMethod: function (methods) {
-            return $properties.add.call(this, methods, false, true, false);
+            var target = troop.testing === true ?
+                Object.getPrototypeOf(this) :
+                this;
+
+            $properties.add.call(target, methods, false, true, false);
+
+            return this;
         },
 
         //////////////////////////////

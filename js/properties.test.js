@@ -60,6 +60,17 @@
         equal(tmp.hasOwnProperty('p_hello'), true, "Prefixed property name exists");
     });
 
+    test("Adding methods", function () {
+        var tmp = {},
+            result;
+
+        result = $properties.addMethod.call(tmp, {
+            foo: function () {}
+        });
+
+        equal(result, tmp, "addMethod returns input object");
+    });
+
     test("Flags not set", function () {
         var tmp = {},
             descriptor;

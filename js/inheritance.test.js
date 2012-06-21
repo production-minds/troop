@@ -2,7 +2,7 @@
  * Inheritance unit tests
  */
 /*global troop, module, test, ok, equal, deepEqual, expect */
-(function ($inheritance) {
+(function ($inheritance, $properties) {
     module("Inheritance");
 
     test("Class extension", function () {
@@ -21,6 +21,28 @@
         equal(myClass.hasOwnProperty('bar'), true, "bar is own property");
     });
 
+    test("Extension while in test mode", function () {
+        troop.testing = true;
+
+        var myClass = $inheritance.extend.call(Object.prototype, {
+                method: function () {}
+            }),
+            result;
+
+        equal(typeof myClass.method, 'function', "Method applied to extended object");
+        equal(myClass.hasOwnProperty('method'), false, "Method is not own property");
+
+        result = $properties.addMethod.call(myClass, {
+            foo: function () {}
+        });
+
+        equal(result, myClass, "addMethod returns input object");
+        equal(typeof myClass.foo, 'function', "Method applied to extended object");
+        equal(myClass.hasOwnProperty('foo'), false, "Method is not own property");
+
+        troop.testing = false;
+    });
+
     test("Instantiation", function () {
         var myClass = $inheritance.instantiate.call(Object.prototype, {
             bar: "bar"
@@ -33,5 +55,6 @@
         equal(myClass.bar, "", "Property is writable");
     });
 }(
-    troop.inheritance
+    troop.inheritance,
+    troop.properties
 ));

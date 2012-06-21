@@ -12,10 +12,7 @@
          * @return {object}
          */
         extend: function (methods) {
-            var c = Object.create(this),
-                result = methods ?
-                    $properties.addMethod.call(c, methods) :
-                    c;
+            var result = Object.create(this);
 
             /**
              * Extending once more with no own properties
@@ -23,6 +20,10 @@
              */
             if (troop.testing === true) {
                 result = Object.create(result);
+            }
+
+            if (methods) {
+                $properties.addMethod.call(result, methods);
             }
 
             return result;
@@ -36,11 +37,13 @@
          * @return {object}
          */
         instantiate: function (properties) {
-            var o = Object.create(this);
+            var result = Object.create(this);
 
-            return properties ?
-                    $properties.addPublic.call(o, properties) :
-                    o;
+            if (properties) {
+                $properties.addPublic.call(result, properties);
+            }
+
+            return result;
         }
     };
 }(
