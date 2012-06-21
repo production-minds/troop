@@ -41,7 +41,9 @@
         addMethod: $properties.addMethod,
         addPrivate: $properties.addPrivate,
         addPrivateConstant: $properties.addPrivateConstant,
-        addPublic: $properties.addPublic
+        addPublic: $properties.addPublic,
+        addMock: $properties.addMock,
+        removeMocks: $properties.removeMocks
     }, false, false, false);
 
     // adding inheritance features

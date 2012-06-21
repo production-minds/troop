@@ -1,7 +1,7 @@
 /**
  * Property management unit tests
  */
-/*global troop, module, test, ok, equal, deepEqual, expect */
+/*global troop, module, test, equal, deepEqual, raises */
 (function ($properties) {
     module("Properties");
 
@@ -75,6 +75,7 @@
         var tmp = {},
             descriptor;
 
+
         $properties.add.call(tmp, {
             test: function () {}
         });
@@ -114,6 +115,24 @@
         );
 
         equal(tmp.p_bar, "bar", "Pseudo-private property added");
+    });
+
+    test("Mocks", function () {
+        var tmp = {};
+
+        function testMethod () {}
+
+        $properties.addMock.call(tmp, {
+            foo: testMethod
+        });
+
+        deepEqual(tmp, {
+            foo: testMethod
+        }, "Mock method added");
+
+        $properties.removeMocks.call(tmp);
+
+        deepEqual(tmp, {}, "Mock methods removed");
     });
 }(
     troop.properties

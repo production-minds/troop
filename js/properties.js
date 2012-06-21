@@ -49,6 +49,12 @@
          * @param methods {object} Methods.
          */
         addMethod: function (methods) {
+            /**
+             * Obtaining target object for methods.
+             * In testing mode, each class has two prototype levels and
+             * methods should go to the lower one, so they may be covered on
+             * the other.
+             */
             var target = troop.testing === true ?
                 Object.getPrototypeOf(this) :
                 this;
@@ -95,6 +101,31 @@
          */
         addPrivateConstant: function (properties) {
             return $properties.add.call(this, properties, false, false, false, PRIVATE_PREFIX);
+        },
+
+        //////////////////////////////
+        // Class and instance-level
+
+        /**
+         * Adds public mock methods (read-only, but removable) members to instance or class.
+         * @this {troop.base} Instance or class object.
+         * @param properties {object} Mock methods.
+         */
+        addMock: function (methods) {
+            return $properties.add.call(this, methods, false, true, true);
+        },
+
+        /**
+         * Removes all mock methods from class or instance.
+         */
+        removeMocks: function () {
+            var key;
+            for (key in this) {
+                if (this.hasOwnProperty(key) && typeof this[key] === 'function') {
+                    delete this[key];
+                }
+            }
+            return this;
         }
     };
 }());
