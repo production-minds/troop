@@ -16,4 +16,9 @@
             break;
         }
     });
+
+    test("Flags", function () {
+        ok(troop.hasOwnProperty('testing'), "Testing flag exists");
+        ok(troop.hasOwnProperty('writable'), "Writable flag exists");
+    });
 }());

@@ -1,10 +1,9 @@
 /**
  * Feature detection.
  */
-var troop = troop || {};
-
-(function () {
-    troop.feature = {
+/*global troop */
+(function ($properties) {
+    var $feature = troop.feature = {
         /**
          * Determines whether read-only properties may be
          * covered up by assignment.
@@ -26,4 +25,22 @@ var troop = troop || {};
             return child.p === true;
         }
     };
-}());
+
+    // environmental constants
+    $properties.addConstant.call(troop, {
+        /**
+         * Whether methods should be writable
+         */
+        writable: !$feature.canAssignToReadOnly()
+    });
+
+    // application state (alterable by user)
+    $properties.addPublic.call(troop, {
+        /**
+         * Whether Troop is in testing mode
+         */
+        testing: false
+    });
+}(
+    troop.properties
+));

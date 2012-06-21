@@ -4,8 +4,7 @@
  * Supports extension, instantiation, property addition.
  * All base methods are non-enumerable.
  */
-var troop = troop || {};
-
+/*global troop */
 (function ($inheritance, $properties) {
     var $base = troop.base = $inheritance.extend.call(Object.prototype);
 
@@ -16,8 +15,8 @@ var troop = troop || {};
          * The derived class must implement an .init method
          * which decorates the instance with necessary properties.
          * @static
-         * @this {wraith.base} Class.
-         * @return {wraith.base} Instance.
+         * @this {troop.base} Class.
+         * @return {troop.base} Instance.
          * @example
          * var instance = someClass.create(someArgs);
          */

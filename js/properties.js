@@ -3,8 +3,7 @@
  *
  * Adding properties of different purposes to a class or instance.
  */
-var troop = troop || {};
-
+/*global troop */
 (function () {
     var $properties = troop.properties = {
         /**

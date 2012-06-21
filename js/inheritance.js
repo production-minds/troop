@@ -1,14 +1,13 @@
 /**
- * General purpose OOP functionality: class extension, instantiation, property delegation.
+ * Inheritance & instantiation tools.
  */
-var troop = troop || {};
-
+/*global troop */
 (function ($properties) {
     troop.inheritance = {
         /**
          * Extends base class with methods.
          * Extended class will have methods as read-only own properties.
-         * @this {object} Base class.
+         * @this {troop.base} Base class.
          * @param [methods] {object} Object containing methods {public, read-only}.
          * @return {object}
          */
@@ -32,17 +31,16 @@ var troop = troop || {};
         /**
          * Creates an instance of a class, ie. creates a new object and adds writable
          * properties to it.
-         * @this {object} Class to instantiate.
+         * @this {troop.base} Class to instantiate.
          * @param [properties] {object} Object containing properties (public, writable)
          * @return {object}
          */
         instantiate: function (properties) {
-            var o = Object.create(this),
-                result = properties ?
+            var o = Object.create(this);
+
+            return properties ?
                     $properties.addPublic.call(o, properties) :
                     o;
-
-            return result;
         }
     };
 }(
