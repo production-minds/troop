@@ -6,17 +6,17 @@
 var troop = troop || {};
 
 (function () {
-    troop.properties = {
+    var $properties = troop.properties = {
         /**
          * Adds properties to object with the specified attributes.
-         * @param o {object}
+         * @this {object}
          * @param properties {object}
          * @param [isWritable] {boolean}
          * @param [isEnumerable] {boolean}
          * @param [isConfigurable] {boolean}
          * @param [prefix] {string} Property prefix. Added to all assigned properties.
          */
-        add: function (o, properties, isWritable, isEnumerable, isConfigurable, prefix) {
+        add: function (properties, isWritable, isEnumerable, isConfigurable, prefix) {
             var name, prefixed;
             for (name in properties) {
                 if (properties.hasOwnProperty(name)) {
@@ -27,7 +27,7 @@ var troop = troop || {};
                         // adding prefix
                         prefixed = prefix + name;
                     }
-                    Object.defineProperty(o, prefixed, {
+                    Object.defineProperty(this, prefixed, {
                         value: properties[name],
                         writable: !!isWritable,
                         enumerable: !!isEnumerable,
@@ -35,7 +35,7 @@ var troop = troop || {};
                     });
                 }
             }
-            return o;
+            return this;
         },
 
         //////////////////////////////
@@ -43,21 +43,11 @@ var troop = troop || {};
 
         /**
          * Adds public read-only methods to class.
-         * @param c {troop.base} Class object.
+         * @this {troop.base} Class object.
          * @param methods {object} Methods.
          */
-        addMethod: function (c, methods) {
-            return this.add(c, methods, false, true, false);
-        },
-
-        /**
-         * Adds static members to class.
-         * Static = read-only, enumerable
-         * @param c {troop.base} Class object.
-         * @param properties {object} Properties and methods.
-         */
-        addStatic: function (c, properties) {
-            return this.add(c, properties, false, true, false);
+        addMethod: function (methods) {
+            return $properties.add.call(this, methods, false, true, false);
         },
 
         //////////////////////////////
@@ -65,31 +55,29 @@ var troop = troop || {};
 
         /**
          * Adds public writable members to class or instance.
-         * @param o {troop.base} Class or instance object.
+         * @this {troop.base} Class or instance object.
          * @param properties {object} Properties and methods.
          */
-        addPublic: function (o, properties) {
-            return this.add(o, properties, true, true, false);
+        addPublic: function (properties) {
+            return $properties.add.call(this, properties, true, true, false);
         },
 
         /**
          * Adds pseudo-private writable members to class or instance.
-         * @param c {troop.base} Class or instance object.
+         * @this {troop.base} Class or instance object.
          * @param properties {object} Properties and methods.
          */
-        addPrivate: function (o, properties) {
-            return this.add(o, properties, true, false, false, 'p_');
+        addPrivate: function (properties) {
+            return $properties.add.call(this, properties, true, false, false, 'p_');
         },
 
         /**
          * Adds public constant (read-only) members to instance.
-         * @param o {troop.base} Instance object.
+         * @this {troop.base} Instance object.
          * @param properties {object} Constant properties.
          */
-        addConstant: function (o, properties) {
-            return this.add(o, properties, false, true, false);
+        addConstant: function (properties) {
+            return $properties.add.call(this, properties, false, true, false);
         }
     };
-
-    troop.properties.addMethod(troop, troop.properties);
 }());

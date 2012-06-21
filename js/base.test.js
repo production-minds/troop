@@ -27,4 +27,54 @@
         );
     });
 
+    test("Extension", function () {
+        var derived,
+            instance;
+
+        function testMethod() {}
+
+        /**
+         * Initializer for derived class
+         */
+        function init() {
+            this
+                .addPrivate({
+                    woo: "hoo"
+                }).addPublic({
+                    holy: "moly"
+                }).addConstant({
+                    pi: 3.14
+                });
+        }
+
+        derived = troop.base.extend()
+            .addPrivate({
+                hello: "world"
+            }).addPublic({
+                yo: "momma"
+            }).addMethod({
+                foo: testMethod,
+                init: init
+            });
+
+        deepEqual(derived, {
+            yo: "momma",
+            foo: testMethod,
+            init: init
+        }, "Public class members");
+
+        equal(derived.p_hello, "world", "Private class member");
+
+        instance = derived.create();
+
+        deepEqual(instance, {
+            yo: "momma",
+            foo: testMethod,
+            init: init,
+            holy: "moly",
+            pi: 3.14
+        }, "Public instance members");
+
+        equal(instance.p_woo, "hoo", "Private instance member");
+    });
 }());

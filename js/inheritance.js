@@ -3,19 +3,19 @@
  */
 var troop = troop || {};
 
-(function () {
+(function ($properties) {
     troop.inheritance = {
         /**
          * Extends base class with methods.
          * Extended class will have methods as read-only own properties.
-         * @param base {object} Base class.
+         * @this {object} Base class.
          * @param [methods] {object} Object containing methods {public, read-only}.
          * @return {object}
          */
-        extend: function (base, methods) {
-            var c = Object.create(base),
+        extend: function (methods) {
+            var c = Object.create(this),
                 result = methods ?
-                    troop.properties.addMethod(c, methods) :
+                    $properties.addMethod.call(c, methods) :
                     c;
 
             /**
@@ -32,31 +32,19 @@ var troop = troop || {};
         /**
          * Creates an instance of a class, ie. creates a new object and adds writable
          * properties to it.
-         * @param base {object} Base class.
+         * @this {object} Class to instantiate.
          * @param [properties] {object} Object containing properties (public, writable)
          * @return {object}
          */
-        instantiate: function (base, properties) {
-            var o = Object.create(base),
+        instantiate: function (properties) {
+            var o = Object.create(this),
                 result = properties ?
-                    troop.addPublic(o, properties) :
+                    $properties.addPublic.call(o, properties) :
                     o;
 
             return result;
         }
     };
-
-    troop.addStatic(troop, troop.inheritance);
-
-    troop.addStatic(troop, {
-        /**
-         * Whether OOP is in testing mode
-         */
-        testing: false,
-
-        /**
-         * Whether methods should be writable
-         */
-        writable: !troop.feature.canAssignToReadOnly()
-    });
-}());
+}(
+    troop.properties
+));

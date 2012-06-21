@@ -2,14 +2,14 @@
  * Property management unit tests
  */
 /*global troop, module, test, ok, equal, deepEqual, expect */
-(function () {
+(function ($properties) {
     module("Properties");
 
     test("Flags set", function () {
         var tmp = {},
             descriptor;
 
-        troop.properties.add(tmp, {
+        $properties.add.call(tmp, {
                 test: function () {}
             },
             true,
@@ -29,7 +29,7 @@
         var tmp = {},
             descriptor;
 
-        troop.properties.add(tmp, {
+        $properties.add.call(tmp, {
                 test: function () {}
             },
             true,
@@ -48,7 +48,7 @@
         equal(descriptor.enumerable, true, "Enumerable");
         equal(descriptor.configurable, true, "Configurable");
 
-        troop.properties.add(tmp, {
+        $properties.add.call(tmp, {
                 p_hello: function () {}
             },
             true,
@@ -64,7 +64,7 @@
         var tmp = {},
             descriptor;
 
-        troop.properties.add(tmp, {
+        $properties.add.call(tmp, {
             test: function () {}
         });
 
@@ -81,15 +81,15 @@
 
         function testMethod() {}
 
-        troop.addMethod(tmp, {
+        $properties.addMethod.call(tmp, {
             test: testMethod
         });
 
-        troop.addStatic(tmp, {
+        $properties.addConstant.call(tmp, {
             foo: "foo"
         });
 
-        troop.addPrivate(tmp, {
+        $properties.addPrivate.call(tmp, {
             bar: "bar"
         });
 
@@ -104,4 +104,6 @@
 
         equal(tmp.p_bar, "bar", "Pseudo-private property added");
     });
-}());
+}(
+    troop.properties
+));

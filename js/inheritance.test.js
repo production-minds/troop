@@ -2,7 +2,7 @@
  * Inheritance unit tests
  */
 /*global troop, module, test, ok, equal, deepEqual, expect */
-(function () {
+(function ($inheritance) {
     module("Inheritance");
 
     test("Class extension", function () {
@@ -10,7 +10,7 @@
             return 'hello';
         }
 
-        var myClass = troop.inheritance.extend(Object.prototype, {
+        var myClass = $inheritance.extend.call(Object.prototype, {
             foo: testFunction,
             bar: "bar"
         });
@@ -22,7 +22,7 @@
     });
 
     test("Instantiation", function () {
-        var myClass = troop.inheritance.instantiate(Object.prototype, {
+        var myClass = $inheritance.instantiate.call(Object.prototype, {
             bar: "bar"
         });
 
@@ -32,4 +32,6 @@
         myClass.bar = ''; // attempting to overwrite method
         equal(myClass.bar, "", "Property is writable");
     });
-}());
+}(
+    troop.inheritance
+));
