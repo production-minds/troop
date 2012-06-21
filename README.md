@@ -46,4 +46,6 @@ var myClass = troop.base.extend()
 var myInstance = myClass.create("Yonkers");
 ```
 
+![myInstance in console](http://dl.dropbox.com/u/9258903/myInstance.png)
+
 Based on post series on [Code Pristine](http://codepristine.com)
