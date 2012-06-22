@@ -26,6 +26,10 @@
                 $properties.addMethod.call(result, methods);
             }
 
+            $properties.addPrivateConstant.call(result, {
+                base: this
+            });
+
             return result;
         },
 
