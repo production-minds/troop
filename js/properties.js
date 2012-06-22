@@ -5,10 +5,7 @@
  */
 /*global troop */
 (function () {
-    var PRIVATE_PREFIX = 'p_',
-        $properties;
-
-    $properties = troop.properties = {
+    var $properties = troop.properties = {
         /**
          * Adds properties to object with the specified attributes.
          * @this {object}
@@ -82,7 +79,7 @@
          * @param properties {object} Properties and methods.
          */
         addPrivate: function (properties) {
-            return $properties.add.call(this, properties, true, false, false, PRIVATE_PREFIX);
+            return $properties.add.call(this, properties, true, false, false, troop.privatePrefix);
         },
 
         /**
@@ -100,7 +97,7 @@
          * @param properties {object} Constant properties.
          */
         addPrivateConstant: function (properties) {
-            return $properties.add.call(this, properties, false, false, false, PRIVATE_PREFIX);
+            return $properties.add.call(this, properties, false, false, false, troop.privatePrefix);
         },
 
         //////////////////////////////
@@ -109,7 +106,7 @@
         /**
          * Adds public mock methods (read-only, but removable) members to instance or class.
          * @this {troop.base} Instance or class object.
-         * @param properties {object} Mock methods.
+         * @param methods {object} Mock methods.
          */
         addMock: function (methods) {
             return $properties.add.call(this, methods, false, true, true);
@@ -128,4 +125,8 @@
             return this;
         }
     };
+
+    $properties.addPublic.call(troop, {
+        privatePrefix: 'p_'
+    });
 }());
