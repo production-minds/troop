@@ -25,6 +25,7 @@ do
 done
 
 cat \
+js/license.js \
 js/troop.js \
 js/properties.js \
 js/feature.js \
