@@ -35,13 +35,13 @@
             true,
             true,
             true,
-            'p_'
+            '_'
         );
 
         equal(tmp.hasOwnProperty('test'), false, "Property by given name doesn't exist");
-        equal(tmp.hasOwnProperty('p_test'), true, "Prefixed property name exists");
+        equal(tmp.hasOwnProperty('_test'), true, "Prefixed property name exists");
 
-        descriptor = Object.getOwnPropertyDescriptor(tmp, 'p_test');
+        descriptor = Object.getOwnPropertyDescriptor(tmp, '_test');
 
         equal(typeof descriptor.value, 'function', "Value type");
         equal(descriptor.writable, true, "Writable");
@@ -49,15 +49,15 @@
         equal(descriptor.configurable, true, "Configurable");
 
         $properties.add.call(tmp, {
-                p_hello: function () {}
+                _hello: function () {}
             },
             true,
             true,
             true,
-            'p_'
+            '_'
         );
 
-        equal(tmp.hasOwnProperty('p_hello'), true, "Prefixed property name exists");
+        equal(tmp.hasOwnProperty('_hello'), true, "Prefixed property name exists");
     });
 
     test("Adding methods", function () {
@@ -114,7 +114,7 @@
             "Enumerable properties of class"
         );
 
-        equal(tmp.p_bar, "bar", "Pseudo-private property added");
+        equal(tmp._bar, "bar", "Pseudo-private property added");
     });
 
     test("Mocks", function () {

@@ -127,6 +127,6 @@
     };
 
     $properties.addPublic.call(troop, {
-        privatePrefix: 'p_'
+        privatePrefix: '_'
     });
 }());

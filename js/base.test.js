@@ -63,7 +63,7 @@
             init: init
         }, "Public class members");
 
-        equal(derived.p_hello, "world", "Private class member");
+        equal(derived._hello, "world", "Private class member");
 
         instance = derived.create();
 
@@ -75,6 +75,6 @@
             pi: 3.14
         }, "Public instance members");
 
-        equal(instance.p_woo, "hoo", "Private instance member");
+        equal(instance._woo, "hoo", "Private instance member");
     });
 }());
