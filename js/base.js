@@ -6,7 +6,7 @@
  */
 /*global troop */
 (function ($inheritance, $properties) {
-    var $base = troop.base = $inheritance.extend.call(Object.prototype);
+    var $base = troop.base = Object.create(Object.prototype);
 
     // adding instantiation mechanism
     $properties.add.call($base, {
