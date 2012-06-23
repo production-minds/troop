@@ -26,10 +26,6 @@
                 $properties.addMethod.call(result, methods);
             }
 
-            $properties.add.call(result, {
-                base: this
-            }, false, false, false);
-
             return result;
         },
 

@@ -15,7 +15,6 @@
             bar: "bar"
         });
 
-        equal(myClass.base, Object.prototype, "Base class reference stored on child");
         equal(myClass.foo, testFunction, "Method applied to extended object");
         equal(myClass.hasOwnProperty('foo'), true, "foo is own property");
         equal(myClass.bar, "bar", "Property applied to extended object");
