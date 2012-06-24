@@ -41,6 +41,7 @@
         addMethod: $properties.addMethod,
         addPrivate: $properties.addPrivate,
         addPrivateConstant: $properties.addPrivateConstant,
+        addPrivateMethod: $properties.addPrivateMethod,
         addPublic: $properties.addPublic,
         addMock: $properties.addMock,
         removeMocks: $properties.removeMocks

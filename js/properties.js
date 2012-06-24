@@ -6,6 +6,9 @@
 /*global troop */
 (function () {
     var $properties = troop.properties = {
+        //////////////////////////////
+        // Utilities
+
         /**
          * Adds properties to object with the specified attributes.
          * @this {object}
@@ -37,6 +40,18 @@
             return this;
         },
 
+        /**
+         * Determines target of property addition.
+         * In testing mode, each class has two prototype levels and
+         * methods should go to the lower one, so they may be covered on
+         * the other.
+         */
+        getTarget: function () {
+            return troop.testing === true ?
+                Object.getPrototypeOf(this) :
+                this;
+        },
+
         //////////////////////////////
         // Class-level
 
@@ -46,18 +61,17 @@
          * @param methods {object} Methods.
          */
         addMethod: function (methods) {
-            /**
-             * Obtaining target object for methods.
-             * In testing mode, each class has two prototype levels and
-             * methods should go to the lower one, so they may be covered on
-             * the other.
-             */
-            var target = troop.testing === true ?
-                Object.getPrototypeOf(this) :
-                this;
+            $properties.add.call($properties.getTarget.call(this), methods, false, true, false);
+            return this;
+        },
 
-            $properties.add.call(target, methods, false, true, false);
-
+        /**
+         * Adds private read-only methods to class.
+         * @this {troop.base} Class object.
+         * @param methods {object} Methods.
+         */
+        addPrivateMethod: function (methods) {
+            $properties.add.call($properties.getTarget.call(this), methods, false, false, false, troop.privatePrefix);
             return this;
         },
 
