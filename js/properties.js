@@ -10,50 +10,47 @@
         // Utilities
 
         /**
-         * Adds properties to object with the specified attributes.
-         * @this {object}
+         * Adds properties to object using simple assignment.
          * @param properties {object}
-         * @param [isWritable] {boolean}
-         * @param [isEnumerable] {boolean}
-         * @param [isConfigurable] {boolean}
          */
-        add: function (properties, isWritable, isEnumerable, isConfigurable) {
-            var name;
-            for (name in properties) {
-                if (properties.hasOwnProperty(name)) {
-                    Object.defineProperty(this, name, {
-                        value: properties[name],
-                        writable: isWritable,
-                        enumerable: isEnumerable,
-                        configurable: isConfigurable
-                    });
-                }
+        _assign: function (object, propertyName, descriptor) {
+            object[propertyName] = descriptor.value;
+        },
+
+        /**
+         * Adds prefix to property name if it's not already there.
+         * @param propertyName {string} Property name.
+         * @param prefix {string} Prefix.
+         * @return {string} Prefixed property name.
+         */
+        _addPrefix: function (propertyName, prefix) {
+            if (!prefix || propertyName.substr(0, prefix.length) === prefix) {
+                // property name is already prefixed
+                return propertyName;
+            } else {
+                // adding prefix
+                return prefix + propertyName;
             }
-            return this;
         },
 
         /**
          * Adds properties to object with the specified attributes.
          * @this {object}
-         * @param prefix {string} Property prefix. Added to all assigned properties.
          * @param properties {object}
          * @param [isWritable] {boolean}
          * @param [isEnumerable] {boolean}
          * @param [isConfigurable] {boolean}
+         * @param [prefix] {string} Property prefix. Added to all assigned properties.
          */
-        addPrefixed: function (prefix, properties, isWritable, isEnumerable, isConfigurable) {
-            var name, prefixed;
-            for (name in properties) {
-                if (properties.hasOwnProperty(name)) {
-                    if (name.substr(0, prefix.length) === prefix) {
-                        // property name is already prefixed
-                        prefixed = name;
-                    } else {
-                        // adding prefix
-                        prefixed = prefix + name;
-                    }
-                    Object.defineProperty(this, prefixed, {
-                        value: properties[name],
+        add: function (properties, isWritable, isEnumerable, isConfigurable, prefix) {
+            var addProperty = troop.sloppy ?
+                    $properties._assign :
+                    Object.defineProperty,
+                propertyName;
+            for (propertyName in properties) {
+                if (properties.hasOwnProperty(propertyName)) {
+                    addProperty(this, $properties._addPrefix(propertyName, prefix), {
+                        value: properties[propertyName],
                         writable: isWritable,
                         enumerable: isEnumerable,
                         configurable: isConfigurable
@@ -122,7 +119,7 @@
          * @param methods {object} Methods.
          */
         addPrivateMethod: function (methods) {
-            $properties.addPrefixed.call($properties.getTarget.call(this), troop.privatePrefix, methods, false, false, false);
+            $properties.add.call($properties.getTarget.call(this), methods, false, false, false, troop.privatePrefix);
             return this;
         },
 
@@ -144,7 +141,7 @@
          * @param properties {object} Properties and methods.
          */
         addPrivate: function (properties) {
-            return $properties.addPrefixed.call(this, troop.privatePrefix, properties, true, false, false);
+            return $properties.add.call(this, properties, true, false, false, troop.privatePrefix);
         },
 
         /**
@@ -162,7 +159,7 @@
          * @param properties {object} Constant properties.
          */
         addPrivateConstant: function (properties) {
-            return $properties.addPrefixed.call(this, troop.privatePrefix, properties, false, false, false);
+            return $properties.add.call(this, properties, false, false, false, troop.privatePrefix);
         },
 
         //////////////////////////////
@@ -192,7 +189,16 @@
     };
 
     $properties.addPublic.call(troop, {
-        privatePrefix: '_'
+        /**
+         * Prefix applied to names of private properties and methods.
+         */
+        privatePrefix: '_',
+
+        /**
+         * When true, plain assignment is used instead of property definition
+         * when apply properties.
+         */
+        sloppy: false
     });
 
     $properties.add.call(troop, {

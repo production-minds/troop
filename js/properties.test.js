@@ -20,6 +20,24 @@
         equal(Object.getOwnPropertyDescriptor(ns, 'test').value, "foo", "Property value after promise is fulfilled");
     });
 
+    test("Utils", function () {
+        var tmp = {};
+        $properties._assign(tmp, 'foo', {value: "bar"});
+        deepEqual(
+            Object.getOwnPropertyDescriptor(tmp, 'foo'),
+            {
+                value: "bar",
+                writable: true,
+                enumerable: true,
+                configurable: true
+            },
+            "Assigned property descriptor"
+        );
+
+        equal($properties._addPrefix('test', '_'), '_test', "Prefixed string w/o prefix");
+        equal($properties._addPrefix('_test', '_'), '_test', "Prefixed string w/ prefix");
+    });
+
     test("Flags set", function () {
         var tmp = {},
             descriptor;
@@ -44,14 +62,13 @@
         var tmp = {},
             descriptor;
 
-        $properties.addPrefixed.call(tmp,
-            '_',
-            {
+        $properties.add.call(tmp, {
                 test: function () {}
             },
             true,
             true,
-            true
+            true,
+            '_'
         );
 
         equal(tmp.hasOwnProperty('test'), false, "Property by given name doesn't exist");
@@ -64,14 +81,13 @@
         equal(descriptor.enumerable, true, "Enumerable");
         equal(descriptor.configurable, true, "Configurable");
 
-        $properties.addPrefixed.call(tmp,
-            '_',
-            {
+        $properties.add.call(tmp, {
                 _hello: function () {}
             },
             true,
             true,
-            true
+            true,
+            '_'
         );
 
         equal(tmp.hasOwnProperty('_hello'), true, "Prefixed property name exists");
@@ -92,7 +108,6 @@
         var tmp = {},
             descriptor;
 
-
         $properties.add.call(tmp, {
             test: function () {}
         });
@@ -104,6 +119,27 @@
         equal(descriptor.enumerable, false, "Enumerable");
         equal(descriptor.configurable, false, "Configurable");
     });
+
+    test("Sloppy", function () {
+        troop.sloppy = true;
+
+        var tmp = {},
+            descriptor;
+
+        $properties.add.call(tmp, {
+            test: function () {}
+        });
+
+        descriptor = Object.getOwnPropertyDescriptor(tmp, 'test');
+
+        equal(typeof descriptor.value, 'function', "Value type");
+        equal(descriptor.writable, true, "Writable");
+        equal(descriptor.enumerable, true, "Enumerable");
+        equal(descriptor.configurable, true, "Configurable");
+
+        troop.sloppy = false;
+    });
+
 
     test("Class assembly", function () {
         var tmp = {};
@@ -137,7 +173,7 @@
     test("Mocks", function () {
         var tmp = {};
 
-        function testMethod () {}
+        function testMethod() {}
 
         $properties.addMock.call(tmp, {
             foo: testMethod
