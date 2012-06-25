@@ -41,22 +41,30 @@
          * @param [isEnumerable] {boolean}
          * @param [isConfigurable] {boolean}
          * @param [prefix] {string} Property prefix. Added to all assigned properties.
+         * @param [typeName] {string} Name of enforced type.
          */
-        add: function (properties, isWritable, isEnumerable, isConfigurable, prefix) {
+        add: function (properties, isWritable, isEnumerable, isConfigurable, prefix, typeName) {
             var addProperty = troop.sloppy ?
                     $properties._assign :
                     Object.defineProperty,
-                propertyName;
+                propertyName, property;
+
             for (propertyName in properties) {
                 if (properties.hasOwnProperty(propertyName)) {
-                    addProperty(this, $properties._addPrefix(propertyName, prefix), {
-                        value: properties[propertyName],
-                        writable: isWritable,
-                        enumerable: isEnumerable,
-                        configurable: isConfigurable
-                    });
+                    property = properties[propertyName];
+                    if (!typeName || typeof property === typeName) {
+                        addProperty(this, $properties._addPrefix(propertyName, prefix), {
+                            value: property,
+                            writable: isWritable,
+                            enumerable: isEnumerable,
+                            configurable: isConfigurable
+                        });
+                    } else {
+                        throw new Error(["Property:", propertyName, "is not of type:", typeName].join(' '));
+                    }
                 }
             }
+
             return this;
         },
 
@@ -109,7 +117,13 @@
          * @param methods {object} Methods.
          */
         addMethod: function (methods) {
-            $properties.add.call($properties.getTarget.call(this), methods, false, true, false);
+            $properties.add.call(
+                $properties.getTarget.call(this),
+                methods,
+                false, true, false,
+                undefined,
+                'function'
+            );
             return this;
         },
 
@@ -119,7 +133,13 @@
          * @param methods {object} Methods.
          */
         addPrivateMethod: function (methods) {
-            $properties.add.call($properties.getTarget.call(this), methods, false, false, false, troop.privatePrefix);
+            $properties.add.call(
+                $properties.getTarget.call(this),
+                methods,
+                false, false, false,
+                troop.privatePrefix,
+                'function'
+            );
             return this;
         },
 
@@ -171,7 +191,13 @@
          * @param methods {object} Mock methods.
          */
         addMock: function (methods) {
-            return $properties.add.call(this, methods, false, true, true);
+            return $properties.add.call(
+                this,
+                methods,
+                false, true, true,
+                undefined,
+                'function'
+            );
         },
 
         /**

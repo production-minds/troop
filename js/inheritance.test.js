@@ -11,14 +11,11 @@
         }
 
         var myClass = $inheritance.extend.call(Object.prototype, {
-            foo: testFunction,
-            bar: "bar"
+            foo: testFunction
         });
 
         equal(myClass.foo, testFunction, "Method applied to extended object");
         equal(myClass.hasOwnProperty('foo'), true, "foo is own property");
-        equal(myClass.bar, "bar", "Property applied to extended object");
-        equal(myClass.hasOwnProperty('bar'), true, "bar is own property");
     });
 
     test("Extension while in test mode", function () {

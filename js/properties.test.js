@@ -38,6 +38,33 @@
         equal($properties._addPrefix('_test', '_'), '_test', "Prefixed string w/ prefix");
     });
 
+    test("Type restriction", function () {
+        // doesn't raise error
+        var tmp = {};
+        $properties.add.call(tmp, {
+                test: function () {}
+            },
+            true,
+            true,
+            true,
+            undefined,
+            'function'
+        );
+        equal(tmp.hasOwnProperty('test'), true, "Property of type function added without raising exception");
+
+        raises(function () {
+            $properties.add.call(tmp, {
+                    test: function () {}
+                },
+                true,
+                true,
+                true,
+                undefined,
+                'string'
+            );
+        }, "Property type function violates type requirement (string)");
+    });
+
     test("Flags set", function () {
         var tmp = {},
             descriptor;

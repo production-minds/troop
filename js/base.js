@@ -28,7 +28,7 @@
             if (typeof this.init === 'function') {
                 this.init.apply(self, arguments);
             } else {
-                throw "Class doesn't implement .init method.";
+                throw new Error("Attempted to instantiate class implementing no .init method.");
             }
 
             return self;
