@@ -41,7 +41,7 @@
         },
 
         /**
-         * Promises a property definition.
+         * Promises a property definition (read-only).
          * @param object {object} Host object.
          * @param propertyName {string} Property name.
          * @param generator {function} Generates (and returns) property value.
@@ -50,9 +50,10 @@
             // placing class promise on namespace as getter
             Object.defineProperty(object, propertyName, {
                 get: function () {
+                    // obtaining property value
                     var value = generator(object, propertyName);
 
-                    // overwriting promise with actual class definition
+                    // overwriting promise with actual property value
                     Object.defineProperty(object, propertyName, {
                         value: value,
                         writable: false,
@@ -63,7 +64,7 @@
                     return value;
                 },
                 enumerable: true,
-                configurable: true
+                configurable: true  // must be configurable in order to be re-defined
             });
         },
 
