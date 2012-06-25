@@ -5,6 +5,21 @@
 (function ($properties) {
     module("Properties");
 
+    test("Promise", function () {
+        var ns = {},
+            tmp;
+
+        $properties.promise(ns, 'test', function () {
+            return "foo";
+        });
+
+        equal(typeof Object.getOwnPropertyDescriptor(ns, 'test').value, 'undefined', "Value before fulfilling promise");
+
+        // first access will fulfill the promise
+        equal(ns.test, "foo", "Accessing for the first time");
+        equal(Object.getOwnPropertyDescriptor(ns, 'test').value, "foo", "Property value after promise is fulfilled");
+    });
+
     test("Flags set", function () {
         var tmp = {},
             descriptor;

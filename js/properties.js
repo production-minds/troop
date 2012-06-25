@@ -41,6 +41,33 @@
         },
 
         /**
+         * Promises a property definition.
+         * @param object {object} Host object.
+         * @param propertyName {string} Property name.
+         * @param generator {function} Generates (and returns) property value.
+         */
+        promise: function (object, propertyName, generator) {
+            // placing class promise on namespace as getter
+            Object.defineProperty(object, propertyName, {
+                get: function () {
+                    var value = generator(object, propertyName);
+
+                    // overwriting promise with actual class definition
+                    Object.defineProperty(object, propertyName, {
+                        value: value,
+                        writable: false,
+                        enumerable: true,
+                        configurable: false
+                    });
+
+                    return value;
+                },
+                enumerable: true,
+                configurable: true
+            });
+        },
+
+        /**
          * Determines target of property addition.
          * In testing mode, each class has two prototype levels and
          * methods should go to the lower one, so they may be covered on
@@ -143,4 +170,8 @@
     $properties.addPublic.call(troop, {
         privatePrefix: '_'
     });
+
+    $properties.add.call(troop, {
+        promise: $properties.promise
+    }, false, true, false);
 }());
