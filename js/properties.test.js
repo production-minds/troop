@@ -44,13 +44,14 @@
         var tmp = {},
             descriptor;
 
-        $properties.add.call(tmp, {
+        $properties.addPrefixed.call(tmp,
+            '_',
+            {
                 test: function () {}
             },
             true,
             true,
-            true,
-            '_'
+            true
         );
 
         equal(tmp.hasOwnProperty('test'), false, "Property by given name doesn't exist");
@@ -63,13 +64,14 @@
         equal(descriptor.enumerable, true, "Enumerable");
         equal(descriptor.configurable, true, "Configurable");
 
-        $properties.add.call(tmp, {
+        $properties.addPrefixed.call(tmp,
+            '_',
+            {
                 _hello: function () {}
             },
             true,
             true,
-            true,
-            '_'
+            true
         );
 
         equal(tmp.hasOwnProperty('_hello'), true, "Prefixed property name exists");

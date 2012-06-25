@@ -16,13 +16,36 @@
          * @param [isWritable] {boolean}
          * @param [isEnumerable] {boolean}
          * @param [isConfigurable] {boolean}
-         * @param [prefix] {string} Property prefix. Added to all assigned properties.
          */
-        add: function (properties, isWritable, isEnumerable, isConfigurable, prefix) {
+        add: function (properties, isWritable, isEnumerable, isConfigurable) {
+            var name;
+            for (name in properties) {
+                if (properties.hasOwnProperty(name)) {
+                    Object.defineProperty(this, name, {
+                        value: properties[name],
+                        writable: isWritable,
+                        enumerable: isEnumerable,
+                        configurable: isConfigurable
+                    });
+                }
+            }
+            return this;
+        },
+
+        /**
+         * Adds properties to object with the specified attributes.
+         * @this {object}
+         * @param prefix {string} Property prefix. Added to all assigned properties.
+         * @param properties {object}
+         * @param [isWritable] {boolean}
+         * @param [isEnumerable] {boolean}
+         * @param [isConfigurable] {boolean}
+         */
+        addPrefixed: function (prefix, properties, isWritable, isEnumerable, isConfigurable) {
             var name, prefixed;
             for (name in properties) {
                 if (properties.hasOwnProperty(name)) {
-                    if (!prefix || name.substr(0, prefix.length) === prefix) {
+                    if (name.substr(0, prefix.length) === prefix) {
                         // property name is already prefixed
                         prefixed = name;
                     } else {
@@ -31,9 +54,9 @@
                     }
                     Object.defineProperty(this, prefixed, {
                         value: properties[name],
-                        writable: !!isWritable,
-                        enumerable: !!isEnumerable,
-                        configurable: !!isConfigurable
+                        writable: isWritable,
+                        enumerable: isEnumerable,
+                        configurable: isConfigurable
                     });
                 }
             }
@@ -99,7 +122,7 @@
          * @param methods {object} Methods.
          */
         addPrivateMethod: function (methods) {
-            $properties.add.call($properties.getTarget.call(this), methods, false, false, false, troop.privatePrefix);
+            $properties.addPrefixed.call($properties.getTarget.call(this), troop.privatePrefix, methods, false, false, false);
             return this;
         },
 
@@ -121,7 +144,7 @@
          * @param properties {object} Properties and methods.
          */
         addPrivate: function (properties) {
-            return $properties.add.call(this, properties, true, false, false, troop.privatePrefix);
+            return $properties.addPrefixed.call(this, troop.privatePrefix, properties, true, false, false);
         },
 
         /**
@@ -139,7 +162,7 @@
          * @param properties {object} Constant properties.
          */
         addPrivateConstant: function (properties) {
-            return $properties.add.call(this, properties, false, false, false, troop.privatePrefix);
+            return $properties.addPrefixed.call(this, troop.privatePrefix, properties, false, false, false);
         },
 
         //////////////////////////////
