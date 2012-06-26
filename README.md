@@ -1,7 +1,7 @@
 Troop
 =====
 
-True JavaScript OOP. Fast & transparent. Latest release: **0.1.1**.
+True JavaScript OOP. Fast & transparent. Latest release: **0.1.2**.
 
 Troop provides *base class* and a set of *tools* to build a close approximation of true classes in ECMAScript 5. Troop puts emphasis on:
 
@@ -19,7 +19,7 @@ Class `troop.base` offers the following methods:
 
 - `.extend(methods)`: Extends class optionally with supplied methods.
 - `.create(...)`: Creates an instance of the class. Calls user-defined `.init` method internally. Arguments are passed over to `.init`. Inside `.init`, `this` refers to the current instance.
-- `.addMethod`, `.addConstant`, `.addPublic`, `.addPrivate`, `.addPrivateConstant`: Adds non-removable properties and methods to class or instance.
+- `.addMethod`, `.addPrivateMethod`, `.addConstant`, `.addPublic`, `.addPrivate`, `.addPrivateConstant`: Adds non-removable properties and methods to class or instance.
   - Methods and constants are read-only.
   - Public and private variables are writable.
   - All except privates are enumerable.
@@ -57,3 +57,5 @@ var myInstance = myClass.create("Yonkers");
 ```
 
 ![myInstance in console](http://dl.dropbox.com/u/9258903/myInstance.png)
+
+See the [Troop wiki](https://github.com/production-minds/troop/wiki) for further details.
