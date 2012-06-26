@@ -155,7 +155,7 @@
 
         $properties.add.call(tmp, {
             test: function () {}
-        });
+        }, false, false, false);
 
         descriptor = Object.getOwnPropertyDescriptor(tmp, 'test');
 
@@ -167,6 +167,25 @@
         troop.sloppy = false;
     });
 
+    test("Messy", function () {
+        troop.messy = true;
+
+        var tmp = {},
+            descriptor;
+
+        $properties.add.call(tmp, {
+            test: function () {}
+        }, false, false, false);
+
+        descriptor = Object.getOwnPropertyDescriptor(tmp, 'test');
+
+        equal(typeof descriptor.value, 'function', "Value type");
+        equal(descriptor.writable, true, "Writable");
+        equal(descriptor.enumerable, false, "Enumerable");
+        equal(descriptor.configurable, false, "Configurable");
+
+        troop.messy = false;
+    });
 
     test("Class assembly", function () {
         var tmp = {};

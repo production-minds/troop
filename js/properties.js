@@ -55,7 +55,7 @@
                     if (!typeName || typeof property === typeName) {
                         addProperty(this, $properties._addPrefix(propertyName, prefix), {
                             value: property,
-                            writable: isWritable,
+                            writable: isWritable || troop.messy,
                             enumerable: isEnumerable,
                             configurable: isConfigurable
                         });
@@ -221,10 +221,16 @@
         privatePrefix: '_',
 
         /**
-         * When true, plain assignment is used instead of property definition
-         * when apply properties.
+         * When true, plain assignment is used instead of ES5 property
+         * definition when applying properties.
          */
-        sloppy: false
+        sloppy: false,
+
+        /**
+         * When true, all properties are writable, so they can be
+         * modified through assignment.
+         */
+        messy: false
     });
 
     $properties.add.call(troop, {
