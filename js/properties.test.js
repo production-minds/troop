@@ -1,7 +1,7 @@
 /**
  * Property management unit tests
  */
-/*global troop, module, test, equal, deepEqual, raises */
+/*global troop, module, test, expect, ok, equal, deepEqual, raises */
 (function ($properties) {
     module("Properties");
 
@@ -9,9 +9,15 @@
         var ns = {},
             tmp;
 
-        $properties.promise(ns, 'test', function () {
+        expect(7);
+
+        $properties.promise(ns, 'test', function (object, propertyName, param1, param2) {
+            ok(object === ns, "Object passed to generator");
+            equal(propertyName, 'test', "Property name passed to generator");
+            equal(param1, 'param1', "Extra parameter passed to generator");
+            equal(param2, 'param2', "Extra parameter passed to generator");
             return "foo";
-        });
+        }, "param1", "param2");
 
         equal(typeof Object.getOwnPropertyDescriptor(ns, 'test').value, 'undefined', "Value before fulfilling promise");
 
