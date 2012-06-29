@@ -75,11 +75,14 @@
          * @param generator {function} Generates (and returns) property value.
          */
         promise: function (object, propertyName, generator) {
+            // rounding up rest of the arguments
+            var generatorArguments = [object, propertyName].concat(Array.prototype.slice.call(arguments, 3));
+
             // placing class promise on namespace as getter
             Object.defineProperty(object, propertyName, {
                 get: function () {
                     // obtaining property value
-                    var value = generator(object, propertyName);
+                    var value = generator.apply(this, generatorArguments);
 
                     // overwriting promise with actual property value
                     Object.defineProperty(object, propertyName, {
