@@ -84,15 +84,30 @@
                     // obtaining property value
                     var value = generator.apply(this, generatorArguments);
 
-                    // overwriting promise with actual property value
+                    if (typeof value !== 'undefined') {
+                        // generator returned a property value
+                        // overwriting promise with actual property value
+                        Object.defineProperty(object, propertyName, {
+                            value: value,
+                            writable: false,
+                            enumerable: true,
+                            configurable: false
+                        });
+                        return value;
+                    } else {
+                        // no return value
+                        // generator supposedly assigned value to property
+                        return object[propertyName];
+                    }
+                },
+                set: function (value) {
+                    // overwriting promise with property value
                     Object.defineProperty(object, propertyName, {
                         value: value,
                         writable: false,
                         enumerable: true,
                         configurable: false
                     });
-
-                    return value;
                 },
                 enumerable: true,
                 configurable: true  // must be configurable in order to be re-defined

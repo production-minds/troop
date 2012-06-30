@@ -9,7 +9,7 @@
         var ns = {},
             tmp;
 
-        expect(7);
+        expect(9);
 
         $properties.promise(ns, 'test', function (object, propertyName, param1, param2) {
             ok(object === ns, "Object passed to generator");
@@ -24,6 +24,15 @@
         // first access will fulfill the promise
         equal(ns.test, "foo", "Accessing for the first time");
         equal(Object.getOwnPropertyDescriptor(ns, 'test').value, "foo", "Property value after promise is fulfilled");
+
+        ns = {};
+
+        $properties.promise(ns, 'test', function () {
+            ns.test = 'foo';
+        });
+
+        equal(typeof Object.getOwnPropertyDescriptor(ns, 'test').value, 'undefined', "Value before fulfilling promise");
+        equal(ns.test, "foo", "Accessing for the first time");
     });
 
     test("Utils", function () {
