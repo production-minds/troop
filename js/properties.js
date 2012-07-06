@@ -10,8 +10,11 @@
         // Utilities
 
         /**
-         * Adds properties to object using simple assignment.
-         * @param properties {object}
+         * Assigns a property to the object using an ES5 property descriptor.
+         * Faster, but sloppy alternative to Object.defineProperty()
+         * @param object {object}
+         * @param propertyName {string}
+         * @param descriptor {object} ES5 property descriptor.
          */
         _assign: function (object, propertyName, descriptor) {
             object[propertyName] = descriptor.value;
