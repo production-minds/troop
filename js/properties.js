@@ -78,6 +78,12 @@
          * @param generator {function} Generates (and returns) property value.
          */
         promise: function (object, propertyName, generator) {
+            // checking whether property is already defined
+            if (object.hasOwnProperty(propertyName)) {
+                console.warn("Property '" + propertyName + "' already exists.");
+                return;
+            }
+
             // rounding up rest of the arguments
             var generatorArguments = [object, propertyName].concat(Array.prototype.slice.call(arguments, 3));
 

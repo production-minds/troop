@@ -6,10 +6,9 @@
     module("Properties");
 
     test("Promise", function () {
-        var ns = {},
-            tmp;
+        var ns = {};
 
-        expect(7);
+        expect(8);
 
         $properties.promise(ns, 'test', function (object, propertyName, param1, param2) {
             ok(object === ns, "Object passed to generator");
@@ -24,6 +23,10 @@
         // first access will fulfill the promise
         equal(ns.test, "foo", "Accessing for the first time");
         equal(Object.getOwnPropertyDescriptor(ns, 'test').value, "foo", "Property value after promise is fulfilled");
+
+        // supposed to emit a warning
+        $properties.promise(ns, 'test', "bar");
+        equal(ns.test, "foo", "Property value after second attempt to apply promise");
     });
 
     test("Utils", function () {
