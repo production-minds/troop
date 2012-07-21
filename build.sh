@@ -31,6 +31,7 @@ js/properties.js \
 js/feature.js \
 js/inheritance.js \
 js/base.js \
+js/exports.js \
 > "build/$NAME.js"
 
 if type yui-compressor >/dev/null 2>&1
