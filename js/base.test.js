@@ -6,22 +6,42 @@
     module("Base");
 
     test("Instantiation", function () {
-        expect(3);
+        var instance1, instance2;
+
+        expect(6);
 
         troop.base.init = function (arg) {
             this.foo = "bar";
             equal(arg, 'testArgument', "Class init called");
         };
+        instance1 = troop.base.create('testArgument');
+        equal(instance1.foo, "bar", "Instance initialized");
 
-        var instance = troop.base.create('testArgument');
+        troop.base.init = function (arg) {
+            return instance1;
+        };
+        instance2 = troop.base.create();
+        equal(instance2, instance1, "Instantiation returned a different object");
 
-        equal(instance.foo, "bar", "Instance initialized");
+        troop.base.init = function (arg) {
+            return 5; // invalid type to return here
+        };
+        raises(function () {
+            instance2 = troop.base.create();
+        }, "Initializer returned invalid type");
+
+        troop.base.init = function (arg) {
+            return troop.base; // prototype won't match
+        };
+        raises(function () {
+            instance2 = troop.base.create();
+        }, "Initializer returned descendant with invalid prototype");
 
         delete troop.base.init;
 
         raises(
             function () {
-                instance = troop.base.create('testArgument');
+                instance1 = troop.base.create('testArgument');
             },
             "Class doesn't implement .init method"
         );

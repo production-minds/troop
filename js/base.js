@@ -22,16 +22,27 @@
          */
         create: function () {
             // instantiating class
-            var self = $inheritance.instantiate.call(this);
+            var self = $inheritance.instantiate.call(this),
+                result;
 
             // initializing instance properties
             if (typeof this.init === 'function') {
-                this.init.apply(self, arguments);
-            } else {
-                throw new Error("Attempted to instantiate class implementing no .init method.");
-            }
+                // running instance initializer
+                result = this.init.apply(self, arguments);
 
-            return self;
+                if (typeof result === 'undefined') {
+                    // initializer returned nothing, returning new instance
+                    return self;
+                } else if (Object.getPrototypeOf(result) === this) {
+                    // initializer returned a (different) instance of this class
+                    return result;
+                } else {
+                    // initializer returned something else
+                    throw new TypeError("Unrecognizable value returned by .init.");
+                }
+            } else {
+                throw new Error("Class implements no .init method.");
+            }
         }
     });
 
