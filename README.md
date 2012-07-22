@@ -1,7 +1,7 @@
 Troop
 =====
 
-True JavaScript OOP. Fast & transparent. Latest release: **0.1.3**.
+True JavaScript OOP. Fast & transparent.
 
 Troop provides *base class* and a set of *tools* to build a close approximation of true classes in ECMAScript 5. Troop puts emphasis on:
 
