@@ -3,11 +3,22 @@
  *
  * Adding properties of different purposes to a class or instance.
  */
-/*global troop */
+/*global troop, console */
 (function () {
-    var $properties = troop.properties = {
+    var self = troop.properties = {
         //////////////////////////////
         // Utilities
+
+        /**
+         * Emits a warning message.
+         * @param message {string}
+         * @private
+         */
+        _warn: function (message) {
+            if (typeof console.warn === 'function') {
+                console.warn(message);
+            }
+        },
 
         /**
          * Assigns a property to the object using an ES5 property descriptor.
@@ -15,6 +26,7 @@
          * @param object {object}
          * @param propertyName {string}
          * @param descriptor {object} ES5 property descriptor.
+         * @private
          */
         _assign: function (object, propertyName, descriptor) {
             object[propertyName] = descriptor.value;
@@ -25,6 +37,7 @@
          * @param propertyName {string} Property name.
          * @param prefix {string} Prefix.
          * @return {string} Prefixed property name.
+         * @private
          */
         _addPrefix: function (propertyName, prefix) {
             if (!prefix || propertyName.substr(0, prefix.length) === prefix) {
@@ -32,6 +45,7 @@
                 return propertyName;
             } else {
                 // adding prefix
+                self._warn("Adding prefix to property '" + propertyName + "'.");
                 return prefix + propertyName;
             }
         },
@@ -48,7 +62,7 @@
          */
         add: function (properties, isWritable, isEnumerable, isConfigurable, prefix, typeName) {
             var addProperty = troop.sloppy ?
-                    $properties._assign :
+                    self._assign :
                     Object.defineProperty,
                 propertyName, property;
 
@@ -56,7 +70,7 @@
                 if (properties.hasOwnProperty(propertyName)) {
                     property = properties[propertyName];
                     if (!typeName || typeof property === typeName) {
-                        addProperty(this, $properties._addPrefix(propertyName, prefix), {
+                        addProperty(this, self._addPrefix(propertyName, prefix), {
                             value: property,
                             writable: isWritable || troop.messy,
                             enumerable: isEnumerable,
@@ -80,7 +94,7 @@
         promise: function (object, propertyName, generator) {
             // checking whether property is already defined
             if (object.hasOwnProperty(propertyName)) {
-                console.warn("Property '" + propertyName + "' already exists.");
+                self._warn("Property '" + propertyName + "' already exists.");
                 return;
             }
 
@@ -144,8 +158,8 @@
          * @param methods {object} Methods.
          */
         addMethod: function (methods) {
-            $properties.add.call(
-                $properties.getTarget.call(this),
+            self.add.call(
+                self.getTarget.call(this),
                 methods,
                 false, true, false,
                 undefined,
@@ -160,8 +174,8 @@
          * @param methods {object} Methods.
          */
         addPrivateMethod: function (methods) {
-            $properties.add.call(
-                $properties.getTarget.call(this),
+            self.add.call(
+                self.getTarget.call(this),
                 methods,
                 false, false, false,
                 troop.privatePrefix,
@@ -179,7 +193,7 @@
          * @param properties {object} Properties and methods.
          */
         addPublic: function (properties) {
-            return $properties.add.call(this, properties, true, true, false);
+            return self.add.call(this, properties, true, true, false);
         },
 
         /**
@@ -188,7 +202,7 @@
          * @param properties {object} Properties and methods.
          */
         addPrivate: function (properties) {
-            return $properties.add.call(this, properties, true, false, false, troop.privatePrefix);
+            return self.add.call(this, properties, true, false, false, troop.privatePrefix);
         },
 
         /**
@@ -197,7 +211,7 @@
          * @param properties {object} Constant properties.
          */
         addConstant: function (properties) {
-            return $properties.add.call(this, properties, false, true, false);
+            return self.add.call(this, properties, false, true, false);
         },
 
         /**
@@ -206,7 +220,7 @@
          * @param properties {object} Constant properties.
          */
         addPrivateConstant: function (properties) {
-            return $properties.add.call(this, properties, false, false, false, troop.privatePrefix);
+            return self.add.call(this, properties, false, false, false, troop.privatePrefix);
         },
 
         //////////////////////////////
@@ -218,7 +232,7 @@
          * @param methods {object} Mock methods.
          */
         addMock: function (methods) {
-            return $properties.add.call(
+            return self.add.call(
                 this,
                 methods,
                 false, true, true,
@@ -241,7 +255,7 @@
         }
     };
 
-    $properties.addPublic.call(troop, {
+    self.addPublic.call(troop, {
         /**
          * Prefix applied to names of private properties and methods.
          */
@@ -260,7 +274,7 @@
         messy: false
     });
 
-    $properties.add.call(troop, {
-        promise: $properties.promise
+    self.add.call(troop, {
+        promise: self.promise
     }, false, true, false);
 }());
