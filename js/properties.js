@@ -22,14 +22,19 @@
 
         /**
          * Assigns a property to the object using an ES5 property descriptor.
-         * Faster, but sloppy alternative to Object.defineProperty()
+         * Uses either Object.defineProperty, or assignment.
          * @param object {object}
          * @param propertyName {string}
          * @param descriptor {object} ES5 property descriptor.
          * @private
+         * @static
          */
-        _assign: function (object, propertyName, descriptor) {
-            object[propertyName] = descriptor.value;
+        _defineProperty: function (object, propertyName, descriptor) {
+            if (troop.sloppy) {
+                object[propertyName] = descriptor.value;
+            } else {
+                Object.defineProperty(object, propertyName, descriptor);
+            }
         },
 
         /**
@@ -61,16 +66,13 @@
          * @param [typeName] {string} Name of enforced type.
          */
         add: function (properties, isWritable, isEnumerable, isConfigurable, prefix, typeName) {
-            var addProperty = troop.sloppy ?
-                    self._assign :
-                    Object.defineProperty,
-                propertyName, property;
+            var propertyName, property;
 
             for (propertyName in properties) {
                 if (properties.hasOwnProperty(propertyName)) {
                     property = properties[propertyName];
                     if (!typeName || typeof property === typeName) {
-                        addProperty(this, self._addPrefix(propertyName, prefix), {
+                        self._defineProperty(this, self._addPrefix(propertyName, prefix), {
                             value: property,
                             writable: isWritable || troop.messy,
                             enumerable: isEnumerable,

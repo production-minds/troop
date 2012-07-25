@@ -40,7 +40,16 @@
 
     test("Utils", function () {
         var tmp = {};
-        $properties._assign(tmp, 'foo', {value: "bar"});
+
+        troop.sloppy = true;
+
+        $properties._defineProperty(tmp, 'foo', {
+            value: "bar",
+            writable: false,
+            enumerable: false,
+            configurable: false
+        });
+
         deepEqual(
             Object.getOwnPropertyDescriptor(tmp, 'foo'),
             {
@@ -49,7 +58,27 @@
                 enumerable: true,
                 configurable: true
             },
-            "Assigned property descriptor"
+            "Assigned property descriptor (sloppy mode)"
+        );
+
+        troop.sloppy = false;
+
+        $properties._defineProperty(tmp, 'foo', {
+            value: "bar",
+            writable: false,
+            enumerable: false,
+            configurable: false
+        });
+
+        deepEqual(
+            Object.getOwnPropertyDescriptor(tmp, 'foo'),
+            {
+                value: "bar",
+                writable: false,
+                enumerable: false,
+                configurable: false
+            },
+            "Defined property descriptor (normal mode)"
         );
 
         equal($properties._addPrefix('test', '_'), '_test', "Prefixed string w/o prefix");
