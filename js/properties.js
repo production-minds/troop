@@ -186,6 +186,26 @@
             return this;
         },
 
+        /**
+         * Copies properties and methods from an object
+         * and adds them preserving all property attributes.
+         * @param trait {object} Object containing traits.
+         */
+        addTrait: function (trait) {
+            // obtaining all property names (including non-enumerable)
+            var propertyNames = Object.getOwnPropertyNames(trait),
+                i, propertyName;
+            for (i = 0; i < propertyNames.length; i++) {
+                propertyName = propertyNames[i];
+                self._defineProperty(
+                    this,
+                    propertyName,
+                    Object.getOwnPropertyDescriptor(trait, propertyName)
+                );
+            }
+            return this;
+        },
+
         //////////////////////////////
         // Class and instance-level
 

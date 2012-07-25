@@ -167,6 +167,31 @@
         equal(tmp.hasOwnProperty('_hello'), true, "Prefixed property name exists");
     });
 
+    test("Adding traits", function () {
+        var source = {},
+            destination = {};
+
+        Object.defineProperty(source, 'foo', {
+            value: 'bar',
+            writable: false,
+            enumerable: false,
+            configurable: false
+        });
+
+        $properties.addTrait.call(destination, source);
+
+        deepEqual(
+            Object.getOwnPropertyDescriptor(destination, 'foo'),
+            {
+                value: 'bar',
+                writable: false,
+                enumerable: false,
+                configurable: false
+            },
+            "Property added as trait"
+        );
+    });
+
     test("Adding methods", function () {
         var tmp = {},
             result;

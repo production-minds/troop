@@ -54,6 +54,7 @@
         addPrivateConstant: $properties.addPrivateConstant,
         addPrivateMethod: $properties.addPrivateMethod,
         addPublic: $properties.addPublic,
+        addTrait: $properties.addTrait,
         addMock: $properties.addMock,
         removeMocks: $properties.removeMocks
     }, false, false, false);
