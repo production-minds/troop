@@ -28,7 +28,7 @@ cat \
 js/license.js \
 js/troop.js \
 js/Properties.js \
-js/feature.js \
+js/Feature.js \
 js/Inheritance.js \
 js/base.js \
 js/exports.js \
