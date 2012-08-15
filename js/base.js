@@ -5,7 +5,7 @@
  * All base methods are non-enumerable.
  */
 /*global troop */
-(function ($inheritance, Properties) {
+(function (Inheritance, Properties) {
     var $base = troop.base = Object.create(Object.prototype);
 
     // adding instantiation mechanism
@@ -22,7 +22,7 @@
          */
         create: function () {
             // instantiating class
-            var self = $inheritance.instantiate.call(this),
+            var self = Inheritance.instantiate.call(this),
                 result;
 
             // initializing instance properties
@@ -61,9 +61,9 @@
 
     // adding inheritance features
     Properties.add.call($base, {
-        extend: $inheritance.extend
+        extend: Inheritance.extend
     }, false, false, false);
 }(
-    troop.inheritance,
+    troop.Inheritance,
     troop.Properties
 ));

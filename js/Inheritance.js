@@ -3,7 +3,7 @@
  */
 /*global troop */
 (function (Properties) {
-    troop.inheritance = {
+    troop.Inheritance = {
         /**
          * Extends base class with methods.
          * Extended class will have methods as read-only own properties.

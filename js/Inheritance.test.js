@@ -2,7 +2,7 @@
  * Inheritance unit tests
  */
 /*global troop, module, test, ok, equal, deepEqual, expect */
-(function ($inheritance, Properties) {
+(function (Inheritance, Properties) {
     module("Inheritance");
 
     test("Class extension", function () {
@@ -10,7 +10,7 @@
             return 'hello';
         }
 
-        var myClass = $inheritance.extend.call(Object.prototype, {
+        var myClass = Inheritance.extend.call(Object.prototype, {
             foo: testFunction
         });
 
@@ -21,7 +21,7 @@
     test("Extension while in test mode", function () {
         troop.testing = true;
 
-        var myClass = $inheritance.extend.call(Object.prototype, {
+        var myClass = Inheritance.extend.call(Object.prototype, {
                 method: function () {}
             }),
             result;
@@ -41,7 +41,7 @@
     });
 
     test("Instantiation", function () {
-        var myClass = $inheritance.instantiate.call(Object.prototype, {
+        var myClass = Inheritance.instantiate.call(Object.prototype, {
             bar: "bar"
         });
 
@@ -52,6 +52,6 @@
         equal(myClass.bar, "", "Property is writable");
     });
 }(
-    troop.inheritance,
+    troop.Inheritance,
     troop.Properties
 ));
