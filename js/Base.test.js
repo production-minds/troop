@@ -10,38 +10,38 @@
 
         expect(6);
 
-        troop.base.init = function (arg) {
+        troop.Base.init = function (arg) {
             this.foo = "bar";
             equal(arg, 'testArgument', "Class init called");
         };
-        instance1 = troop.base.create('testArgument');
+        instance1 = troop.Base.create('testArgument');
         equal(instance1.foo, "bar", "Instance initialized");
 
-        troop.base.init = function (arg) {
+        troop.Base.init = function (arg) {
             return instance1;
         };
-        instance2 = troop.base.create();
+        instance2 = troop.Base.create();
         equal(instance2, instance1, "Instantiation returned a different object");
 
-        troop.base.init = function (arg) {
+        troop.Base.init = function (arg) {
             return 5; // invalid type to return here
         };
         raises(function () {
-            instance2 = troop.base.create();
+            instance2 = troop.Base.create();
         }, "Initializer returned invalid type");
 
-        troop.base.init = function (arg) {
-            return troop.base; // prototype won't match
+        troop.Base.init = function (arg) {
+            return troop.Base; // prototype won't match
         };
         raises(function () {
-            instance2 = troop.base.create();
+            instance2 = troop.Base.create();
         }, "Initializer returned descendant with invalid prototype");
 
-        delete troop.base.init;
+        delete troop.Base.init;
 
         raises(
             function () {
-                instance1 = troop.base.create('testArgument');
+                instance1 = troop.Base.create('testArgument');
             },
             "Class doesn't implement .init method"
         );
@@ -67,7 +67,7 @@
                 });
         }
 
-        derived = troop.base.extend()
+        derived = troop.Base.extend()
             .addPrivate({
                 hello: "world"
             }).addPublic({

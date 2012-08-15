@@ -30,7 +30,7 @@ js/troop.js \
 js/Properties.js \
 js/Feature.js \
 js/Inheritance.js \
-js/base.js \
+js/Base.js \
 js/exports.js \
 > "build/$NAME.js"
 

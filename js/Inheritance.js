@@ -7,7 +7,7 @@
         /**
          * Extends base class with methods.
          * Extended class will have methods as read-only own properties.
-         * @this {troop.base} Base class.
+         * @this {troop.Base} Base class.
          * @param [methods] {object} Object containing methods {public, read-only}.
          * @return {object}
          */
@@ -32,7 +32,7 @@
         /**
          * Creates an instance of a class, ie. creates a new object and adds writable
          * properties to it.
-         * @this {troop.base} Class to instantiate.
+         * @this {troop.Base} Class to instantiate.
          * @param [properties] {object} Object containing properties (public, writable)
          * @return {object}
          */

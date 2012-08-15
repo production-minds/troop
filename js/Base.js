@@ -6,17 +6,17 @@
  */
 /*global troop */
 (function (Inheritance, Properties) {
-    var $base = troop.base = Object.create(Object.prototype);
+    var Base = troop.Base = Object.create(Object.prototype);
 
     // adding instantiation mechanism
-    Properties.add.call($base, {
+    Properties.add.call(Base, {
         /**
          * Creates a class instance.
          * The derived class must implement an .init method
          * which decorates the instance with necessary properties.
          * @static
-         * @this {troop.base} Class.
-         * @return {troop.base} Instance.
+         * @this {troop.Base} Class.
+         * @return {troop.Base} Instance.
          * @example
          * var instance = someClass.create(someArgs);
          */
@@ -47,7 +47,7 @@
     });
 
     // adding property definition features
-    Properties.add.call($base, {
+    Properties.add.call(Base, {
         addConstant: Properties.addConstant,
         addMethod: Properties.addMethod,
         addPrivate: Properties.addPrivate,
@@ -60,7 +60,7 @@
     }, false, false, false);
 
     // adding inheritance features
-    Properties.add.call($base, {
+    Properties.add.call(Base, {
         extend: Inheritance.extend
     }, false, false, false);
 }(

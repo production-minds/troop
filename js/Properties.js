@@ -156,7 +156,7 @@
 
         /**
          * Adds public read-only methods to class.
-         * @this {troop.base} Class object.
+         * @this {troop.Base} Class object.
          * @param methods {object} Methods.
          */
         addMethod: function (methods) {
@@ -172,7 +172,7 @@
 
         /**
          * Adds private read-only methods to class.
-         * @this {troop.base} Class object.
+         * @this {troop.Base} Class object.
          * @param methods {object} Methods.
          */
         addPrivateMethod: function (methods) {
@@ -225,7 +225,7 @@
 
         /**
          * Adds public writable members to class or instance.
-         * @this {troop.base} Class or instance object.
+         * @this {troop.Base} Class or instance object.
          * @param properties {object} Properties and methods.
          */
         addPublic: function (properties) {
@@ -234,7 +234,7 @@
 
         /**
          * Adds pseudo-private writable members to class or instance.
-         * @this {troop.base} Class or instance object.
+         * @this {troop.Base} Class or instance object.
          * @param properties {object} Properties and methods.
          */
         addPrivate: function (properties) {
@@ -243,7 +243,7 @@
 
         /**
          * Adds public constant (read-only) members to instance.
-         * @this {troop.base} Instance object.
+         * @this {troop.Base} Instance object.
          * @param properties {object} Constant properties.
          */
         addConstant: function (properties) {
@@ -252,7 +252,7 @@
 
         /**
          * Adds private constant (read-only & non-enumerable) members to instance.
-         * @this {troop.base} Instance object.
+         * @this {troop.Base} Instance object.
          * @param properties {object} Constant properties.
          */
         addPrivateConstant: function (properties) {
@@ -264,7 +264,7 @@
 
         /**
          * Adds public mock methods (read-only, but removable) members to instance or class.
-         * @this {troop.base} Instance or class object.
+         * @this {troop.Base} Instance or class object.
          * @param methods {object} Mock methods.
          */
         addMock: function (methods) {
