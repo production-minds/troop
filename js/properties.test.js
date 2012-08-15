@@ -168,8 +168,8 @@
     });
 
     test("Adding traits", function () {
-        var source = {},
-            destination = {};
+        var source = Object.create({'boo': 'far'}),
+            destination;
 
         Object.defineProperty(source, 'foo', {
             value: 'bar',
@@ -178,6 +178,7 @@
             configurable: false
         });
 
+        destination = Object.create({});
         $properties.addTrait.call(destination, source);
 
         deepEqual(
@@ -190,6 +191,15 @@
             },
             "Property added as trait"
         );
+
+        troop.testing = true;
+
+        destination = Object.create({});
+        $properties.addTrait.call(destination, source);
+
+        equal(Object.getPrototypeOf(destination).boo, 'far', "Trait in testing mode");
+
+        troop.testing = false;
     });
 
     test("Adding methods", function () {

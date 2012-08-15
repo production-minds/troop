@@ -189,20 +189,25 @@
         /**
          * Copies properties and methods from an object
          * and adds them preserving all property attributes.
+         * In testing mode, only copies methods!
          * @param trait {object} Object containing traits.
          */
         addTrait: function (trait) {
             // obtaining all property names (including non-enumerable)
-            var propertyNames = Object.getOwnPropertyNames(trait),
+            var source = self.getTarget.call(trait),
+                destination = self.getTarget.call(this),
+                propertyNames = Object.getOwnPropertyNames(source),
                 i, propertyName;
+
             for (i = 0; i < propertyNames.length; i++) {
                 propertyName = propertyNames[i];
                 self._defineProperty(
-                    this,
+                    destination,
                     propertyName,
-                    Object.getOwnPropertyDescriptor(trait, propertyName)
+                    Object.getOwnPropertyDescriptor(source, propertyName)
                 );
             }
+
             return this;
         },
 
