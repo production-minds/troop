@@ -2,7 +2,7 @@
  * Inheritance unit tests
  */
 /*global troop, module, test, ok, equal, deepEqual, expect */
-(function ($inheritance, $properties) {
+(function ($inheritance, Properties) {
     module("Inheritance");
 
     test("Class extension", function () {
@@ -29,7 +29,7 @@
         equal(typeof myClass.method, 'function', "Method applied to extended object");
         equal(myClass.hasOwnProperty('method'), false, "Method is not own property");
 
-        result = $properties.addMethod.call(myClass, {
+        result = Properties.addMethod.call(myClass, {
             foo: function () {}
         });
 
@@ -53,5 +53,5 @@
     });
 }(
     troop.inheritance,
-    troop.properties
+    troop.Properties
 ));

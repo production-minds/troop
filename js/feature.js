@@ -2,7 +2,7 @@
  * Feature detection.
  */
 /*global troop */
-(function ($properties) {
+(function (Properties) {
     var $feature = troop.feature = {
         /**
          * Determines whether read-only properties may be
@@ -27,7 +27,7 @@
     };
 
     // environmental constants
-    $properties.addConstant.call(troop, {
+    Properties.addConstant.call(troop, {
         /**
          * Whether methods should be writable
          */
@@ -35,12 +35,12 @@
     });
 
     // application state (alterable by user)
-    $properties.addPublic.call(troop, {
+    Properties.addPublic.call(troop, {
         /**
          * Whether Troop is in testing mode
          */
         testing: false
     });
 }(
-    troop.properties
+    troop.Properties
 ));

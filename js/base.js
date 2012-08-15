@@ -5,11 +5,11 @@
  * All base methods are non-enumerable.
  */
 /*global troop */
-(function ($inheritance, $properties) {
+(function ($inheritance, Properties) {
     var $base = troop.base = Object.create(Object.prototype);
 
     // adding instantiation mechanism
-    $properties.add.call($base, {
+    Properties.add.call($base, {
         /**
          * Creates a class instance.
          * The derived class must implement an .init method
@@ -47,23 +47,23 @@
     });
 
     // adding property definition features
-    $properties.add.call($base, {
-        addConstant: $properties.addConstant,
-        addMethod: $properties.addMethod,
-        addPrivate: $properties.addPrivate,
-        addPrivateConstant: $properties.addPrivateConstant,
-        addPrivateMethod: $properties.addPrivateMethod,
-        addPublic: $properties.addPublic,
-        addTrait: $properties.addTrait,
-        addMock: $properties.addMock,
-        removeMocks: $properties.removeMocks
+    Properties.add.call($base, {
+        addConstant: Properties.addConstant,
+        addMethod: Properties.addMethod,
+        addPrivate: Properties.addPrivate,
+        addPrivateConstant: Properties.addPrivateConstant,
+        addPrivateMethod: Properties.addPrivateMethod,
+        addPublic: Properties.addPublic,
+        addTrait: Properties.addTrait,
+        addMock: Properties.addMock,
+        removeMocks: Properties.removeMocks
     }, false, false, false);
 
     // adding inheritance features
-    $properties.add.call($base, {
+    Properties.add.call($base, {
         extend: $inheritance.extend
     }, false, false, false);
 }(
     troop.inheritance,
-    troop.properties
+    troop.Properties
 ));

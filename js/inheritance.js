@@ -2,7 +2,7 @@
  * Inheritance & instantiation tools.
  */
 /*global troop */
-(function ($properties) {
+(function (Properties) {
     troop.inheritance = {
         /**
          * Extends base class with methods.
@@ -23,7 +23,7 @@
             }
 
             if (methods) {
-                $properties.addMethod.call(result, methods);
+                Properties.addMethod.call(result, methods);
             }
 
             return result;
@@ -40,12 +40,12 @@
             var result = Object.create(this);
 
             if (properties) {
-                $properties.addPublic.call(result, properties);
+                Properties.addPublic.call(result, properties);
             }
 
             return result;
         }
     };
 }(
-    troop.properties
+    troop.Properties
 ));

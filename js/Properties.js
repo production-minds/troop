@@ -5,7 +5,7 @@
  */
 /*global troop, console */
 (function () {
-    var self = troop.properties = {
+    var self = troop.Properties = {
         //////////////////////////////
         // Utilities
 

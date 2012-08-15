@@ -2,7 +2,7 @@
  * Property management unit tests
  */
 /*global troop, module, test, expect, ok, equal, deepEqual, raises */
-(function ($properties) {
+(function (Properties) {
     module("Properties");
 
     test("Promise", function () {
@@ -10,7 +10,7 @@
 
         expect(10);
 
-        $properties.promise(ns, 'test', function (object, propertyName, param1, param2) {
+        Properties.promise(ns, 'test', function (object, propertyName, param1, param2) {
             ok(object === ns, "Object passed to generator");
             equal(propertyName, 'test', "Property name passed to generator");
             equal(param1, 'param1', "Extra parameter passed to generator");
@@ -26,7 +26,7 @@
 
         ns = {};
 
-        $properties.promise(ns, 'test', function () {
+        Properties.promise(ns, 'test', function () {
             ns.test = 'foo';
         });
 
@@ -34,7 +34,7 @@
         equal(ns.test, "foo", "Accessing for the first time");
 
         // supposed to emit a warning
-        $properties.promise(ns, 'test', "bar");
+        Properties.promise(ns, 'test', "bar");
         equal(ns.test, "foo", "Property value after second attempt to apply promise");
     });
 
@@ -43,7 +43,7 @@
 
         troop.sloppy = true;
 
-        $properties._defineProperty(tmp, 'foo', {
+        Properties._defineProperty(tmp, 'foo', {
             value       : "bar",
             writable    : false,
             enumerable  : false,
@@ -63,7 +63,7 @@
 
         troop.sloppy = false;
 
-        $properties._defineProperty(tmp, 'foo', {
+        Properties._defineProperty(tmp, 'foo', {
             value       : "bar",
             writable    : false,
             enumerable  : false,
@@ -81,14 +81,14 @@
             "Defined property descriptor (normal mode)"
         );
 
-        equal($properties._addPrefix('test', '_'), '_test', "Prefixed string w/o prefix");
-        equal($properties._addPrefix('_test', '_'), '_test', "Prefixed string w/ prefix");
+        equal(Properties._addPrefix('test', '_'), '_test', "Prefixed string w/o prefix");
+        equal(Properties._addPrefix('_test', '_'), '_test', "Prefixed string w/ prefix");
     });
 
     test("Type restriction", function () {
         // doesn't raise error
         var tmp = {};
-        $properties.add.call(tmp, {
+        Properties.add.call(tmp, {
                 test: function () {}
             },
             true,
@@ -100,7 +100,7 @@
         equal(tmp.hasOwnProperty('test'), true, "Property of type function added without raising exception");
 
         raises(function () {
-            $properties.add.call(tmp, {
+            Properties.add.call(tmp, {
                     test: function () {}
                 },
                 true,
@@ -116,7 +116,7 @@
         var tmp = {},
             descriptor;
 
-        $properties.add.call(tmp, {
+        Properties.add.call(tmp, {
                 test: function () {}
             },
             true,
@@ -136,7 +136,7 @@
         var tmp = {},
             descriptor;
 
-        $properties.add.call(tmp, {
+        Properties.add.call(tmp, {
                 test: function () {}
             },
             true,
@@ -155,7 +155,7 @@
         equal(descriptor.enumerable, true, "Enumerable");
         equal(descriptor.configurable, true, "Configurable");
 
-        $properties.add.call(tmp, {
+        Properties.add.call(tmp, {
                 _hello: function () {}
             },
             true,
@@ -189,7 +189,7 @@
         raises(
             function () {
                 destination = Object.create({});
-                $properties.addTrait.call(destination, trait);
+                Properties.addTrait.call(destination, trait);
             },
             function (err) {
                 return err instanceof TypeError;
@@ -198,7 +198,7 @@
         );
 
         destination = Object.create(base);
-        $properties.addTrait.call(destination, trait);
+        Properties.addTrait.call(destination, trait);
 
         deepEqual(
             Object.getOwnPropertyDescriptor(destination, 'foo'),
@@ -214,7 +214,7 @@
         troop.testing = true;
 
         destination = Object.create(base);
-        $properties.addTrait.call(destination, trait);
+        Properties.addTrait.call(destination, trait);
 
         deepEqual(
             Object.getOwnPropertyDescriptor(Object.getPrototypeOf(destination), 'boo'),
@@ -234,7 +234,7 @@
         var tmp = {},
             result;
 
-        result = $properties.addMethod.call(tmp, {
+        result = Properties.addMethod.call(tmp, {
             foo: function () {}
         });
 
@@ -245,7 +245,7 @@
         var tmp = {},
             descriptor;
 
-        $properties.add.call(tmp, {
+        Properties.add.call(tmp, {
             test: function () {}
         });
 
@@ -263,7 +263,7 @@
         var tmp = {},
             descriptor;
 
-        $properties.add.call(tmp, {
+        Properties.add.call(tmp, {
             test: function () {}
         }, false, false, false);
 
@@ -283,7 +283,7 @@
         var tmp = {},
             descriptor;
 
-        $properties.add.call(tmp, {
+        Properties.add.call(tmp, {
             test: function () {}
         }, false, false, false);
 
@@ -302,15 +302,15 @@
 
         function testMethod() {}
 
-        $properties.addMethod.call(tmp, {
+        Properties.addMethod.call(tmp, {
             test: testMethod
         });
 
-        $properties.addConstant.call(tmp, {
+        Properties.addConstant.call(tmp, {
             foo: "foo"
         });
 
-        $properties.addPrivate.call(tmp, {
+        Properties.addPrivate.call(tmp, {
             bar: "bar"
         });
 
@@ -331,7 +331,7 @@
 
         function testMethod() {}
 
-        $properties.addMock.call(tmp, {
+        Properties.addMock.call(tmp, {
             foo: testMethod
         });
 
@@ -339,10 +339,10 @@
             foo: testMethod
         }, "Mock method added");
 
-        $properties.removeMocks.call(tmp);
+        Properties.removeMocks.call(tmp);
 
         deepEqual(tmp, {}, "Mock methods removed");
     });
 }(
-    troop.properties
+    troop.Properties
 ));

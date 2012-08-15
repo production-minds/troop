@@ -27,7 +27,7 @@ done
 cat \
 js/license.js \
 js/troop.js \
-js/properties.js \
+js/Properties.js \
 js/feature.js \
 js/inheritance.js \
 js/base.js \
