@@ -195,10 +195,19 @@
         addTrait: function (trait) {
             // obtaining all property names (including non-enumerable)
             var source = self.getTarget.call(trait),
+                sourcePrototype = Object.getPrototypeOf(source),
                 destination = self.getTarget.call(this),
-                propertyNames = Object.getOwnPropertyNames(source),
+                destinationPrototype = Object.getPrototypeOf(destination),
+                propertyNames,
                 i, propertyName;
 
+            if (sourcePrototype !== destinationPrototype &&
+                sourcePrototype !== Object.prototype
+                ) {
+                throw new TypeError("Trait prototype doesn't match host's.");
+            }
+
+            propertyNames = Object.getOwnPropertyNames(source);
             for (i = 0; i < propertyNames.length; i++) {
                 propertyName = propertyNames[i];
                 self._defineProperty(

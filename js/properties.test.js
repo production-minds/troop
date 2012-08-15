@@ -44,18 +44,18 @@
         troop.sloppy = true;
 
         $properties._defineProperty(tmp, 'foo', {
-            value: "bar",
-            writable: false,
-            enumerable: false,
+            value       : "bar",
+            writable    : false,
+            enumerable  : false,
             configurable: false
         });
 
         deepEqual(
             Object.getOwnPropertyDescriptor(tmp, 'foo'),
             {
-                value: "bar",
-                writable: true,
-                enumerable: true,
+                value       : "bar",
+                writable    : true,
+                enumerable  : true,
                 configurable: true
             },
             "Assigned property descriptor (sloppy mode)"
@@ -64,18 +64,18 @@
         troop.sloppy = false;
 
         $properties._defineProperty(tmp, 'foo', {
-            value: "bar",
-            writable: false,
-            enumerable: false,
+            value       : "bar",
+            writable    : false,
+            enumerable  : false,
             configurable: false
         });
 
         deepEqual(
             Object.getOwnPropertyDescriptor(tmp, 'foo'),
             {
-                value: "bar",
-                writable: false,
-                enumerable: false,
+                value       : "bar",
+                writable    : false,
+                enumerable  : false,
                 configurable: false
             },
             "Defined property descriptor (normal mode)"
@@ -168,25 +168,44 @@
     });
 
     test("Adding traits", function () {
-        var source = Object.create({'boo': 'far'}),
+        var base = {},
+            trait = Object.create(base),
             destination;
 
-        Object.defineProperty(source, 'foo', {
-            value: 'bar',
-            writable: false,
-            enumerable: false,
+        Object.defineProperty(base, 'boo', {
+            value       : 'far',
+            writable    : false,
+            enumerable  : false,
             configurable: false
         });
 
-        destination = Object.create({});
-        $properties.addTrait.call(destination, source);
+        Object.defineProperty(trait, 'foo', {
+            value       : 'bar',
+            writable    : false,
+            enumerable  : false,
+            configurable: false
+        });
+
+        raises(
+            function () {
+                destination = Object.create({});
+                $properties.addTrait.call(destination, trait);
+            },
+            function (err) {
+                return err instanceof TypeError;
+            },
+            "Trait prototype must match host's"
+        );
+
+        destination = Object.create(base);
+        $properties.addTrait.call(destination, trait);
 
         deepEqual(
             Object.getOwnPropertyDescriptor(destination, 'foo'),
             {
-                value: 'bar',
-                writable: false,
-                enumerable: false,
+                value       : 'bar',
+                writable    : false,
+                enumerable  : false,
                 configurable: false
             },
             "Property added as trait"
@@ -194,10 +213,19 @@
 
         troop.testing = true;
 
-        destination = Object.create({});
-        $properties.addTrait.call(destination, source);
+        destination = Object.create(base);
+        $properties.addTrait.call(destination, trait);
 
-        equal(Object.getPrototypeOf(destination).boo, 'far', "Trait in testing mode");
+        deepEqual(
+            Object.getOwnPropertyDescriptor(Object.getPrototypeOf(destination), 'boo'),
+            {
+                value       : 'far',
+                writable    : false,
+                enumerable  : false,
+                configurable: false
+            },
+            "Trait in testing mode"
+        );
 
         troop.testing = false;
     });
@@ -290,7 +318,7 @@
             tmp,
             {
                 test: testMethod,
-                foo: "foo"
+                foo : "foo"
             },
             "Enumerable properties of class"
         );
