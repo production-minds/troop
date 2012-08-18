@@ -59,7 +59,7 @@
         function init() {
             this
                 .addPrivate({
-                    woo: "hoo"
+                    _woo: "hoo"
                 }).addPublic({
                     holy: "moly"
                 }).addConstant({
@@ -69,7 +69,7 @@
 
         derived = troop.Base.extend()
             .addPrivate({
-                hello: "world"
+                _hello: "world"
             }).addPublic({
                 yo: "momma"
             }).addMethod({

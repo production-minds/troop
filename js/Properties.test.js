@@ -80,36 +80,51 @@
             },
             "Defined property descriptor (normal mode)"
         );
+    });
 
-        equal(Properties._addPrefix('test', '_'), '_test', "Prefixed string w/o prefix");
-        equal(Properties._addPrefix('_test', '_'), '_test', "Prefixed string w/ prefix");
+    test("Prefix restriction", function () {
+        equal(
+            Properties._checkPrefix({foo: 'hello', bar: 'world'}, 'f'),
+            false,
+            "Object properties fail prefix restriction"
+        );
+
+        equal(
+            Properties._checkPrefix({foo: 'hello', far: 'world'}, 'f'),
+            true,
+            "Object properties meet prefix restriction"
+        );
     });
 
     test("Type restriction", function () {
-        // doesn't raise error
-        var tmp = {};
-        Properties.add.call(tmp, {
-                test: function () {}
-            },
+        equal(
+            Properties._checkType({a: 'a', b: 'b'}, 'string'),
             true,
-            true,
-            true,
-            undefined,
-            'function'
+            "Object properties meet type restriction"
         );
-        equal(tmp.hasOwnProperty('test'), true, "Property of type function added without raising exception");
 
-        raises(function () {
-            Properties.add.call(tmp, {
-                    test: function () {}
-                },
-                true,
-                true,
-                true,
-                undefined,
-                'string'
-            );
-        }, "Property type function violates type requirement (string)");
+        equal(
+            Properties._checkType({a: 'a', b: 1}, 'string'),
+            false,
+            "Object properties fail type restriction"
+        );
+
+        var myClass = troop.Base.extend({
+            init: function () {},
+            foo: function () {}
+        });
+
+        equal(
+            Properties._checkType({a: myClass.create(), b: myClass.create()}, myClass),
+            true,
+            "Object properties meet class restriction"
+        );
+
+        equal(
+            Properties._checkType({a: 'hello', b: myClass.create()}, myClass),
+            false,
+            "Object properties fail class restriction"
+        );
     });
 
     test("Flags set", function () {
@@ -130,41 +145,6 @@
         equal(descriptor.writable, true, "Writable");
         equal(descriptor.enumerable, true, "Enumerable");
         equal(descriptor.configurable, true, "Configurable");
-    });
-
-    test("Prefixed", function () {
-        var tmp = {},
-            descriptor;
-
-        Properties.add.call(tmp, {
-                test: function () {}
-            },
-            true,
-            true,
-            true,
-            '_'
-        );
-
-        equal(tmp.hasOwnProperty('test'), false, "Property by given name doesn't exist");
-        equal(tmp.hasOwnProperty('_test'), true, "Prefixed property name exists");
-
-        descriptor = Object.getOwnPropertyDescriptor(tmp, '_test');
-
-        equal(typeof descriptor.value, 'function', "Value type");
-        equal(descriptor.writable, true, "Writable");
-        equal(descriptor.enumerable, true, "Enumerable");
-        equal(descriptor.configurable, true, "Configurable");
-
-        Properties.add.call(tmp, {
-                _hello: function () {}
-            },
-            true,
-            true,
-            true,
-            '_'
-        );
-
-        equal(tmp.hasOwnProperty('_hello'), true, "Prefixed property name exists");
     });
 
     test("Adding traits", function () {
@@ -323,7 +303,8 @@
             "Enumerable properties of class"
         );
 
-        equal(tmp._bar, "bar", "Pseudo-private property added");
+        equal(tmp.hasOwnProperty('bar'), false, "Invalid private property not added");
+        equal(tmp.hasOwnProperty('_bar'), false, "Invalid private property not prefixed");
     });
 
     test("Mocks", function () {

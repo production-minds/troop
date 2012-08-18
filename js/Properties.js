@@ -13,6 +13,7 @@
          * Emits a warning message.
          * @param message {string}
          * @private
+         * @static
          */
         _warn: function (message) {
             if (typeof console.warn === 'function') {
@@ -30,7 +31,8 @@
          * @static
          */
         _defineProperty: function (object, propertyName, descriptor) {
-            if (troop.sloppy) {
+            if (troop.sloppy && descriptor.hasOwnProperty('value')) {
+                // in sloppy mode, value definitions revert to simple assignments
                 object[propertyName] = descriptor.value;
             } else {
                 Object.defineProperty(object, propertyName, descriptor);
@@ -38,48 +40,125 @@
         },
 
         /**
-         * Adds prefix to property name if it's not already there.
-         * @param propertyName {string} Property name.
+         * Checks type or class of each property against type name.
+         * @param object {object} Host object.
+         * @param typeName {string|troop.Base} Type name or base class to check.
+         * @private
+         * @static
+         */
+        _checkType: function (object, typeName) {
+            var isType = typeof typeName === 'string',
+                isClass = troop.Base.isPrototypeOf(typeName),
+                propertyName, property;
+
+            if (!(isType || isClass)) {
+                // typeName is neither string nor troop class
+                return false;
+            }
+
+            for (propertyName in object) {
+                if (object.hasOwnProperty(propertyName)) {
+                    property = object[propertyName];
+                    if (isType && typeof property !== typeName ||
+                        isClass && !typeName.isPrototypeOf(property)
+                        ) {
+                        self._warn(["Method", propertyName, "doesn't meet type requirement", typeName].join(" "));
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        },
+
+        /**
+         * Checks property names for prefix.
+         * @param object {object} Host object.
          * @param prefix {string} Prefix.
-         * @return {string} Prefixed property name.
+         * @return {boolean} Whether all properties on the object satisfy the prefix condition.
+         * @private
+         * @static
+         */
+        _checkPrefix: function (object, prefix) {
+            var propertyName;
+            for (propertyName in object) {
+                if (object.hasOwnProperty(propertyName)) {
+                    if (propertyName.substr(0, prefix.length) !== prefix) {
+                        self._warn(["Property", propertyName, "doesn't match prefix", prefix].join(" "));
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        },
+
+        /**
+         * Adds single value property.
+         * @param propertyName {string} Property name.
+         * @param value {*} Property value to be assigned.
+         * @param [isWritable] {boolean}
+         * @param [isEnumerable] {boolean}
+         * @param [isConfigurable] {boolean}
          * @private
          */
-        _addPrefix: function (propertyName, prefix) {
-            if (!prefix || propertyName.substr(0, prefix.length) === prefix) {
-                // property name is already prefixed
-                return propertyName;
-            } else {
-                // adding prefix
-                self._warn("Adding prefix to property '" + propertyName + "'.");
-                return prefix + propertyName;
-            }
+        _addValue: function (propertyName, value, isWritable, isEnumerable, isConfigurable) {
+            self._defineProperty(this, propertyName, {
+                value       : value,
+                writable    : isWritable || troop.messy,
+                enumerable  : isEnumerable,
+                configurable: isConfigurable
+            });
+        },
+
+        /**
+         * Adds single getter-setter property.
+         * @param propertyName {string} Property name.
+         * @param [getter] {function} Property getter.
+         * @param [setter] {function} Property setter.
+         * @param [isWritable] {boolean}
+         * @param [isEnumerable] {boolean}
+         * @param [isConfigurable] {boolean}
+         * @private
+         */
+        _addGetterSetter: function (propertyName, getter, setter, isWritable, isEnumerable, isConfigurable) {
+            self._defineProperty(this, propertyName, {
+                get         : getter,
+                set         : setter,
+                writable    : isWritable || troop.messy,
+                enumerable  : isEnumerable,
+                configurable: isConfigurable
+            });
         },
 
         /**
          * Adds properties to object with the specified attributes.
          * @this {object}
-         * @param properties {object}
+         * @param properties {object|function} Property object or its generator function.
          * @param [isWritable] {boolean}
          * @param [isEnumerable] {boolean}
          * @param [isConfigurable] {boolean}
-         * @param [prefix] {string} Property prefix. Added to all assigned properties.
-         * @param [typeName] {string} Name of enforced type.
          */
-        add: function (properties, isWritable, isEnumerable, isConfigurable, prefix, typeName) {
-            var propertyName, property;
+        add: function (properties, isWritable, isEnumerable, isConfigurable) {
+            var propertyName;
 
-            for (propertyName in properties) {
-                if (properties.hasOwnProperty(propertyName)) {
-                    property = properties[propertyName];
-                    if (!typeName || typeof property === typeName) {
-                        self._defineProperty(this, self._addPrefix(propertyName, prefix), {
-                            value: property,
-                            writable: isWritable || troop.messy,
-                            enumerable: isEnumerable,
-                            configurable: isConfigurable
-                        });
-                    } else {
-                        throw new Error(["Property:", propertyName, "is not of type:", typeName].join(' '));
+            if (typeof properties === 'function') {
+                // when function is passed
+                // generating property object
+                properties = properties.call(this);
+            }
+
+            if (typeof properties === 'object') {
+                for (propertyName in properties) {
+                    if (properties.hasOwnProperty(propertyName)) {
+                        self._addValue.call(
+                            this,
+                            propertyName,
+                            properties[propertyName],
+                            isWritable,
+                            isEnumerable,
+                            isConfigurable
+                        );
                     }
                 }
             }
@@ -113,9 +192,9 @@
                         // generator returned a property value
                         // overwriting promise with actual property value
                         Object.defineProperty(object, propertyName, {
-                            value: value,
-                            writable: false,
-                            enumerable: true,
+                            value       : value,
+                            writable    : false,
+                            enumerable  : true,
                             configurable: false
                         });
                         return value;
@@ -125,16 +204,18 @@
                         return object[propertyName];
                     }
                 },
+
                 set: function (value) {
                     // overwriting promise with property value
                     Object.defineProperty(object, propertyName, {
-                        value: value,
-                        writable: false,
-                        enumerable: true,
+                        value       : value,
+                        writable    : false,
+                        enumerable  : true,
                         configurable: false
                     });
                 },
-                enumerable: true,
+
+                enumerable  : true,
                 configurable: true  // must be configurable in order to be re-defined
             });
         },
@@ -160,13 +241,9 @@
          * @param methods {object} Methods.
          */
         addMethod: function (methods) {
-            self.add.call(
-                self.getTarget.call(this),
-                methods,
-                false, true, false,
-                undefined,
-                'function'
-            );
+            if (self._checkType(methods, 'function')) {
+                self.add.call(self.getTarget.call(this), methods, false, true, false);
+            }
             return this;
         },
 
@@ -176,13 +253,11 @@
          * @param methods {object} Methods.
          */
         addPrivateMethod: function (methods) {
-            self.add.call(
-                self.getTarget.call(this),
-                methods,
-                false, false, false,
-                troop.privatePrefix,
-                'function'
-            );
+            if (self._checkType(methods, 'function') &&
+                self._checkPrefix(methods, troop.privatePrefix)
+                ) {
+                self.add.call(self.getTarget.call(this), methods, false, false, false);
+            }
             return this;
         },
 
@@ -238,7 +313,10 @@
          * @param properties {object} Properties and methods.
          */
         addPrivate: function (properties) {
-            return self.add.call(this, properties, true, false, false, troop.privatePrefix);
+            if (self._checkPrefix(properties, troop.privatePrefix)) {
+                self.add.call(this, properties, true, false, false);
+            }
+            return this;
         },
 
         /**
@@ -256,7 +334,10 @@
          * @param properties {object} Constant properties.
          */
         addPrivateConstant: function (properties) {
-            return self.add.call(this, properties, false, false, false, troop.privatePrefix);
+            if (self._checkPrefix(properties, troop.privatePrefix)) {
+                self.add.call(this, properties, false, false, false);
+            }
+            return this;
         },
 
         //////////////////////////////
@@ -268,13 +349,10 @@
          * @param methods {object} Mock methods.
          */
         addMock: function (methods) {
-            return self.add.call(
-                this,
-                methods,
-                false, true, true,
-                undefined,
-                'function'
-            );
+            if (self._checkType(methods, 'function')) {
+                self.add.call(this, methods, false, true, true);
+            }
+            return this;
         },
 
         /**
