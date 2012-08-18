@@ -96,6 +96,15 @@
         );
     });
 
+    test("Accessor validation", function () {
+        equal(Properties._isAccessor('a'), false, "Non-object does not validate");
+        equal(Properties._isAccessor({}), false, "Empty object does not validate");
+        equal(Properties._isAccessor({get: 'a'}), false, "Non-function 'get' does not validate");
+        equal(Properties._isAccessor({get: function () {}}), true, "Getter only validates");
+        equal(Properties._isAccessor({set: function () {}}), true, "Setter only validates");
+        equal(Properties._isAccessor({get: function () {}, set: function () {}}), true, "Full accessor validates");
+    });
+
     test("Type restriction", function () {
         equal(
             Properties._checkType({a: undefined, b: undefined}, 'string'),
@@ -113,6 +122,12 @@
             Properties._checkType({a: 'a', b: 1}, 'string'),
             false,
             "Object properties fail type restriction"
+        );
+
+        equal(
+            Properties._checkType({a: function () {}, b: {get: function () {}}}, 'function'),
+            true,
+            "Getter-setter validates as function"
         );
 
         var myClass = troop.Base.extend({
@@ -136,7 +151,7 @@
     test("Property addition", function () {
         var tmp;
 
-        expect(3);
+        expect(4);
 
         tmp = {};
         Properties.add.call(tmp, {a: 'foo', b: 'bar'});
@@ -148,6 +163,10 @@
             return {c: 'foo', d: 'bar'};
         });
         equal(tmp.c, 'foo', "Property added through generator function");
+
+        tmp = {};
+        Properties.add.call(tmp, {a: {get: function () {return this.b;}}, b: 'foo'});
+        equal(tmp.a, 'foo', "Property added with getter");
     });
 
     test("Flags set", function () {

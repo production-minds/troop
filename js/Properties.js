@@ -40,6 +40,19 @@
         },
 
         /**
+         * Tells whether an object holds a getter / setter pair.
+         * @param object {object} Host object.
+         * @return {boolean}
+         * @private
+         * @static
+         */
+        _isAccessor: function (object) {
+            return typeof object === 'object' && (
+                typeof object.get === 'function' ||
+                typeof object.set === 'function');
+        },
+
+        /**
          * Checks type or class of each property against type name.
          * @param object {object} Host object.
          * @param typeName {string|troop.Base} Type name or base class to check.
@@ -49,6 +62,7 @@
         _checkType: function (object, typeName) {
             var isType = typeof typeName === 'string',
                 isClass = troop.Base.isPrototypeOf(typeName),
+                isFunction = typeName === 'function',
                 propertyName, property;
 
             if (!(isType || isClass)) {
@@ -60,8 +74,9 @@
                 if (object.hasOwnProperty(propertyName)) {
                     property = object[propertyName];
                     if (!(typeof property === 'undefined' ||
-                        isType && typeof property === typeName ||
-                        isClass && typeName.isPrototypeOf(property))
+                          isFunction && self._isAccessor(property) ||
+                          isType && typeof property === typeName ||
+                          isClass && typeName.isPrototypeOf(property))
                         ) {
                         self._warn(["Method", propertyName, "doesn't meet type requirement", typeName].join(" "));
                         return false;
@@ -113,7 +128,7 @@
         },
 
         /**
-         * Adds single getter-setter property.
+         * Adds single accessor property.
          * @param propertyName {string} Property name.
          * @param [getter] {function} Property getter.
          * @param [setter] {function} Property setter.
@@ -122,11 +137,10 @@
          * @param [isConfigurable] {boolean}
          * @private
          */
-        _addGetterSetter: function (propertyName, getter, setter, isWritable, isEnumerable, isConfigurable) {
+        _addAccessor: function (propertyName, getter, setter, isWritable, isEnumerable, isConfigurable) {
             self._defineProperty(this, propertyName, {
                 get         : getter,
                 set         : setter,
-                writable    : isWritable || troop.messy,
                 enumerable  : isEnumerable,
                 configurable: isConfigurable
             });
@@ -141,10 +155,10 @@
          * @param [isConfigurable] {boolean}
          */
         add: function (properties, isWritable, isEnumerable, isConfigurable) {
-            var propertyName;
+            var propertyName, property;
 
             if (typeof properties === 'function') {
-                // when function is passed
+                // when function is passed as 'properties'
                 // generating property object
                 properties = properties.call(this);
             }
@@ -152,14 +166,24 @@
             if (typeof properties === 'object') {
                 for (propertyName in properties) {
                     if (properties.hasOwnProperty(propertyName)) {
-                        self._addValue.call(
-                            this,
-                            propertyName,
-                            properties[propertyName],
-                            isWritable,
-                            isEnumerable,
-                            isConfigurable
-                        );
+                        property = properties[propertyName];
+                        if (self._isAccessor(property)) {
+                            self._addAccessor.call(this,
+                                propertyName,
+                                property.get,
+                                property.set,
+                                isEnumerable,
+                                isConfigurable
+                            );
+                        } else {
+                            self._addValue.call(this,
+                                propertyName,
+                                property,
+                                isWritable,
+                                isEnumerable,
+                                isConfigurable
+                            );
+                        }
                     }
                 }
             }
