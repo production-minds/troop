@@ -111,7 +111,7 @@
 
         var myClass = troop.Base.extend({
             init: function () {},
-            foo: function () {}
+            foo : function () {}
         });
 
         equal(
@@ -125,6 +125,23 @@
             false,
             "Object properties fail class restriction"
         );
+    });
+
+    test("Property addition", function () {
+        var tmp;
+
+        expect(3);
+
+        tmp = {};
+        Properties.add.call(tmp, {a: 'foo', b: 'bar'});
+        equal(tmp.a, 'foo', "Property added through object");
+
+        tmp = {};
+        Properties.add.call(tmp, function () {
+            equal(this, tmp, "Generator function receives host object as this");
+            return {c: 'foo', d: 'bar'};
+        });
+        equal(tmp.c, 'foo', "Property added through generator function");
     });
 
     test("Flags set", function () {
