@@ -15,7 +15,7 @@ Library is based on a post series at [Code Pristine](http://codepristine.com), d
 Base class
 ----------
 
-Class `troop.base` offers the following methods:
+Class `troop.Base` offers the following methods:
 
 - `.extend(methods)`: Extends class optionally with supplied methods.
 - `.create(...)`: Creates an instance of the class. Calls user-defined `.init` method internally. Arguments are passed over to `.init`. Inside `.init`, `this` refers to the current instance.
@@ -38,9 +38,9 @@ Example
 The following example implements and instantiates a class with (pseudo-)private & public members, read-only methods and constants.
 
 ```javascript
-var myClass = troop.base.extend()
+var myClass = troop.Base.extend()
     .addPrivate({
-        secret: "ufo"
+        _secret: "ufo"
     }).addPublic({
         hello: "world"
     }).addConstant({
