@@ -48,8 +48,8 @@
          */
         _isAccessor: function (object) {
             return typeof object === 'object' && (
-                typeof object.get === 'function' ||
-                typeof object.set === 'function');
+                object.hasOwnProperty('get') && typeof object.get === 'function' ||
+                object.hasOwnProperty('set') && typeof object.set === 'function');
         },
 
         /**
