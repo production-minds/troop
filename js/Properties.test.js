@@ -98,6 +98,12 @@
 
     test("Type restriction", function () {
         equal(
+            Properties._checkType({a: undefined, b: undefined}, 'string'),
+            true,
+            "Undefined always meets type restriction"
+        );
+
+        equal(
             Properties._checkType({a: 'a', b: 'b'}, 'string'),
             true,
             "Object properties meet type restriction"

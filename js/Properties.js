@@ -1,7 +1,7 @@
 /**
  * Property Management.
  *
- * Adding properties of different purposes to a class or instance.
+ * Adding properties and methods to a class or instance.
  */
 /*global troop, console */
 (function () {
@@ -59,8 +59,9 @@
             for (propertyName in object) {
                 if (object.hasOwnProperty(propertyName)) {
                     property = object[propertyName];
-                    if (isType && typeof property !== typeName ||
-                        isClass && !typeName.isPrototypeOf(property)
+                    if (!(typeof property === 'undefined' ||
+                        isType && typeof property === typeName ||
+                        isClass && typeName.isPrototypeOf(property))
                         ) {
                         self._warn(["Method", propertyName, "doesn't meet type requirement", typeName].join(" "));
                         return false;
