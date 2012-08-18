@@ -6,10 +6,10 @@
  */
 /*global troop */
 (function (Inheritance, Properties) {
-    var Base = troop.Base = Object.create(Object.prototype);
+    var self = troop.Base = Object.create(Object.prototype);
 
     // adding instantiation mechanism
-    Properties.add.call(Base, {
+    Properties.add.call(self, {
         /**
          * Creates a class instance.
          * The derived class must implement an .init method
@@ -47,7 +47,7 @@
     });
 
     // adding property definition features
-    Properties.add.call(Base, {
+    Properties.add.call(self, {
         addConstant: Properties.addConstant,
         addMethod: Properties.addMethod,
         addPrivate: Properties.addPrivate,
@@ -60,7 +60,7 @@
     }, false, false, false);
 
     // adding inheritance features
-    Properties.add.call(Base, {
+    Properties.add.call(self, {
         extend: Inheritance.extend
     }, false, false, false);
 }(

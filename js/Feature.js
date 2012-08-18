@@ -3,7 +3,7 @@
  */
 /*global troop */
 (function (Properties) {
-    var Feature = troop.Feature = {
+    var self = troop.Feature = {
         /**
          * Determines whether read-only properties may be
          * covered up by assignment.
@@ -31,7 +31,7 @@
         /**
          * Whether methods should be writable
          */
-        writable: !Feature.canAssignToReadOnly()
+        writable: !self.canAssignToReadOnly()
     });
 
     // application state (alterable by user)
