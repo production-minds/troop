@@ -47,7 +47,7 @@
          * @static
          */
         _isAccessor: function (object) {
-            return typeof object === 'object' && (
+            return Object.prototype.isPrototypeOf(object) && (
                 object.hasOwnProperty('get') && typeof object.get === 'function' ||
                 object.hasOwnProperty('set') && typeof object.set === 'function');
         },

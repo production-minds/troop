@@ -97,6 +97,7 @@
     });
 
     test("Accessor validation", function () {
+        equal(Properties._isAccessor(null), false, "Null does not validate");
         equal(Properties._isAccessor('a'), false, "Non-object does not validate");
         equal(Properties._isAccessor({}), false, "Empty object does not validate");
         equal(Properties._isAccessor({get: 'a'}), false, "Non-function 'get' does not validate");
@@ -151,7 +152,7 @@
     test("Property addition", function () {
         var tmp;
 
-        expect(4);
+        expect(5);
 
         tmp = {};
         Properties.add.call(tmp, {a: 'foo', b: 'bar'});
@@ -167,6 +168,10 @@
         tmp = {};
         Properties.add.call(tmp, {a: {get: function () {return this.b;}}, b: 'foo'});
         equal(tmp.a, 'foo', "Property added with getter");
+
+        tmp = {};
+        Properties.add.call(tmp, {a: null});
+        equal(tmp.a, null, "Null property added");
     });
 
     test("Flags set", function () {
