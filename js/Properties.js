@@ -47,9 +47,10 @@
          * @static
          */
         _isAccessor: function (object) {
-            return Object.prototype.isPrototypeOf(object) && (
-                object.hasOwnProperty('get') && typeof object.get === 'function' ||
-                object.hasOwnProperty('set') && typeof object.set === 'function');
+            return Object.prototype.isPrototypeOf(object) &&
+                   Object.getPrototypeOf(object) === Object.prototype &&
+                   Object.getOwnPropertyNames(object).join(',') in {'get': true, 'set': true, 'get,set': true} &&
+                   self._checkType(object, 'function');
         },
 
         /**

@@ -97,6 +97,9 @@
     });
 
     test("Accessor validation", function () {
+        var derived = Object.create({});
+        derived.get = function () {};
+
         equal(Properties._isAccessor(null), false, "Null does not validate");
         equal(Properties._isAccessor('a'), false, "Non-object does not validate");
         equal(Properties._isAccessor({}), false, "Empty object does not validate");
@@ -104,6 +107,8 @@
         equal(Properties._isAccessor({get: function () {}}), true, "Getter only validates");
         equal(Properties._isAccessor({set: function () {}}), true, "Setter only validates");
         equal(Properties._isAccessor({get: function () {}, set: function () {}}), true, "Full accessor validates");
+        equal(Properties._isAccessor({get: function () {}, foo: 'bar'}), false, "Dirty getter fails");
+        equal(Properties._isAccessor(derived), false, "Derived object fails (even w/ valid getter-setter)");
     });
 
     test("Type restriction", function () {
