@@ -199,6 +199,34 @@
         equal(descriptor.configurable, true, "Configurable");
     });
 
+    test("Base", function () {
+        var testing = troop.testing,
+            extended;
+
+        troop.testing = false;
+        extended = troop.Base.extend();
+        equal(Properties.getBase(extended), troop.Base, "Getting base class in live mode");
+
+        troop.testing = true;
+        extended = troop.Base.extend();
+        equal(Properties.getBase(extended), troop.Base, "Getting base class in testing mode");
+
+        troop.testing = testing;
+    });
+
+    test("Trait validation", function () {
+        equal(Properties._isTrait({}), true, "Simple object validates as trait");
+
+        var base = {},
+            child = Object.create(base),
+            trait = Object.create(base),
+            grandchild = Object.create(child);
+
+        equal(Properties._isTrait(trait), false, "Derived objects don't validate on their own");
+        equal(Properties._isTrait(trait, grandchild), true, "Object with immediate ancestor common with host validates");
+        equal(Properties._isTrait(trait, child), true, "Object with same base validates");
+    });
+
     test("Adding traits", function () {
         var base = {},
             trait = Object.create(base),

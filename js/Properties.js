@@ -258,6 +258,17 @@
                 this;
         },
 
+        /**
+         * Retrieves the immediate base class of a given child class.
+         * @param child {troop.Base} Child class.
+         * @return {troop.Base}
+         */
+        getBase: function (child) {
+            return troop.testing === true ?
+                Object.getPrototypeOf(Object.getPrototypeOf(child)) :
+                Object.getPrototypeOf(child);
+        },
+
         //////////////////////////////
         // Class-level
 
@@ -288,6 +299,31 @@
         },
 
         /**
+         * Validates an object for being trait in the context
+         * of a host object.
+         * @param trait {object} Trait object.
+         * @param [host] {object} Host object.
+         * @private
+         * @static
+         */
+        _isTrait: function (trait, host) {
+            var result = false,
+                traitBase,
+                hostBase;
+
+            if (Object.prototype.isPrototypeOf(trait)) {
+                traitBase = self.getBase(trait);
+                result = result || traitBase === Object.prototype;
+                if (Object.prototype.isPrototypeOf(host)) {
+                    hostBase = self.getBase(host);
+                    result = result || traitBase.isPrototypeOf(hostBase) || traitBase === hostBase;
+                }
+            }
+
+            return result;
+        },
+
+        /**
          * Copies properties and methods from an object
          * and adds them preserving all property attributes.
          * In testing mode, only copies methods!
@@ -295,26 +331,22 @@
          */
         addTrait: function (trait) {
             // obtaining all property names (including non-enumerable)
-            var source = self.getTarget.call(trait),
-                sourcePrototype = Object.getPrototypeOf(source),
-                destination = self.getTarget.call(this),
-                destinationPrototype = Object.getPrototypeOf(destination),
+            var traitTarget = self.getTarget.call(trait),
+                hostTarget = self.getTarget.call(this),
                 propertyNames,
                 i, propertyName;
 
-            if (sourcePrototype !== destinationPrototype &&
-                sourcePrototype !== Object.prototype
-                ) {
-                throw new TypeError("Trait prototype doesn't match host's.");
+            if (!self._isTrait(trait, this)) {
+                throw new TypeError("Trait doesn't satisfy common ancestor requirement.");
             }
 
-            propertyNames = Object.getOwnPropertyNames(source);
+            propertyNames = Object.getOwnPropertyNames(traitTarget);
             for (i = 0; i < propertyNames.length; i++) {
                 propertyName = propertyNames[i];
                 self._defineProperty(
-                    destination,
+                    hostTarget,
                     propertyName,
-                    Object.getOwnPropertyDescriptor(source, propertyName)
+                    Object.getOwnPropertyDescriptor(traitTarget, propertyName)
                 );
             }
 
