@@ -39,6 +39,14 @@
         instantiate: function (properties) {
             var result = Object.create(this);
 
+            /**
+             * Extending once more with no own properties
+             * so that methods may be mocked on a static level.
+             */
+            if (troop.testing === true) {
+                result = Object.create(result);
+            }
+
             if (properties) {
                 Properties.addPublic.call(result, properties);
             }
