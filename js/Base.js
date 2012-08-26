@@ -56,7 +56,8 @@
         addPublic: Properties.addPublic,
         addTrait: Properties.addTrait,
         addMock: Properties.addMock,
-        removeMocks: Properties.removeMocks
+        removeMocks: Properties.removeMocks,
+        getBase: Properties.getBase
     }, false, false, false);
 
     // adding inheritance features

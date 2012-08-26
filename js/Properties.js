@@ -263,10 +263,10 @@
          * @param child {troop.Base} Child class.
          * @return {troop.Base}
          */
-        getBase: function (child) {
+        getBase: function () {
             return troop.testing === true ?
-                Object.getPrototypeOf(Object.getPrototypeOf(child)) :
-                Object.getPrototypeOf(child);
+                Object.getPrototypeOf(Object.getPrototypeOf(this)) :
+                Object.getPrototypeOf(this);
         },
 
         //////////////////////////////
@@ -312,10 +312,10 @@
                 hostBase;
 
             if (Object.prototype.isPrototypeOf(trait)) {
-                traitBase = self.getBase(trait);
+                traitBase = self.getBase.call(trait);
                 result = result || traitBase === Object.prototype;
                 if (Object.prototype.isPrototypeOf(host)) {
-                    hostBase = self.getBase(host);
+                    hostBase = self.getBase.call(host);
                     result = result || traitBase.isPrototypeOf(hostBase) || traitBase === hostBase;
                 }
             }

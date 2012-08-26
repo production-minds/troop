@@ -205,11 +205,11 @@
 
         troop.testing = false;
         extended = troop.Base.extend();
-        equal(Properties.getBase(extended), troop.Base, "Getting base class in live mode");
+        equal(Properties.getBase.call(extended), troop.Base, "Getting base class in live mode");
 
         troop.testing = true;
         extended = troop.Base.extend();
-        equal(Properties.getBase(extended), troop.Base, "Getting base class in testing mode");
+        equal(Properties.getBase.call(extended), troop.Base, "Getting base class in testing mode");
 
         troop.testing = testing;
     });

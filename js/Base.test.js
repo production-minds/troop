@@ -96,5 +96,9 @@
         }, "Public instance members");
 
         equal(instance._woo, "hoo", "Private instance member");
+
+        equal(instance.getBase(), derived, "Instance extends from derived");
+        equal(derived.getBase(), troop.Base, "Derived extends from troop.Base");
+        equal(troop.Base.getBase(), Object.prototype, "Troop.Base extends from Object.prototype");
     });
 }());
