@@ -40,6 +40,17 @@
         },
 
         /**
+         * List of valid method combinations for accessors.
+         * @type {object}
+         */
+        _accessorMethods: {
+            'get': true,
+            'set': true,
+            'get,set': true,
+            'set,get': true
+        },
+
+        /**
          * Tells whether an object holds a getter / setter pair.
          * @param object {object} Host object.
          * @return {boolean}
@@ -49,7 +60,7 @@
         _isAccessor: function (object) {
             return Object.prototype.isPrototypeOf(object) &&
                    Object.getPrototypeOf(object) === Object.prototype &&
-                   Object.getOwnPropertyNames(object).join(',') in {'get': true, 'set': true, 'get,set': true} &&
+                   Object.getOwnPropertyNames(object).join(',') in self._accessorMethods &&
                    self._checkType(object, 'function');
         },
 
