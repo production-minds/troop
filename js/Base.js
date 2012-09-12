@@ -55,6 +55,7 @@
         addPrivateMethod: Properties.addPrivateMethod,
         addPublic: Properties.addPublic,
         addTrait: Properties.addTrait,
+        elevateMethod: Properties.elevateMethod,
         addMock: Properties.addMock,
         removeMocks: Properties.removeMocks,
         getBase: Properties.getBase

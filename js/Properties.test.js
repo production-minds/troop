@@ -1,7 +1,7 @@
 /**
  * Property management unit tests
  */
-/*global troop, module, test, expect, ok, equal, deepEqual, raises */
+/*global troop, module, test, expect, ok, equal, notEqual, deepEqual, raises */
 (function (Properties) {
     module("Properties");
 
@@ -385,6 +385,18 @@
 
         equal(tmp.hasOwnProperty('bar'), false, "Invalid private property not added");
         equal(tmp.hasOwnProperty('_bar'), false, "Invalid private property not prefixed");
+    });
+
+    test("Method elevation", function () {
+        var base = {test: function () {return this;}},
+            instance = Object.create(base);
+
+        equal(instance.test, base.test, "Instance method same as class method");
+        Properties.elevateMethod.call(instance, 'test');
+        notEqual(instance.test, base.test, "Instance method differs from class method");
+
+        var test = instance.test;
+        equal(test(), instance, "Instance method tied to instance");
     });
 
     test("Mocks", function () {

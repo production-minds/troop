@@ -409,6 +409,28 @@
             return this;
         },
 
+        /**
+         * Elevates method from class level to instance level.
+         * (Or from base class to child class.)
+         * Ties context to the object it was elevated to.
+         * @param methodName {string} Name of method to elevate.
+         */
+        elevateMethod: function (methodName) {
+            var that = this, // instance or child class
+                base = self.getBase.call(this), // class or base class
+                methods;
+
+            if (typeof base[methodName] === 'function') {
+                methods = {};
+                methods[methodName] = function () {
+                    return base[methodName].apply(that, arguments);
+                };
+                self.addMethod.call(this, methods);
+            }
+
+            return this;
+        },
+
         //////////////////////////////
         // Class and instance-level
 
