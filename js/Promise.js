@@ -1,7 +1,8 @@
 /**
- * Property Management.
+ * Promise Addition.
  *
- * Adding properties and methods to a class or instance.
+ * API to add properties to objects as promises.
+ * A promise means that the property will be evaluated upon first access.
  */
 /*global troop, console */
 (function (Properties) {
