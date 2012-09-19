@@ -23,7 +23,7 @@
         };
 
         deepEqual(
-            Promise._promiseArgs('test.path.prop', testFunc),
+            Promise._normalizeArguments('test.path.prop', testFunc),
             {
                 path        : 'test.path.prop',
                 host        : window.test.path,
@@ -34,7 +34,7 @@
         );
 
         deepEqual(
-            Promise._promiseArgs('test.path', 'prop', testFunc),
+            Promise._normalizeArguments('test.path', 'prop', testFunc),
             {
                 path        : 'test.path.prop',
                 host        : window.test.path,
@@ -45,7 +45,7 @@
         );
 
         deepEqual(
-            Promise._promiseArgs(window.test.path, 'prop', testFunc),
+            Promise._normalizeArguments(window.test.path, 'prop', testFunc),
             {
                 path        : undefined,
                 host        : window.test.path,

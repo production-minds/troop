@@ -43,12 +43,13 @@
         },
 
         /**
-         * Processes promise arguments.
-         * @return {Object}
+         * Normalizes promise arguments, so that the output is the same
+         * for all possible combinations.
+         * @return {Object} Normalized argument list.
          * @private
          * @static
          */
-        _promiseArgs: function () {
+        _normalizeArguments: function () {
             var path,
                 host, tmp,
                 propertyName,
@@ -95,10 +96,11 @@
          * @param generator {function} Generates (and returns) property value.
          */
         promise: function (host, propertyName, generator) {
-            var args = self._promiseArgs.apply(this, arguments),
+            var args = self._normalizeArguments.apply(this, arguments),
                 path = args.path,
                 generatorArguments;
 
+            // applying normalized arguments
             host = args.host;
             propertyName = args.propertyName;
             generator = args.generator;
