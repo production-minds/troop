@@ -5,6 +5,57 @@
 (function (Properties) {
     module("Properties");
 
+    test("Scope", function () {
+        equal(Properties.global, window, "Global scope in the browser");
+    });
+
+    test("Scope resolution", function () {
+        window.hello = {world: "test"};
+        equal(Properties._resolve(['hello', 'world']), "test", "Resolving existing object");
+        equal(typeof Properties._resolve(['hi', 'world']), 'undefined', "Resolving non-existing object");
+    });
+
+    test("Promise argument processing", function () {
+        var testFunc = function () {};
+
+        window.test = {
+            path: {}
+        };
+
+        deepEqual(
+            Properties._promiseArgs('test.path.prop', testFunc),
+            {
+                path        : 'test.path.prop',
+                host        : window.test.path,
+                propertyName: 'prop',
+                generator   : testFunc
+            },
+            "Promise args with full path"
+        );
+
+        deepEqual(
+            Properties._promiseArgs('test.path', 'prop', testFunc),
+            {
+                path        : 'test.path.prop',
+                host        : window.test.path,
+                propertyName: 'prop',
+                generator   : testFunc
+            },
+            "Promise args with host path & property name"
+        );
+
+        deepEqual(
+            Properties._promiseArgs(window.test.path, 'prop', testFunc),
+            {
+                path        : undefined,
+                host        : window.test.path,
+                propertyName: 'prop',
+                generator   : testFunc
+            },
+            "Promise args with host object & property name"
+        );
+    });
+
     test("Promise", function () {
         var ns = {};
 
@@ -36,6 +87,24 @@
         // supposed to emit a warning
         Properties.promise(ns, 'test', "bar");
         equal(ns.test, "foo", "Property value after second attempt to apply promise");
+    });
+
+    test("Promise with tracking", function () {
+        window.test = {
+            path: {}
+        };
+
+        equal(Properties.unfulfilled.hasOwnProperty('test.path.prop'), false, "Promise not in registry yet");
+
+        function generator() {
+            return "foo";
+        }
+
+        Properties.promise('test.path.prop', generator);
+        equal(Properties.unfulfilled['test.path.prop'], true, "Promise in registry");
+
+        equal(window.test.path.prop, "foo", "Promise fulfilled");
+        equal(Properties.unfulfilled.hasOwnProperty('test.path.prop'), false, "Promise removed from registry");
     });
 
     test("Utils", function () {
