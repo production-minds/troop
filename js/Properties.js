@@ -217,7 +217,6 @@
 
         /**
          * Retrieves the immediate base class of a given child class.
-         * @param child {troop.Base} Child class.
          * @return {troop.Base}
          */
         getBase: function () {
