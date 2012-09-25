@@ -218,9 +218,6 @@
                 destination = Object.create({});
                 Properties.addTrait.call(destination, trait);
             },
-            function (err) {
-                return err instanceof TypeError;
-            },
             "Trait prototype must match host's"
         );
 
