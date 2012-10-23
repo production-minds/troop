@@ -54,11 +54,15 @@
         addPrivateConstant: Properties.addPrivateConstant,
         addPrivateMethod: Properties.addPrivateMethod,
         addPublic: Properties.addPublic,
+        addPublicConstant: Properties.addConstant,
+        addPublicMethod: Properties.addMethod,
         addTrait: Properties.addTrait,
         elevateMethod: Properties.elevateMethod,
         addMock: Properties.addMock,
         removeMocks: Properties.removeMocks,
-        getBase: Properties.getBase
+        getBase: Properties.getBase,
+        isA: Inheritance.isA,
+        instanceOf: Inheritance.isA
     }, false, false, false);
 
     // adding inheritance features

@@ -51,6 +51,11 @@
         myClass.bar = ''; // attempting to overwrite method
         equal(myClass.bar, "", "Property is writable");
     });
+
+    test("Base validation", function () {
+        ok(Inheritance.isA.call({}, Object.prototype), "{} is an Object.prototype");
+        ok(Inheritance.isA.call([], Array.prototype), "[] is an Array.prototype");
+    });
 }(
     troop.Inheritance,
     troop.Properties

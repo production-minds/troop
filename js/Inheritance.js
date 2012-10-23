@@ -52,6 +52,14 @@
             }
 
             return result;
+        },
+
+        /**
+         * Tests whether the current object is a descendant of base.
+         * @param base {troop.Base}
+         */
+        isA: function (base) {
+            return this instanceof base.constructor;
         }
     };
 }(
