@@ -33,7 +33,7 @@
                 if (typeof result === 'undefined') {
                     // initializer returned nothing, returning new instance
                     return self;
-                } else if (Properties.getBase.call(result) === this) {
+                } else if (result instanceof Object && this.isPrototypeOf(result)) {
                     // initializer returned a (different) instance of this class
                     return result;
                 } else {

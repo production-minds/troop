@@ -17,13 +17,13 @@
         instance1 = troop.Base.create('testArgument');
         equal(instance1.foo, "bar", "Instance initialized");
 
-        troop.Base.init = function (arg) {
+        troop.Base.init = function () {
             return instance1;
         };
         instance2 = troop.Base.create();
         equal(instance2, instance1, "Instantiation returned a different object");
 
-        troop.Base.init = function (arg) {
+        troop.Base.init = function () {
             return 5; // invalid type to return here
         };
         raises(function () {
@@ -43,7 +43,7 @@
     test("Custom instance value", function () {
         expect(3);
 
-        troop.Base.init = function (arg) {
+        troop.Base.init = function () {
             return troop.Base; // not immediate extension of class
         };
         raises(function () {
@@ -51,38 +51,30 @@
         }, "Initializer returned object same as class");
 
         var result = Object.create(troop.Base);
-        troop.Base.init = function (arg) {
+        troop.Base.init = function () {
             return result; // not full immediate extension of class
         };
         equal(troop.Base.create(), result, "Initializer returns immediate extension of class");
 
-        troop.Base.init = function (arg) {
-            return Object.create(Object.create(troop.Base)); // not full immediate extension of class
+        result = Object.create(Object.create(troop.Base));
+        troop.Base.init = function () {
+            return result; // not full immediate extension of class
         };
-        raises(function () {
-            troop.Base.create();
-        }, "Initializer returned farther extension of class");
+        equal(troop.Base.create(), result, "Initializer returned farther extension of class");
 
         delete troop.Base.init;
     });
 
     test("Custom instance value in testing mode", function () {
-        expect(2);
+        expect(1);
         troop.testing = true;
 
-        troop.Base.init = function (arg) {
+        troop.Base.init = function () {
             return troop.Base; // not immediate extension of class
         };
         raises(function () {
             troop.Base.create();
         }, "Initializer returned object same as class");
-
-        troop.Base.init = function (arg) {
-            return Object.create(troop.Base); // not full immediate extension of class
-        };
-        raises(function () {
-            troop.Base.create();
-        }, "Initializer returned invalid extension of class");
 
         troop.testing = false;
         delete troop.Base.init;
