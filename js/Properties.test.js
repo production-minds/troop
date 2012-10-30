@@ -2,10 +2,16 @@
  * Property management unit tests
  */
 /*global troop, module, test, expect, ok, equal, notEqual, deepEqual, raises */
-(function (Properties) {
+(function (Properties, Feature) {
     module("Properties");
 
     test("Utils", function () {
+        if (!Feature.hasPropertyAttributes()) {
+            // no need to check when we're in ES4
+            expect(0);
+            return;
+        }
+
         var tmp = {};
 
         troop.sloppy = true;
@@ -381,5 +387,6 @@
         deepEqual(tmp, {}, "Mock methods removed");
     });
 }(
-    troop.Properties
+    troop.Properties,
+    troop.Feature
 ));
