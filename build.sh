@@ -27,6 +27,7 @@ done
 cat \
 js/license.js \
 js/troop.js \
+js/Polyfill.js \
 js/Properties.js \
 js/Promise.js \
 js/Feature.js \
