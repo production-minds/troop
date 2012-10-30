@@ -6,7 +6,7 @@
     module("Polyfill");
 
     test("Basic", function () {
-        equal(Polyfill.getPrototypeOf([]), Array.prototype, "Object prototype");
+        equal(Polyfill.getPrototypeOf([]), Array.prototype, "Array prototype");
 
         var tmp = {foo: 'bar', hello: "world"};
 
@@ -51,7 +51,6 @@
 
         equal(child1.constructor.prototype, base, "Immediate prototype");
         equal(child1.test, 'tset', "Applied property");
-        deepEqual(child2, {}, "Content");
     });
 }(
     troop.Polyfill

@@ -66,6 +66,7 @@
                 }
             }
 
+            o.constructor = F;
             return o;
         }
     };
