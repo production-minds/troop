@@ -2,7 +2,7 @@
  * Feature detection.
  */
 /*global troop */
-(function (Properties) {
+(function () {
     var self = troop.Feature = {
         /**
          * Determines whether read-only properties may be
@@ -46,21 +46,13 @@
         }
     };
 
-    // environmental constants
-    Properties.addConstant.call(troop, {
-        /**
-         * Whether methods should be writable
-         */
-        writable: !self.canAssignToReadOnly()
-    });
+    /**
+     * Whether methods should be writable (environmental)
+     */
+    troop.writable = !self.canAssignToReadOnly();
 
-    // application state (alterable by user)
-    Properties.addPublic.call(troop, {
-        /**
-         * Whether Troop is in testing mode
-         */
-        testing: false
-    });
-}(
-    troop.Properties
-));
+    /**
+     * Whether Troop is in testing mode (application state)
+     */
+    troop.testing = false;
+}());
