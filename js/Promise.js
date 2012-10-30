@@ -5,7 +5,7 @@
  * A promise means that the property will be evaluated upon first access.
  */
 /*global troop, console */
-(function (Properties) {
+(function () {
     var self = troop.Promise = {
         //////////////////////////////
         // Constants
@@ -109,13 +109,10 @@
             if (path) {
                 // adding promise to registry
                 self.unfulfilled[path] = true;
-            } else {
-                Properties._warn("Promise '" + propertyName + "' can't be tracked.");
             }
 
             // checking whether property is already defined
             if (host.hasOwnProperty(propertyName)) {
-                Properties._warn("Property '" + propertyName + "' already exists.");
                 return;
             }
 
@@ -167,11 +164,6 @@
         }
     };
 
-    Properties.addConstant.call(troop, {
-        unfulfilled: self.unfulfilled
-    });
-
-    Properties.add.call(troop, {
-        promise: self.promise
-    }, false, true, false);
-}(troop.Properties));
+    troop.unfulfilled = self.unfulfilled;
+    troop.promise = self.promise;
+}());
