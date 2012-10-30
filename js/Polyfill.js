@@ -20,13 +20,29 @@
         },
 
         getOwnPropertyDescriptor: function (obj, prop) {
-            var result = {
-                writable: true,
-                enumerable: true,
-                configurable: true
-            };
+            if (!obj.hasOwnProperty(prop)) {
+                return undefined;
+            }
 
-            if (obj.hasOwnProperty(prop)) {
+            // basic properties
+            var result = {
+                    writable: true,
+                    enumerable: true,
+                    configurable: true
+                },
+                getter = obj.__lookupGetter__(prop),
+                setter = obj.__lookupSetter__(prop);
+
+            if (getter || setter) {
+                // applying accessors when property is getter/setter
+                if (getter) {
+                    result.get = getter;
+                }
+                if (setter) {
+                    result.set = setter;
+                }
+            } else {
+                // applying value
                 result.value = obj[prop];
             }
 

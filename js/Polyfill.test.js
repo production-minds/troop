@@ -64,6 +64,36 @@
         equal(o.p4, 'world', "Property value provided by getter");
     });
 
+    test(".getOwnPropertyDescriptor", function () {
+        var o = {};
+
+        o.p1 = 'foo';
+        deepEqual(
+            Polyfill.getOwnPropertyDescriptor(o, 'p1'),
+            {
+                writable: true,
+                enumerable: true,
+                configurable: true,
+                value: 'foo'
+            },
+            "Value-property descriptor OK"
+        );
+
+        function getter() {return 'foo';}
+
+        o.__defineGetter__('p2', getter);
+        deepEqual(
+            Polyfill.getOwnPropertyDescriptor(o, 'p2'),
+            {
+                writable: true,
+                enumerable: true,
+                configurable: true,
+                get: getter
+            },
+            "Getter-property descriptor OK"
+        );
+    });
+
     test(".create", function () {
         var base = {},
             child1 = Polyfill.create(base, {test: {value: 'tset'}});
