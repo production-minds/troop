@@ -34,6 +34,9 @@
         },
 
         defineProperty: function (obj, prop, desc) {
+            // cleaning up
+            delete obj[prop];
+
             if (desc.hasOwnProperty('value')) {
                 // value assignment
                 obj[prop] = desc.value;
@@ -46,6 +49,7 @@
                     obj.__defineSetter__(prop, desc.set);
                 }
             }
+
             return obj;
         },
 

@@ -44,12 +44,29 @@
         o.p3 = 3;
 
         equal(o.p3, 6, "Setter");
+
+        Polyfill.defineProperty(o, 'p4', {value: 'hello'});
+        equal(o.p4, 'hello', "Property starts out as value");
+        equal(typeof o.__lookupGetter__('p4'), 'undefined', "Value property has no getter");
+
+        tmp = 'boo';
+        Polyfill.defineProperty(o, 'p4', {
+            get: function () { return tmp;},
+            set: function (x) { tmp = x;}
+        });
+        equal(typeof o.__lookupGetter__('p4'), 'function', "Property getter");
+        equal(typeof o.__lookupSetter__('p4'), 'function', "Property setter");
+        equal(o.p4, 'boo', "Property value provided by getter");
+
+        Polyfill.defineProperty(o, 'p4', {get: function () { return 'world';}});
+        equal(typeof o.__lookupGetter__('p4'), 'function', "Property getter");
+        equal(typeof o.__lookupSetter__('p4'), 'undefined', "No setter defined");
+        equal(o.p4, 'world', "Property value provided by getter");
     });
 
     test(".create", function () {
         var base = {},
-            child1 = Polyfill.create(base, {test: {value: 'tset'}}),
-            child2 = Polyfill.create(base);
+            child1 = Polyfill.create(base, {test: {value: 'tset'}});
 
         equal(child1.constructor.prototype, base, "Immediate prototype");
         equal(child1.test, 'tset', "Applied property");
