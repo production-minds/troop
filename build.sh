@@ -28,9 +28,9 @@ cat \
 js/license.js \
 js/troop.js \
 js/Polyfill.js \
-js/Properties.js \
-js/Promise.js \
 js/Feature.js \
+js/Promise.js \
+js/Properties.js \
 js/Inheritance.js \
 js/Base.js \
 js/exports.js \
