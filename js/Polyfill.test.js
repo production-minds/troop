@@ -26,9 +26,11 @@
 
     test(".defineProperty", function () {
         var o = {},
+            result,
             tmp;
 
-        Polyfill.defineProperty(o, 'p1', {value: 5});
+        result = Polyfill.defineProperty(o, 'p1', {value: 5});
+        equal(result, o, "Returns host object");
         equal(o.p1, 5, "Value assignment");
 
         Polyfill.defineProperty(o, 'p2', {get: function () {return tmp + 'foo';}});

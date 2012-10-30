@@ -46,6 +46,7 @@
                     obj.__defineSetter__(prop, desc.set);
                 }
             }
+            return obj;
         },
 
         /**
