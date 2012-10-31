@@ -100,6 +100,10 @@
         Object.getOwnPropertyNames = self.getOwnPropertyNames;
     }
 
+    if (typeof Object.keys !== 'function') {
+        Object.keys = self.getOwnPropertyNames;
+    }
+
     if (typeof Object.getOwnPropertyDescriptor !== 'function') {
         Object.getOwnPropertyDescriptor = self.getOwnPropertyDescriptor;
     }
