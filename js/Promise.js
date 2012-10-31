@@ -72,7 +72,7 @@
                     host = self._resolve(tmp);
                     generator = arguments[1];
                 }
-            } else if (typeof arguments[0] === 'object') {
+            } else {
                 // first argument is host object
                 host = arguments[0];
                 propertyName = arguments[1];
