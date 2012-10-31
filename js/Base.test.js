@@ -2,7 +2,7 @@
  * Base class unit tests
  */
 /*global troop, module, test, ok, equal, deepEqual, raises, expect, mock, unMock */
-(function () {
+(function (Feature) {
     module("Base");
 
     test("Instantiation", function () {
@@ -81,7 +81,8 @@
     });
 
     test("Extension", function () {
-        var derived,
+        var hasPropertyAttributes = Feature.hasPropertyAttributes(),
+            derived, keys,
             instance;
 
         function testMethod() {}
@@ -110,23 +111,27 @@
                 init: init
             });
 
-        deepEqual(derived, {
-            yo: "momma",
-            foo: testMethod,
-            init: init
-        }, "Public class members");
+        keys = Object.keys(derived).sort();
+        deepEqual(
+            keys,
+            hasPropertyAttributes ?
+                ['foo', 'init', 'yo'] :
+                ['_hello', 'constructor', 'foo', 'init', 'yo'],
+            "Public class members"
+        );
 
         equal(derived._hello, "world", "Private class member");
 
         instance = derived.create();
+        keys = Object.keys(instance).sort();
 
-        deepEqual(instance, {
-            yo: "momma",
-            foo: testMethod,
-            init: init,
-            holy: "moly",
-            pi: 3.14
-        }, "Public instance members");
+        deepEqual(
+            keys,
+            hasPropertyAttributes ?
+                ['holy', 'pi'] :
+                ['_woo', 'constructor', 'holy', 'pi'],
+            "Public instance members"
+        );
 
         equal(instance._woo, "hoo", "Private instance member");
 
@@ -134,4 +139,4 @@
         equal(derived.getBase(), troop.Base, "Derived extends from troop.Base");
         equal(troop.Base.getBase(), Object.prototype, "Troop.Base extends from Object.prototype");
     });
-}());
+}(troop.Feature));

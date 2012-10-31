@@ -201,7 +201,8 @@
     });
 
     test("Adding traits", function () {
-        var base = {},
+        var hasPropertyAttributes = Feature.hasPropertyAttributes(),
+            base = {},
             trait = Object.create(base),
             destination;
 
@@ -234,9 +235,9 @@
             Object.getOwnPropertyDescriptor(destination, 'foo'),
             {
                 value       : 'bar',
-                writable    : false,
-                enumerable  : false,
-                configurable: false
+                writable    : !hasPropertyAttributes,
+                enumerable  : !hasPropertyAttributes,
+                configurable: !hasPropertyAttributes
             },
             "Property added as trait"
         );
@@ -250,9 +251,9 @@
             Object.getOwnPropertyDescriptor(Object.getPrototypeOf(destination), 'boo'),
             {
                 value       : 'far',
-                writable    : false,
-                enumerable  : false,
-                configurable: false
+                writable    : !hasPropertyAttributes,
+                enumerable  : !hasPropertyAttributes,
+                configurable: !hasPropertyAttributes
             },
             "Trait in testing mode"
         );
@@ -272,7 +273,8 @@
     });
 
     test("Flags not set", function () {
-        var tmp = {},
+        var hasPropertyAttributes = Feature.hasPropertyAttributes(),
+            tmp = {},
             descriptor;
 
         Properties.add.call(tmp, {
@@ -282,9 +284,9 @@
         descriptor = Object.getOwnPropertyDescriptor(tmp, 'test');
 
         equal(typeof descriptor.value, 'function', "Value type");
-        equal(descriptor.writable, false, "Writable");
-        equal(descriptor.enumerable, false, "Enumerable");
-        equal(descriptor.configurable, false, "Configurable");
+        equal(descriptor.writable, !hasPropertyAttributes, "Writable");
+        equal(descriptor.enumerable, !hasPropertyAttributes, "Enumerable");
+        equal(descriptor.configurable, !hasPropertyAttributes, "Configurable");
     });
 
     test("Sloppy", function () {
@@ -310,7 +312,8 @@
     test("Messy", function () {
         troop.messy = true;
 
-        var tmp = {},
+        var hasPropertyAttributes = Feature.hasPropertyAttributes(),
+            tmp = {},
             descriptor;
 
         Properties.add.call(tmp, {
@@ -321,8 +324,8 @@
 
         equal(typeof descriptor.value, 'function', "Value type");
         equal(descriptor.writable, true, "Writable");
-        equal(descriptor.enumerable, false, "Enumerable");
-        equal(descriptor.configurable, false, "Configurable");
+        equal(descriptor.enumerable, !hasPropertyAttributes, "Enumerable");
+        equal(descriptor.configurable, !hasPropertyAttributes, "Configurable");
 
         troop.messy = false;
     });
