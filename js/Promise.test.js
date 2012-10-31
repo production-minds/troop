@@ -10,23 +10,23 @@
     });
 
     test("Scope resolution", function () {
-        window.hello = {world: "test"};
-        equal(Promise._resolve(['hello', 'world']), "test", "Resolving existing object");
+        window.hello = {world: "bar"};
+        equal(Promise._resolve(['hello', 'world']), "bar", "Resolving existing object");
         equal(typeof Promise._resolve(['hi', 'world']), 'undefined', "Resolving non-existing object");
     });
 
     test("Promise argument processing", function () {
         var testFunc = function () {};
 
-        window.test = {
+        window.bar = {
             path: {}
         };
 
         deepEqual(
-            Promise._normalizeArguments('test.path.prop', testFunc),
+            Promise._normalizeArguments('bar.path.prop', testFunc),
             {
-                path        : 'test.path.prop',
-                host        : window.test.path,
+                path        : 'bar.path.prop',
+                host        : window.bar.path,
                 propertyName: 'prop',
                 generator   : testFunc
             },
@@ -34,10 +34,10 @@
         );
 
         deepEqual(
-            Promise._normalizeArguments('test.path', 'prop', testFunc),
+            Promise._normalizeArguments('bar.path', 'prop', testFunc),
             {
-                path        : 'test.path.prop',
-                host        : window.test.path,
+                path        : 'bar.path.prop',
+                host        : window.bar.path,
                 propertyName: 'prop',
                 generator   : testFunc
             },
@@ -45,10 +45,10 @@
         );
 
         deepEqual(
-            Promise._normalizeArguments(window.test.path, 'prop', testFunc),
+            Promise._normalizeArguments(window.bar.path, 'prop', testFunc),
             {
                 path        : undefined,
-                host        : window.test.path,
+                host        : window.bar.path,
                 propertyName: 'prop',
                 generator   : testFunc
             },
@@ -61,50 +61,50 @@
 
         expect(10);
 
-        Promise.promise(ns, 'test', function (object, propertyName, param1, param2) {
+        Promise.promise(ns, 'bar', function (object, propertyName, param1, param2) {
             ok(object === ns, "Object passed to generator");
-            equal(propertyName, 'test', "Property name passed to generator");
+            equal(propertyName, 'bar', "Property name passed to generator");
             equal(param1, 'param1', "Extra parameter passed to generator");
             equal(param2, 'param2', "Extra parameter passed to generator");
             return "foo";
         }, "param1", "param2");
 
-        equal(typeof Object.getOwnPropertyDescriptor(ns, 'test').value, 'undefined', "Value before fulfilling promise");
+        equal(typeof Object.getOwnPropertyDescriptor(ns, 'bar').value, 'undefined', "Value before fulfilling promise");
 
         // first access will fulfill the promise
-        equal(ns.test, "foo", "Accessing for the first time");
-        equal(Object.getOwnPropertyDescriptor(ns, 'test').value, "foo", "Property value after promise is fulfilled");
+        equal(ns.bar, "foo", "Accessing for the first time");
+        equal(Object.getOwnPropertyDescriptor(ns, 'bar').value, "foo", "Property value after promise is fulfilled");
 
         ns = {};
 
-        Promise.promise(ns, 'test', function () {
-            ns.test = 'foo';
+        Promise.promise(ns, 'bar', function () {
+            ns.bar = 'foo';
         });
 
-        equal(typeof Object.getOwnPropertyDescriptor(ns, 'test').value, 'undefined', "Value before fulfilling promise");
-        equal(ns.test, "foo", "Accessing for the first time");
+        equal(typeof Object.getOwnPropertyDescriptor(ns, 'bar').value, 'undefined', "Value before fulfilling promise");
+        equal(ns.bar, "foo", "Accessing for the first time");
 
         // supposed to emit a warning
-        Promise.promise(ns, 'test', "bar");
-        equal(ns.test, "foo", "Property value after second attempt to apply promise");
+        Promise.promise(ns, 'bar', "bar");
+        equal(ns.bar, "foo", "Property value after second attempt to apply promise");
     });
 
     test("Promise with tracking", function () {
-        window.test = {
+        window.bar = {
             path: {}
         };
 
-        equal(Promise.unfulfilled.hasOwnProperty('test.path.prop'), false, "Promise not in registry yet");
+        equal(Promise.unfulfilled.hasOwnProperty('bar.path.prop'), false, "Promise not in registry yet");
 
         function generator() {
             return "foo";
         }
 
-        Promise.promise('test.path.prop', generator);
-        equal(Promise.unfulfilled['test.path.prop'], true, "Promise in registry");
+        Promise.promise('bar.path.prop', generator);
+        equal(Promise.unfulfilled['bar.path.prop'], true, "Promise in registry");
 
-        equal(window.test.path.prop, "foo", "Promise fulfilled");
-        equal(Promise.unfulfilled.hasOwnProperty('test.path.prop'), false, "Promise removed from registry");
+        equal(window.bar.path.prop, "foo", "Promise fulfilled");
+        equal(Promise.unfulfilled.hasOwnProperty('bar.path.prop'), false, "Promise removed from registry");
     });
 }(
     troop.Promise
