@@ -17,18 +17,18 @@
         troop.sloppy = true;
 
         Properties._defineProperty(tmp, 'foo', {
-            value       : "bar",
-            writable    : false,
-            enumerable  : false,
+            value: "bar",
+            writable: false,
+            enumerable: false,
             configurable: false
         });
 
         deepEqual(
             Object.getOwnPropertyDescriptor(tmp, 'foo'),
             {
-                value       : "bar",
-                writable    : true,
-                enumerable  : true,
+                value: "bar",
+                writable: true,
+                enumerable: true,
                 configurable: true
             },
             "Assigned property descriptor (sloppy mode)"
@@ -37,18 +37,18 @@
         troop.sloppy = false;
 
         Properties._defineProperty(tmp, 'foo', {
-            value       : "bar",
-            writable    : false,
-            enumerable  : false,
+            value: "bar",
+            writable: false,
+            enumerable: false,
             configurable: false
         });
 
         deepEqual(
             Object.getOwnPropertyDescriptor(tmp, 'foo'),
             {
-                value       : "bar",
-                writable    : false,
-                enumerable  : false,
+                value: "bar",
+                writable: false,
+                enumerable: false,
                 configurable: false
             },
             "Defined property descriptor (normal mode)"
@@ -109,19 +109,20 @@
             "Getter-setter validates as function"
         );
 
-        var myClass = troop.Base.extend({
-            init: function () {},
-            foo : function () {}
-        });
+        var myClass = troop.Base.extend()
+            .addMethod({
+                init: function () {},
+                foo: function () {}
+            });
 
         equal(
-            Properties._checkType({a: myClass.create(), b: myClass.create()}, myClass),
+            Properties._checkType({a: myClass.extend(), b: myClass.extend()}, myClass),
             true,
             "Object properties meet class restriction"
         );
 
         equal(
-            Properties._checkType({a: 'hello', b: myClass.create()}, myClass),
+            Properties._checkType({a: 'hello', b: myClass.extend()}, myClass),
             false,
             "Object properties fail class restriction"
         );
@@ -207,16 +208,16 @@
             destination;
 
         Object.defineProperty(base, 'boo', {
-            value       : 'far',
-            writable    : false,
-            enumerable  : false,
+            value: 'far',
+            writable: false,
+            enumerable: false,
             configurable: false
         });
 
         Object.defineProperty(trait, 'foo', {
-            value       : 'bar',
-            writable    : false,
-            enumerable  : false,
+            value: 'bar',
+            writable: false,
+            enumerable: false,
             configurable: false
         });
 
@@ -234,9 +235,9 @@
         deepEqual(
             Object.getOwnPropertyDescriptor(destination, 'foo'),
             {
-                value       : 'bar',
-                writable    : !hasPropertyAttributes,
-                enumerable  : !hasPropertyAttributes,
+                value: 'bar',
+                writable: !hasPropertyAttributes,
+                enumerable: !hasPropertyAttributes,
                 configurable: !hasPropertyAttributes
             },
             "Property added as trait"
@@ -250,9 +251,9 @@
         deepEqual(
             Object.getOwnPropertyDescriptor(Object.getPrototypeOf(destination), 'boo'),
             {
-                value       : 'far',
-                writable    : !hasPropertyAttributes,
-                enumerable  : !hasPropertyAttributes,
+                value: 'far',
+                writable: !hasPropertyAttributes,
+                enumerable: !hasPropertyAttributes,
                 configurable: !hasPropertyAttributes
             },
             "Trait in testing mode"
@@ -351,7 +352,7 @@
             tmp,
             {
                 test: testMethod,
-                foo : "foo"
+                foo: "foo"
             },
             "Enumerable properties of class"
         );

@@ -1,55 +1,149 @@
 /**
  * Inheritance unit tests
  */
-/*global troop, module, test, ok, equal, deepEqual, expect */
-(function (Inheritance, Properties) {
+/*global troop, module, test, ok, equal, deepEqual, expect, raises */
+(function (Inheritance, Feature) {
     module("Inheritance");
 
-    test("Class extension", function () {
-        function testFunction() {
-            return 'hello';
-        }
+    test("Instantiation", function () {
+        var instance1, instance2;
 
-        var myClass = Inheritance.extend.call(Object.prototype, {
-            foo: testFunction
-        });
+        expect(5);
 
-        equal(myClass.foo, testFunction, "Method applied to extended object");
-        equal(myClass.hasOwnProperty('foo'), true, "foo is own property");
+        troop.Base.init = function (arg) {
+            this.foo = "bar";
+            equal(arg, 'testArgument', "Class init called");
+        };
+        instance1 = troop.Base.create('testArgument');
+        equal(instance1.foo, "bar", "Instance initialized");
+
+        troop.Base.init = function () {
+            return instance1;
+        };
+        instance2 = troop.Base.create();
+        equal(instance2, instance1, "Instantiation returned a different object");
+
+        troop.Base.init = function () {
+            return 5; // invalid type to return here
+        };
+        raises(function () {
+            instance2 = troop.Base.create();
+        }, "Initializer returned invalid type");
+
+        delete troop.Base.init;
+
+        raises(
+            function () {
+                instance1 = troop.Base.create('testArgument');
+            },
+            "Class doesn't implement .init method"
+        );
     });
 
-    test("Extension while in test mode", function () {
+    test("Custom instance value", function () {
+        expect(3);
+
+        troop.Base.init = function () {
+            return troop.Base; // not immediate extension of class
+        };
+        raises(function () {
+            troop.Base.create();
+        }, "Initializer returned object same as class");
+
+        var result = Object.create(troop.Base);
+        troop.Base.init = function () {
+            return result; // not full immediate extension of class
+        };
+        equal(troop.Base.create(), result, "Initializer returns immediate extension of class");
+
+        result = Object.create(Object.create(troop.Base));
+        troop.Base.init = function () {
+            return result; // not full immediate extension of class
+        };
+        equal(troop.Base.create(), result, "Initializer returned farther extension of class");
+
+        delete troop.Base.init;
+    });
+
+    test("Custom instance value in testing mode", function () {
+        expect(1);
         troop.testing = true;
 
-        var myClass = Inheritance.extend.call(Object.prototype, {
-                method: function () {}
-            }),
-            result;
-
-        equal(typeof myClass.method, 'function', "Method applied to extended object");
-        equal(myClass.hasOwnProperty('method'), false, "Method is not own property");
-
-        result = Properties.addMethod.call(myClass, {
-            foo: function () {}
-        });
-
-        equal(result, myClass, "addMethod returns input object");
-        equal(typeof myClass.foo, 'function', "Method applied to extended object");
-        equal(myClass.hasOwnProperty('foo'), false, "Method is not own property");
+        troop.Base.init = function () {
+            return troop.Base; // not immediate extension of class
+        };
+        raises(function () {
+            troop.Base.create();
+        }, "Initializer returned object same as class");
 
         troop.testing = false;
+        delete troop.Base.init;
+    });
+
+    test("Extension", function () {
+        var hasPropertyAttributes = Feature.hasPropertyAttributes(),
+            derived, keys,
+            instance;
+
+        function testMethod() {}
+
+        /**
+         * Initializer for derived class
+         */
+        function init() {
+            this
+                .addPrivate({
+                    _woo: "hoo"
+                }).addPublic({
+                    holy: "moly"
+                }).addConstant({
+                    pi: 3.14
+                });
+        }
+
+        derived = troop.Base.extend()
+            .addPrivate({
+                _hello: "world"
+            }).addPublic({
+                yo: "momma"
+            }).addMethod({
+                foo: testMethod,
+                init: init
+            });
+
+        keys = Object.keys(derived).sort();
+        deepEqual(
+            keys,
+            hasPropertyAttributes ?
+                ['foo', 'init', 'yo'] :
+                ['_hello', 'constructor', 'foo', 'init', 'yo'],
+            "Public class members"
+        );
+
+        equal(derived._hello, "world", "Private class member");
+
+        instance = derived.create();
+        keys = Object.keys(instance).sort();
+
+        deepEqual(
+            keys,
+            hasPropertyAttributes ?
+                ['holy', 'pi'] :
+                ['_woo', 'constructor', 'holy', 'pi'],
+            "Public instance members"
+        );
+
+        equal(instance._woo, "hoo", "Private instance member");
+
+        equal(instance.getBase(), derived, "Instance extends from derived");
+        equal(derived.getBase(), troop.Base, "Derived extends from troop.Base");
+        equal(troop.Base.getBase(), Object.prototype, "Troop.Base extends from Object.prototype");
     });
 
     test("Instantiation", function () {
-        var myClass = Inheritance.instantiate.call(Object.prototype, {
-            bar: "bar"
-        });
+        var myInstance = Inheritance._instantiate.call(Object.prototype);
 
-        equal(myClass.bar, "bar", "Property applied to extended object");
-        equal(myClass.hasOwnProperty('bar'), true, "bar is own property");
-
-        myClass.bar = ''; // attempting to overwrite method
-        equal(myClass.bar, "", "Property is writable");
+        ok(Object.getPrototypeOf(myInstance) === Object.prototype, "Instantiated Object prototype");
     });
 
     test("Base validation", function () {
@@ -58,5 +152,5 @@
     });
 }(
     troop.Inheritance,
-    troop.Properties
+    troop.Feature
 ));

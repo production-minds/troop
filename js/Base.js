@@ -5,71 +5,32 @@
  * All base methods are non-enumerable.
  */
 /*global troop */
-(function (Inheritance, Properties) {
-    var self = troop.Base = Object.create(Object.prototype);
-
-    // adding instantiation mechanism
-    Properties.add.call(self, {
+(function () {
+    return troop.Base = Object.create(Object.prototype, {
         /**
-         * Creates a class instance.
-         * The derived class must implement an .init method
-         * which decorates the instance with necessary properties.
-         * @static
-         * @this {troop.Base} Class.
-         * @return {troop.Base} Instance.
-         * @example
-         * var instance = someClass.create(someArgs);
+         * Extends base class with methods.
+         * Extended class will have methods as read-only own properties.
+         * @function
+         * @this {troop.Base} Troop class.
+         * @return {object}
          */
-        create: function () {
-            // instantiating class
-            var self = Inheritance.instantiate.call(this),
-                result;
+        extend: {
+            writable: false,
+            enumerable: true,
+            configurable: false,
+            value: function () {
+                var result = Object.create(this);
 
-            // initializing instance properties
-            if (typeof this.init === 'function') {
-                // running instance initializer
-                result = this.init.apply(self, arguments);
-
-                if (typeof result === 'undefined') {
-                    // initializer returned nothing, returning new instance
-                    return self;
-                } else if (result !== this && result instanceof this.constructor) {
-                    // initializer returned a (different) instance of this class
-                    return result;
-                } else {
-                    // initializer returned something else
-                    throw new TypeError("Unrecognizable value returned by .init.");
+                /**
+                 * Extending once more with no own properties
+                 * so that methods may be mocked on a static level.
+                 */
+                if (troop.testing === true) {
+                    result = Object.create(result);
                 }
-            } else {
-                throw new Error("Class implements no .init method.");
+
+                return result;
             }
         }
     });
-
-    // adding property definition features
-    Properties.add.call(self, {
-        addConstant: Properties.addConstant,
-        addMethod: Properties.addMethod,
-        addPrivate: Properties.addPrivate,
-        addPrivateConstant: Properties.addPrivateConstant,
-        addPrivateMethod: Properties.addPrivateMethod,
-        addPublic: Properties.addPublic,
-        addPublicConstant: Properties.addConstant,
-        addPublicMethod: Properties.addMethod,
-        addTrait: Properties.addTrait,
-        elevateMethod: Properties.elevateMethod,
-        addMock: Properties.addMock,
-        removeMocks: Properties.removeMocks,
-        getBase: Properties.getBase,
-        isA: Inheritance.isA,
-        instanceOf: Inheritance.isA
-    }, false, false, false);
-
-    // adding inheritance features
-    Properties.add.call(self, {
-        extend: Inheritance.extend
-    }, false, false, false);
-}(
-    troop.Inheritance,
-    troop.Properties
-));
+}());

@@ -44,8 +44,8 @@
          * @type {object}
          */
         _accessorMethods: {
-            'get'    : true,
-            'set'    : true,
+            'get': true,
+            'set': true,
             'get,set': true,
             'set,get': true
         },
@@ -132,9 +132,9 @@
          */
         _addValue: function (propertyName, value, isWritable, isEnumerable, isConfigurable) {
             self._defineProperty(this, propertyName, {
-                value       : value,
-                writable    : isWritable || troop.messy,
-                enumerable  : isEnumerable,
+                value: value,
+                writable: isWritable || troop.messy,
+                enumerable: isEnumerable,
                 configurable: isConfigurable
             });
         },
@@ -151,9 +151,9 @@
          */
         _addAccessor: function (propertyName, getter, setter, isWritable, isEnumerable, isConfigurable) {
             self._defineProperty(this, propertyName, {
-                get         : getter,
-                set         : setter,
-                enumerable  : isEnumerable,
+                get: getter,
+                set: setter,
+                enumerable: isEnumerable,
                 configurable: isConfigurable
             });
         },
@@ -404,6 +404,22 @@
             return this;
         }
     };
+
+    self.addMethod.call(troop.Base, {
+        addConstant: self.addConstant,
+        addMethod: self.addMethod,
+        addPrivate: self.addPrivate,
+        addPrivateConstant: self.addPrivateConstant,
+        addPrivateMethod: self.addPrivateMethod,
+        addPublic: self.addPublic,
+        addPublicConstant: self.addConstant,
+        addPublicMethod: self.addMethod,
+        addTrait: self.addTrait,
+        elevateMethod: self.elevateMethod,
+        addMock: self.addMock,
+        removeMocks: self.removeMocks,
+        getBase: self.getBase
+    });
 
     self.addPublic.call(troop, {
         /**
