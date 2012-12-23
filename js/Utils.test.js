@@ -1,3 +1,4 @@
+/*global troop, module, test, expect, ok, equal, notEqual, deepEqual, raises */
 (function (Utils) {
     module("Utils");
 

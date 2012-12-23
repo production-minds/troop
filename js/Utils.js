@@ -3,6 +3,7 @@
  *
  * Static class.
  */
+/*globals troop */
 (function () {
     var self = troop.Utils = troop.Base.extend()
         .addConstant({
