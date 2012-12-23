@@ -5,57 +5,6 @@
 (function (Promise) {
     module("Promise");
 
-    test("Scope", function () {
-        equal(Promise.global, window, "Global scope in the browser");
-    });
-
-    test("Scope resolution", function () {
-        window.hello = {world: "bar"};
-        equal(Promise._resolve(['hello', 'world']), "bar", "Resolving existing object");
-        equal(typeof Promise._resolve(['hi', 'world']), 'undefined', "Resolving non-existing object");
-    });
-
-    test("Promise argument processing", function () {
-        var testFunc = function () {};
-
-        window.bar = {
-            path: {}
-        };
-
-        deepEqual(
-            Promise._normalizeArguments('bar.path.prop', testFunc),
-            {
-                path        : 'bar.path.prop',
-                host        : window.bar.path,
-                propertyName: 'prop',
-                generator   : testFunc
-            },
-            "Promise args with full path"
-        );
-
-        deepEqual(
-            Promise._normalizeArguments('bar.path', 'prop', testFunc),
-            {
-                path        : 'bar.path.prop',
-                host        : window.bar.path,
-                propertyName: 'prop',
-                generator   : testFunc
-            },
-            "Promise args with host path & property name"
-        );
-
-        deepEqual(
-            Promise._normalizeArguments(window.bar.path, 'prop', testFunc),
-            {
-                path        : undefined,
-                host        : window.bar.path,
-                propertyName: 'prop',
-                generator   : testFunc
-            },
-            "Promise args with host object & property name"
-        );
-    });
-
     test("Promise", function () {
         var ns = {};
 

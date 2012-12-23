@@ -5,89 +5,16 @@
  * A promise means that the property will be evaluated upon first access.
  */
 /*global troop, console */
-(function () {
+(function (Utils) {
     var self = troop.Promise = troop.Base.extend()
         .addConstant({
             //////////////////////////////
             // Constants
 
             /**
-             * Shortcut to global scope.
-             * `window` in the browser, `global` in Node.js
-             * @type {window|global}
-             */
-            global: this,
-
-            /**
              * Registry of unfulfilled promises.
              */
             unfulfilled: {}
-        })
-        .addPrivateMethod({
-            //////////////////////////////
-            // Utilities
-
-            /**
-             * Resolves a path on the global scope.
-             * It's basically an oversimplified flock.get.
-             * @param path {string[]}
-             * @private
-             * @static
-             */
-            _resolve: function (path) {
-                var result = self.global;
-                while (path.length) {
-                    result = result[path.shift()];
-                    if (typeof result === 'undefined') {
-                        break;
-                    }
-                }
-                return result;
-            },
-
-            /**
-             * Normalizes promise arguments, so that the output is the same
-             * for all possible combinations.
-             * @return {Object} Normalized argument list.
-             * @private
-             * @static
-             */
-            _normalizeArguments: function () {
-                var path,
-                    host, tmp,
-                    propertyName,
-                    generator;
-
-                if (typeof arguments[0] === 'string') {
-                    // first argument is path to either the host object or property
-                    if (typeof arguments[1] === 'string') {
-                        // first arg path to host, second name of property
-                        path = arguments[0] + '.' + arguments[1];
-                        host = self._resolve(arguments[0].split('.'));
-                        propertyName = arguments[1];
-                        generator = arguments[2];
-                    } else {
-                        // first arg full path
-                        path = arguments[0];
-                        tmp = path.split('.');
-                        propertyName = tmp.pop();
-                        host = self._resolve(tmp);
-                        generator = arguments[1];
-                    }
-                } else if (typeof arguments[0] === 'object') {
-                    // first argument is host object
-                    host = arguments[0];
-                    propertyName = arguments[1];
-                    generator = arguments[2];
-                }
-
-                return {
-                    path: path,
-                    host: host,
-                    propertyName: propertyName,
-                    generator: generator
-                };
-            }
         })
         .addMethod({
             //////////////////////////////
@@ -100,18 +27,18 @@
              * @param generator {function} Generates (and returns) property value.
              */
             promise: function (host, propertyName, generator) {
-                var args = self._normalizeArguments.apply(this, arguments),
-                    path = args.path,
+                var hostInfo = Utils.extractHostInfo.apply(this, arguments),
+                    fullPath = hostInfo.fullPath,
                     generatorArguments;
 
                 // applying normalized arguments
-                host = args.host;
-                propertyName = args.propertyName;
-                generator = args.generator;
+                host = hostInfo.host;
+                propertyName = hostInfo.propertyName;
+                generator = hostInfo.arguments[0];
 
-                if (path) {
+                if (fullPath) {
                     // adding promise to registry
-                    self.unfulfilled[path] = true;
+                    self.unfulfilled[fullPath] = true;
                 }
 
                 // checking whether property is already defined
@@ -143,9 +70,9 @@
                             value = host[propertyName];
                         }
 
-                        if (path) {
+                        if (fullPath) {
                             // removing promise form registry
-                            delete self.unfulfilled[path];
+                            delete self.unfulfilled[fullPath];
                         }
 
                         return value;
@@ -169,4 +96,4 @@
 
     troop.unfulfilled = self.unfulfilled;
     troop.promise = self.promise;
-}());
+}(troop.Utils));
