@@ -21,4 +21,19 @@
 
         troop.testing = false;
     });
+
+    test("Base", function () {
+        var testing = troop.testing,
+            extended;
+
+        troop.testing = false;
+        extended = troop.Base.extend();
+        equal(Base.getBase.call(extended), troop.Base, "Getting base class in live mode");
+
+        troop.testing = true;
+        extended = troop.Base.extend();
+        equal(Base.getBase.call(extended), troop.Base, "Getting base class in testing mode");
+
+        troop.testing = testing;
+    });
 }(troop.Base));

@@ -4,7 +4,7 @@
  * Adding properties and methods to a class or instance.
  */
 /*global troop, console */
-(function () {
+(function (Base) {
     var self = troop.Properties = {
         //////////////////////////////
         // Utilities
@@ -203,28 +203,6 @@
             return this;
         },
 
-        /**
-         * Determines target of property addition.
-         * In testing mode, each class has two prototype levels and
-         * methods should go to the lower one, so they may be covered on
-         * the other.
-         */
-        getTarget: function () {
-            return troop.testing === true ?
-                Object.getPrototypeOf(this) :
-                this;
-        },
-
-        /**
-         * Retrieves the immediate base class of a given child class.
-         * @return {troop.Base}
-         */
-        getBase: function () {
-            return troop.testing === true ?
-                Object.getPrototypeOf(Object.getPrototypeOf(this)) :
-                Object.getPrototypeOf(this);
-        },
-
         //////////////////////////////
         // Class-level
 
@@ -235,7 +213,7 @@
          */
         addMethod: function (methods) {
             if (self._checkType(methods, 'function')) {
-                self.add.call(self.getTarget.call(this), methods, false, true, false);
+                self.add.call(Base.getTarget.call(this), methods, false, true, false);
             }
             return this;
         },
@@ -249,7 +227,7 @@
             if (self._checkType(methods, 'function') &&
                 self._checkPrefix(methods, troop.privatePrefix)
                 ) {
-                self.add.call(self.getTarget.call(this), methods, false, false, false);
+                self.add.call(Base.getTarget.call(this), methods, false, false, false);
             }
             return this;
         },
@@ -268,10 +246,10 @@
                 hostBase;
 
             if (Object.prototype.isPrototypeOf(trait)) {
-                traitBase = self.getBase.call(trait);
+                traitBase = Base.getBase.call(trait);
                 result = result || traitBase === Object.prototype;
                 if (Object.prototype.isPrototypeOf(host)) {
-                    hostBase = self.getBase.call(host);
+                    hostBase = Base.getBase.call(host);
                     result = result || traitBase.isPrototypeOf(hostBase) || traitBase === hostBase;
                 }
             }
@@ -287,8 +265,8 @@
          */
         addTrait: function (trait) {
             // obtaining all property names (including non-enumerable)
-            var traitTarget = self.getTarget.call(trait),
-                hostTarget = self.getTarget.call(this),
+            var traitTarget = Base.getTarget.call(trait),
+                hostTarget = Base.getTarget.call(this),
                 propertyNames,
                 i, propertyName;
 
@@ -362,7 +340,7 @@
          */
         elevateMethod: function (methodName) {
             var that = this, // instance or child class
-                base = self.getBase.call(this), // class or base class
+                base = Base.getBase.call(this), // class or base class
                 methods;
 
             if (typeof base[methodName] === 'function') {
@@ -417,8 +395,7 @@
         addTrait: self.addTrait,
         elevateMethod: self.elevateMethod,
         addMock: self.addMock,
-        removeMocks: self.removeMocks,
-        getBase: self.getBase
+        removeMocks: self.removeMocks
     });
 
     self.addPublic.call(troop, {
@@ -439,4 +416,4 @@
          */
         messy: false
     });
-}());
+}(troop.Base));

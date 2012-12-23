@@ -15,10 +15,10 @@
          * @return {object}
          */
         extend: {
-            writable: false,
-            enumerable: true,
+            writable    : false,
+            enumerable  : true,
             configurable: false,
-            value: function () {
+            value       : function () {
                 var result = Object.create(this);
 
                 /**
@@ -31,6 +31,41 @@
 
                 return result;
             }
-        }
+        },
+
+        /**
+         * Determines target of property addition.
+         * In testing mode, each class has two prototype levels and
+         * methods should go to the lower one, so they may be covered on
+         * the other.
+         * @function
+         * @return {troop.Base}
+         */
+        getTarget: {
+            writable    : false,
+            enumerable  : true,
+            configurable: false,
+            value       : function () {
+                return troop.testing === true ?
+                    Object.getPrototypeOf(this) :
+                    this;
+            }
+        },
+
+        /**
+         * Retrieves the immediate base class of a given child class.
+         * @function
+         * @return {troop.Base}
+         */
+        getBase: {
+            writable    : false,
+            enumerable  : true,
+            configurable: false,
+            value       : function () {
+                return troop.testing === true ?
+                    Object.getPrototypeOf(Object.getPrototypeOf(this)) :
+                    Object.getPrototypeOf(this);
+            }
+        },
     });
 }());

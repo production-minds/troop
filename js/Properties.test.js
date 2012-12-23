@@ -173,21 +173,6 @@
         equal(descriptor.configurable, true, "Configurable");
     });
 
-    test("Base", function () {
-        var testing = troop.testing,
-            extended;
-
-        troop.testing = false;
-        extended = troop.Base.extend();
-        equal(Properties.getBase.call(extended), troop.Base, "Getting base class in live mode");
-
-        troop.testing = true;
-        extended = troop.Base.extend();
-        equal(Properties.getBase.call(extended), troop.Base, "Getting base class in testing mode");
-
-        troop.testing = testing;
-    });
-
     test("Trait validation", function () {
         equal(Properties._isTrait({}), true, "Simple object validates as trait");
 
