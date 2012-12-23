@@ -31,7 +31,7 @@ js/Polyfill.js \
 js/Feature.js \
 js/Promise.js \
 js/Properties.js \
-js/Inheritance.js \
+js/Instantiation.js \
 js/Base.js \
 js/exports.js \
 > "build/$NAME.js"

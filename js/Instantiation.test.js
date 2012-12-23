@@ -3,7 +3,7 @@
  */
 /*global troop, module, test, ok, equal, deepEqual, expect, raises */
 (function (Inheritance, Feature) {
-    module("Inheritance");
+    module("Instantiation");
 
     test("Instantiation", function () {
         var instance1, instance2;
@@ -151,6 +151,6 @@
         ok(Inheritance.isA.call([], Array.prototype), "[] is an Array.prototype");
     });
 }(
-    troop.Inheritance,
+    troop.Instantiation,
     troop.Feature
 ));

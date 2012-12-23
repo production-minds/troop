@@ -3,7 +3,7 @@
  */
 /*global troop */
 (function () {
-    var self = troop.Inheritance = troop.Base.extend()
+    var self = troop.Instantiation = troop.Base.extend()
         .addPrivateMethod({
             /**
              * Creates an instance of a class, ie. creates a new object and adds writable
