@@ -63,7 +63,7 @@
              * var instance = someClass.create(someArgs);
              */
             create: function () {
-                var surrogates, i, surrogate, delegate,
+                var surrogates, i, surrogateInfo, surrogate,
                     that,
                     result;
 
@@ -71,14 +71,14 @@
                 if (this.hasOwnProperty('surrogates')) {
                     surrogates = this.surrogates;
                     for (i = 0; i < surrogates.length; i++) {
-                        surrogate = surrogates[i];
-                        if (surrogate.filter.apply(this, arguments)) {
+                        surrogateInfo = surrogates[i];
+                        if (surrogateInfo.filter.apply(this, arguments)) {
                             // surrogate fits arguments
-                            delegate = surrogate.namespace[surrogate.className];
-                            if (this !== delegate) {
+                            surrogate = surrogateInfo.namespace[surrogateInfo.className];
+                            if (this !== surrogate) {
                                 // current class is not surrogate of base class(es)
                                 // instantiating surrogate class
-                                return delegate.create.apply(delegate, arguments);
+                                return surrogate.create.apply(surrogate, arguments);
                             }
                         }
                     }

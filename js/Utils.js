@@ -77,7 +77,7 @@
                 }
 
                 return {
-                    fullPath        : fullPath,
+                    fullPath    : fullPath,
                     host        : host,
                     propertyName: propertyName,
                     arguments   : rest
