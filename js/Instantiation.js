@@ -2,7 +2,7 @@
  * Inheritance & instantiation tools.
  */
 /*global troop */
-(function () {
+(function (Utils) {
     var self = troop.Instantiation = troop.Base.extend()
         .addPrivateMethod({
             /**
@@ -27,6 +27,32 @@
         })
         .addMethod({
             /**
+             * Adds surrogate class to this class.
+             * When surrogate classes are present, instantiation is delegated
+             * to the first surrogate satisfying the filter argument.
+             * @this {troop.Base} Class object.
+             */
+            addSurrogate: function (/* namespace, className, filter */) {
+                if (!this.hasOwnProperty('surrogates')) {
+                    this.addConstant({surrogates: []});
+                }
+
+                var hostInfo = Utils.extractHostInfo.apply(this, arguments),
+                    namespace = hostInfo.host, // namespace for surrogate class
+                    className = hostInfo.propertyName, // name of surrogate class
+                    args = hostInfo.arguments, // rest of arguments
+                    filter = args[0]; // filter function
+
+                this.surrogates.push({
+                    namespace: namespace,
+                    className: className,
+                    filter   : filter
+                });
+
+                return this;
+            },
+
+            /**
              * Creates a class instance.
              * The derived class must implement an .init method
              * which decorates the instance with necessary properties.
@@ -37,9 +63,29 @@
              * var instance = someClass.create(someArgs);
              */
             create: function () {
-                // instantiating class
-                var that = self._instantiate.call(this),
+                var surrogates, i, surrogate, delegate,
+                    that,
                     result;
+
+                // checking surrogates
+                if (this.hasOwnProperty('surrogates')) {
+                    surrogates = this.surrogates;
+                    for (i = 0; i < surrogates.length; i++) {
+                        surrogate = surrogates[i];
+                        if (surrogate.filter.apply(this, arguments)) {
+                            // surrogate fits arguments
+                            delegate = surrogate.namespace[surrogate.className];
+                            if (this !== delegate) {
+                                // current class is not surrogate of base class(es)
+                                // instantiating surrogate class
+                                return delegate.create.apply(delegate, arguments);
+                            }
+                        }
+                    }
+                }
+
+                // instantiating class
+                that = self._instantiate.call(this);
 
                 // initializing instance properties
                 if (typeof this.init === 'function') {
@@ -72,10 +118,11 @@
 
     // delegating public methods to troop.Base
     troop.Base.addMethod({
-        create: self.create,
-        isA: self.isA,
-        instanceOf: self.isA
+        addSurrogate: self.addSurrogate,
+        create      : self.create,
+        isA         : self.isA,
+        instanceOf  : self.isA
     });
 
     return self;
-}());
+}(troop.Utils));

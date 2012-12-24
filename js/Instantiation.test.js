@@ -40,6 +40,45 @@
         );
     });
 
+    test("Surrogates", function () {
+        var base = troop.Base.extend()
+                .addMethod({
+                    init: function () {}
+                }),
+            child = base.extend()
+                .addMethod({
+                    init: function (test) {
+                        equal(test, 'test', "Argument passed to filter");
+                    }
+                }),
+            ns = {
+                base : base,
+                child: child
+            };
+
+        expect(6);
+
+        ok(!base.hasOwnProperty('surrogates'), "Class doesn't have surrogates");
+
+        base.addSurrogate(ns, 'child', function (test) {
+            ok("Filter triggered");
+            if (test === 'test') {
+                return true;
+            }
+        });
+
+        equal(base.surrogates.length, 1, "New number of surrogates");
+
+        // triggers filter & init
+        base.create('test');
+
+        // triggers filter only
+        base.create('blah');
+
+        // triggers init only
+        child.create('test');
+    });
+
     test("Custom instance value", function () {
         expect(3);
 
@@ -107,7 +146,7 @@
             }).addPublic({
                 yo: "momma"
             }).addMethod({
-                foo: testMethod,
+                foo : testMethod,
                 init: init
             });
 
