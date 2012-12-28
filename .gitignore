@@ -2,3 +2,4 @@
 /lib/
 /build/
 /build.sh
+/build*.sh
