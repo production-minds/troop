@@ -22,7 +22,7 @@
 
                 for (methodName in expr) {
                     if (expr.hasOwnProperty(methodName)) {
-                        result = result && this.isFunction(expr[methodName]);
+                        result = result && this.isFunctionOptional(expr[methodName]);
                     }
                 }
 
