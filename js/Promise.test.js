@@ -8,7 +8,7 @@
     test("Promise", function () {
         var ns = {};
 
-        expect(10);
+        expect(11);
 
         Promise.promise(ns, 'bar', function (object, propertyName, param1, param2) {
             ok(object === ns, "Object passed to generator");
@@ -33,8 +33,9 @@
         equal(typeof Object.getOwnPropertyDescriptor(ns, 'bar').value, 'undefined', "Value before fulfilling promise");
         equal(ns.bar, "foo", "Accessing for the first time");
 
-        // supposed to emit a warning
-        Promise.promise(ns, 'bar', "bar");
+        raises(function () {
+            Promise.promise(ns, 'bar', "bar");
+        }, "Invalid generator function passed");
         equal(ns.bar, "foo", "Property value after second attempt to apply promise");
     });
 

@@ -1,7 +1,7 @@
 /**
  * Base class unit tests
  */
-/*global troop, module, test, ok, equal, notEqual, deepEqual, raises, expect, mock, unMock */
+/*global dessert, troop, module, test, ok, equal, notEqual, deepEqual, raises, expect, mock, unMock */
 (function (Base) {
     module("Base");
 
@@ -35,5 +35,22 @@
         equal(Base.getBase.call(extended), troop.Base, "Getting base class in testing mode");
 
         troop.testing = testing;
+    });
+
+    test("Custom assertion", function () {
+        var extended = Base.extend();
+
+        equal(dessert.isClass(extended), dessert, "Troop class passes assertion");
+
+        raises(function () {
+            dessert.isClass({});
+        }, "Ordinary object fails assertion");
+
+        equal(dessert.isClassOptional(extended), dessert, "Troop class passes assertion (optional)");
+        equal(dessert.isClassOptional(), dessert, "Undefined passes assertion (optional)");
+
+        raises(function () {
+            dessert.isClassOptional({});
+        }, "Ordinary object fails assertion (optional)");
     });
 }(troop.Base));

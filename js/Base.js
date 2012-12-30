@@ -4,9 +4,9 @@
  * Supports extension, instantiation, property addition.
  * All base methods are non-enumerable.
  */
-/*global troop */
+/*global dessert, troop */
 (function () {
-    return troop.Base = Object.create(Object.prototype, {
+    var self = troop.Base = Object.create(Object.prototype, {
         /**
          * Extends base class with methods.
          * Extended class will have methods as read-only own properties.
@@ -68,4 +68,20 @@
             }
         },
     });
+
+    // custom assertion for troop classes
+    dessert.addTypes({
+        isClass: function (expr) {
+            return expr instanceof Object && self.isPrototypeOf(expr);
+        },
+
+        isClassOptional: function (expr) {
+            return (
+                typeof expr === 'undefined' ||
+                expr instanceof Object && self.isPrototypeOf(expr)
+                );
+        }
+    });
+
+    return self;
 }());

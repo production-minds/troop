@@ -4,7 +4,7 @@
  * API to add properties to objects as promises.
  * A promise means that the property will be evaluated upon first access.
  */
-/*global troop, console */
+/*global dessert, troop, console */
 (function (Utils) {
     var self = troop.Promise = troop.Base.extend()
         .addConstant({
@@ -35,6 +35,8 @@
                 host = hostInfo.host;
                 propertyName = hostInfo.propertyName;
                 generator = hostInfo.arguments[0];
+
+                dessert.isFunction(generator);
 
                 if (fullPath) {
                     // adding promise to registry

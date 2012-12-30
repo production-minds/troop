@@ -3,7 +3,7 @@
  *
  * Static class.
  */
-/*globals troop */
+/*globals dessert, troop */
 (function () {
     var self = troop.Utils = troop.Base.extend()
         .addConstant({
@@ -75,6 +75,11 @@
                 } else {
                     rest = arguments;
                 }
+
+                dessert
+                    .isStringOptional(fullPath)
+                    .isObject(host)
+                    .isString(propertyName);
 
                 return {
                     fullPath    : fullPath,
