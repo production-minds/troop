@@ -98,19 +98,7 @@
 
     self = troop.Properties = {
         //////////////////////////////
-        // Utilities
-
-        /**
-         * Emits a warning message.
-         * @param message {string}
-         * @private
-         * @static
-         */
-        _warn: function (message) {
-            if (typeof console.warn === 'function') {
-                console.warn(message);
-            }
-        },
+        // Core
 
         /**
          * Assigns a property to the object using an ES5 property descriptor.
@@ -140,6 +128,12 @@
          * @private
          */
         _addValue: function (propertyName, value, isWritable, isEnumerable, isConfigurable) {
+            dessert
+                .isString((propertyName))
+                .isBooleanOptional(isWritable)
+                .isBooleanOptional(isEnumerable)
+                .isBooleanOptional(isConfigurable);
+
             self._defineProperty(this, propertyName, {
                 value       : value,
                 writable    : isWritable || troop.messy,
@@ -153,12 +147,18 @@
          * @param propertyName {string} Property name.
          * @param [getter] {function} Property getter.
          * @param [setter] {function} Property setter.
-         * @param [isWritable] {boolean}
          * @param [isEnumerable] {boolean}
          * @param [isConfigurable] {boolean}
          * @private
          */
-        _addAccessor: function (propertyName, getter, setter, isWritable, isEnumerable, isConfigurable) {
+        _addAccessor: function (propertyName, getter, setter, isEnumerable, isConfigurable) {
+            dessert
+                .isString((propertyName))
+                .isFunctionOptional(getter)
+                .isFunctionOptional(setter)
+                .isBooleanOptional(isEnumerable)
+                .isBooleanOptional(isConfigurable);
+
             self._defineProperty(this, propertyName, {
                 get         : getter,
                 set         : setter,
@@ -184,28 +184,28 @@
                 properties = properties.call(this);
             }
 
-            if (typeof properties === 'object') {
-                for (propertyName in properties) {
-                    if (properties.hasOwnProperty(propertyName)) {
-                        property = properties[propertyName];
+            dessert.isObject(properties);
 
-                        if (dessert.isAccessor(property, true)) {
-                            self._addAccessor.call(this,
-                                propertyName,
-                                property.get,
-                                property.set,
-                                isEnumerable,
-                                isConfigurable
-                            );
-                        } else {
-                            self._addValue.call(this,
-                                propertyName,
-                                property,
-                                isWritable,
-                                isEnumerable,
-                                isConfigurable
-                            );
-                        }
+            for (propertyName in properties) {
+                if (properties.hasOwnProperty(propertyName)) {
+                    property = properties[propertyName];
+
+                    if (dessert.isAccessor(property, true)) {
+                        self._addAccessor.call(this,
+                            propertyName,
+                            property.get,
+                            property.set,
+                            isEnumerable,
+                            isConfigurable
+                        );
+                    } else {
+                        self._addValue.call(this,
+                            propertyName,
+                            property,
+                            isWritable,
+                            isEnumerable,
+                            isConfigurable
+                        );
                     }
                 }
             }
@@ -327,6 +327,8 @@
          * @param methodName {string} Name of method to elevate.
          */
         elevateMethod: function (methodName) {
+            dessert.isString(methodName);
+
             var that = this, // instance or child class
                 base = Base.getBase.call(this), // class or base class
                 methods;
@@ -341,9 +343,6 @@
 
             return this;
         },
-
-        //////////////////////////////
-        // Class and instance-level
 
         /**
          * Adds public mock methods (read-only, but removable) members to instance or class.
