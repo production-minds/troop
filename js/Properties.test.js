@@ -1,7 +1,7 @@
 /**
  * Property management unit tests
  */
-/*global troop, module, test, expect, ok, equal, notEqual, deepEqual, raises */
+/*global dessert, troop, module, test, expect, ok, equal, notEqual, deepEqual, raises */
 (function (Properties, Feature) {
     module("Properties");
 
@@ -17,18 +17,18 @@
         troop.sloppy = true;
 
         Properties._defineProperty(tmp, 'foo', {
-            value: "bar",
-            writable: false,
-            enumerable: false,
+            value       : "bar",
+            writable    : false,
+            enumerable  : false,
             configurable: false
         });
 
         deepEqual(
             Object.getOwnPropertyDescriptor(tmp, 'foo'),
             {
-                value: "bar",
-                writable: true,
-                enumerable: true,
+                value       : "bar",
+                writable    : true,
+                enumerable  : true,
                 configurable: true
             },
             "Assigned property descriptor (sloppy mode)"
@@ -37,18 +37,18 @@
         troop.sloppy = false;
 
         Properties._defineProperty(tmp, 'foo', {
-            value: "bar",
-            writable: false,
-            enumerable: false,
+            value       : "bar",
+            writable    : false,
+            enumerable  : false,
             configurable: false
         });
 
         deepEqual(
             Object.getOwnPropertyDescriptor(tmp, 'foo'),
             {
-                value: "bar",
-                writable: false,
-                enumerable: false,
+                value       : "bar",
+                writable    : false,
+                enumerable  : false,
                 configurable: false
             },
             "Defined property descriptor (normal mode)"
@@ -56,15 +56,13 @@
     });
 
     test("Prefix restriction", function () {
-        equal(
-            Properties._checkPrefix({foo: 'hello', bar: 'world'}, 'f'),
-            false,
-            "Object properties fail prefix restriction"
-        );
+        raises(function () {
+            dessert.isAllPrefixed({foo: 'hello', bar: 'world'}, 'f');
+        }, "Object properties fail prefix restriction");
 
         equal(
-            Properties._checkPrefix({foo: 'hello', far: 'world'}, 'f'),
-            true,
+            dessert.isAllPrefixed({foo: 'hello', far: 'world'}, 'f'),
+            dessert,
             "Object properties meet prefix restriction"
         );
     });
@@ -73,59 +71,32 @@
         var derived = Object.create({});
         derived.get = function () {};
 
-        equal(Properties._isAccessor(null), false, "Null does not validate");
-        equal(Properties._isAccessor('a'), false, "Non-object does not validate");
-        equal(Properties._isAccessor({}), false, "Empty object does not validate");
-        equal(Properties._isAccessor({get: 'a'}), false, "Non-function 'get' does not validate");
-        equal(Properties._isAccessor({get: function () {}}), true, "Getter only validates");
-        equal(Properties._isAccessor({set: function () {}}), true, "Setter only validates");
-        equal(Properties._isAccessor({get: function () {}, set: function () {}}), true, "Full accessor validates");
-        equal(Properties._isAccessor({get: function () {}, foo: 'bar'}), false, "Dirty getter fails");
-        equal(Properties._isAccessor(derived), false, "Derived object fails (even w/ valid getter-setter)");
-    });
+        raises(function () {
+            dessert.isAccessor(null);
+        }, "Null does not validate");
 
-    test("Type restriction", function () {
-        equal(
-            Properties._checkType({a: undefined, b: undefined}, 'string'),
-            true,
-            "Undefined always meets type restriction"
-        );
+        equal(dessert.isAccessor(null, true), false, "Null does not validate (soft mode)");
 
-        equal(
-            Properties._checkType({a: 'a', b: 'b'}, 'string'),
-            true,
-            "Object properties meet type restriction"
-        );
+        raises(function () {
+            dessert.isAccessor('a');
+        }, "Non-object does not validate");
+        raises(function () {
+            dessert.isAccessor({});
+        }, "Empty object does not validate");
+        raises(function () {
+            dessert.isAccessor({get: 'a'});
+        }, "Non-function 'get' does not validate");
 
-        equal(
-            Properties._checkType({a: 'a', b: 1}, 'string'),
-            false,
-            "Object properties fail type restriction"
-        );
+        equal(dessert.isAccessor({get: function () {}}), dessert, "Getter only validates");
+        equal(dessert.isAccessor({set: function () {}}), dessert, "Setter only validates");
+        equal(dessert.isAccessor({get: function () {}, set: function () {}}), dessert, "Full accessor validates");
 
-        equal(
-            Properties._checkType({a: function () {}, b: {get: function () {}}}, 'function'),
-            true,
-            "Getter-setter validates as function"
-        );
-
-        var myClass = troop.Base.extend()
-            .addMethod({
-                init: function () {},
-                foo: function () {}
-            });
-
-        equal(
-            Properties._checkType({a: myClass.extend(), b: myClass.extend()}, myClass),
-            true,
-            "Object properties meet class restriction"
-        );
-
-        equal(
-            Properties._checkType({a: 'hello', b: myClass.extend()}, myClass),
-            false,
-            "Object properties fail class restriction"
-        );
+        raises(function () {
+            dessert.isAccessor({get: function () {}, foo: 'bar'});
+        }, "Dirty getter fails");
+        raises(function () {
+            dessert.isAccessor(derived);
+        }, "Derived object fails (even w/ valid getter-setter)");
     });
 
     test("Property addition", function () {
@@ -174,16 +145,16 @@
     });
 
     test("Trait validation", function () {
-        equal(Properties._isTrait({}), true, "Simple object validates as trait");
+        equal(dessert.isTrait({}, true), true, "Simple object validates as trait");
 
         var base = {},
             child = Object.create(base),
             trait = Object.create(base),
             grandchild = Object.create(child);
 
-        equal(Properties._isTrait(trait), false, "Derived objects don't validate on their own");
-        equal(Properties._isTrait(trait, grandchild), true, "Object with immediate ancestor common with host validates");
-        equal(Properties._isTrait(trait, child), true, "Object with same base validates");
+        equal(dessert.isTrait(trait, true), false, "Derived objects don't validate on their own");
+        equal(dessert.isTrait(trait, grandchild, true), true, "Object with immediate ancestor common with host validates");
+        equal(dessert.isTrait(trait, child, true), true, "Object with same base validates");
     });
 
     test("Adding traits", function () {
@@ -193,16 +164,16 @@
             destination;
 
         Object.defineProperty(base, 'boo', {
-            value: 'far',
-            writable: false,
-            enumerable: false,
+            value       : 'far',
+            writable    : false,
+            enumerable  : false,
             configurable: false
         });
 
         Object.defineProperty(trait, 'foo', {
-            value: 'bar',
-            writable: false,
-            enumerable: false,
+            value       : 'bar',
+            writable    : false,
+            enumerable  : false,
             configurable: false
         });
 
@@ -220,9 +191,9 @@
         deepEqual(
             Object.getOwnPropertyDescriptor(destination, 'foo'),
             {
-                value: 'bar',
-                writable: !hasPropertyAttributes,
-                enumerable: !hasPropertyAttributes,
+                value       : 'bar',
+                writable    : !hasPropertyAttributes,
+                enumerable  : !hasPropertyAttributes,
                 configurable: !hasPropertyAttributes
             },
             "Property added as trait"
@@ -236,9 +207,9 @@
         deepEqual(
             Object.getOwnPropertyDescriptor(Object.getPrototypeOf(destination), 'boo'),
             {
-                value: 'far',
-                writable: !hasPropertyAttributes,
-                enumerable: !hasPropertyAttributes,
+                value       : 'far',
+                writable    : !hasPropertyAttributes,
+                enumerable  : !hasPropertyAttributes,
                 configurable: !hasPropertyAttributes
             },
             "Trait in testing mode"
@@ -329,21 +300,20 @@
             foo: "foo"
         });
 
-        Properties.addPrivate.call(tmp, {
-            bar: "bar"
-        });
+        raises(function () {
+            Properties.addPrivate.call(tmp, {
+                bar: "bar"
+            });
+        }, "Invalid private property");
 
         deepEqual(
             tmp,
             {
                 test: testMethod,
-                foo: "foo"
+                foo : "foo"
             },
             "Enumerable properties of class"
         );
-
-        equal(tmp.hasOwnProperty('bar'), false, "Invalid private property not added");
-        equal(tmp.hasOwnProperty('_bar'), false, "Invalid private property not prefixed");
     });
 
     test("Method elevation", function () {

@@ -3,9 +3,100 @@
  *
  * Adding properties and methods to a class or instance.
  */
-/*global troop, console */
+/*global dessert, troop, console */
 (function (Base) {
-    var self = troop.Properties = {
+    var self;
+
+    dessert
+        .addTypes({
+            /**
+             * Checks whether properties of `expr` are *all* functions.
+             * @param expr {object}
+             * @return {Boolean}
+             */
+            isAllFunctions: function (expr) {
+                var methodName,
+                    result = true;
+
+                result = result && this.isObject(expr);
+
+                for (methodName in expr) {
+                    if (expr.hasOwnProperty(methodName)) {
+                        result = result && this.isFunction(expr[methodName]);
+                    }
+                }
+
+                return result;
+            },
+
+            /**
+             * Checks property names against prefix.
+             * @param expr {object} Host object.
+             * @param prefix {string} Prefix.
+             * @return {boolean} Whether all properties on the object satisfy the prefix condition.
+             */
+            isAllPrefixed: function (expr, prefix) {
+                var propertyName;
+
+                if (!this.isString(prefix)) {
+                    // failed on argument type
+                    return false;
+                }
+
+                for (propertyName in expr) {
+                    if (expr.hasOwnProperty(propertyName)) {
+                        if (propertyName.substr(0, prefix.length) !== prefix) {
+                            // prefix doesn't match property name
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            },
+
+            /**
+             * Tells whether an object holds a getter / setter pair.
+             * @param expr {object} Host object.
+             * @return {boolean}
+             */
+            isAccessor: function (expr) {
+                var accessorMethods = {
+                    'get'    : true,
+                    'set'    : true,
+                    'get,set': true,
+                    'set,get': true
+                };
+
+                return this.isPlainObject(expr) &&
+                       this.isAllFunctions(expr) &&
+                       Object.getOwnPropertyNames(expr).join(',') in accessorMethods;
+            },
+
+            /**
+             * Validates an object for being trait in the context of a host object.
+             * Compares the immediate base classes of the trait and the host.
+             * @param trait {object} Trait object.
+             * @param [host] {object} Host object.
+             */
+            isTrait: function (trait, host) {
+                if (this.isPlainObject(trait)) {
+                    // plain object qualifies as trait in itself
+                    return true;
+                } else if (!this.isObject(trait) || !this.isObject(host)) {
+                    // otherwise both trait and host must be objects
+                    return false;
+                }
+
+                var traitBase = Base.getBase.call(trait),
+                    hostBase = Base.getBase.call(host);
+
+                return traitBase === hostBase ||
+                       traitBase.isPrototypeOf(hostBase);
+            }
+        });
+
+    self = troop.Properties = {
         //////////////////////////////
         // Utilities
 
@@ -40,88 +131,6 @@
         },
 
         /**
-         * List of valid method combinations for accessors.
-         * @type {object}
-         */
-        _accessorMethods: {
-            'get': true,
-            'set': true,
-            'get,set': true,
-            'set,get': true
-        },
-
-        /**
-         * Tells whether an object holds a getter / setter pair.
-         * @param object {object} Host object.
-         * @return {boolean}
-         * @private
-         * @static
-         */
-        _isAccessor: function (object) {
-            return Object.prototype.isPrototypeOf(object) &&
-                   Object.getPrototypeOf(object) === Object.prototype &&
-                   Object.getOwnPropertyNames(object).join(',') in self._accessorMethods &&
-                   self._checkType(object, 'function');
-        },
-
-        /**
-         * Checks type or class of each property against type name.
-         * @param object {object} Host object.
-         * @param typeName {string|troop.Base} Type name or base class to check.
-         * @private
-         * @static
-         */
-        _checkType: function (object, typeName) {
-            var isType = typeof typeName === 'string',
-                isClass = troop.Base.isPrototypeOf(typeName),
-                isFunction = typeName === 'function',
-                propertyName, property;
-
-            if (!(isType || isClass)) {
-                // typeName is neither string nor troop class
-                return false;
-            }
-
-            for (propertyName in object) {
-                if (object.hasOwnProperty(propertyName)) {
-                    property = object[propertyName];
-                    if (!(typeof property === 'undefined' ||
-                          isFunction && self._isAccessor(property) ||
-                          isType && typeof property === typeName ||
-                          isClass && typeName.isPrototypeOf(property))
-                        ) {
-                        self._warn(["Method", propertyName, "doesn't meet type requirement", typeName].join(" "));
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        },
-
-        /**
-         * Checks property names for prefix.
-         * @param object {object} Host object.
-         * @param prefix {string} Prefix.
-         * @return {boolean} Whether all properties on the object satisfy the prefix condition.
-         * @private
-         * @static
-         */
-        _checkPrefix: function (object, prefix) {
-            var propertyName;
-            for (propertyName in object) {
-                if (object.hasOwnProperty(propertyName)) {
-                    if (propertyName.substr(0, prefix.length) !== prefix) {
-                        self._warn(["Property", propertyName, "doesn't match prefix", prefix].join(" "));
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        },
-
-        /**
          * Adds single value property.
          * @param propertyName {string} Property name.
          * @param value {*} Property value to be assigned.
@@ -132,9 +141,9 @@
          */
         _addValue: function (propertyName, value, isWritable, isEnumerable, isConfigurable) {
             self._defineProperty(this, propertyName, {
-                value: value,
-                writable: isWritable || troop.messy,
-                enumerable: isEnumerable,
+                value       : value,
+                writable    : isWritable || troop.messy,
+                enumerable  : isEnumerable,
                 configurable: isConfigurable
             });
         },
@@ -151,9 +160,9 @@
          */
         _addAccessor: function (propertyName, getter, setter, isWritable, isEnumerable, isConfigurable) {
             self._defineProperty(this, propertyName, {
-                get: getter,
-                set: setter,
-                enumerable: isEnumerable,
+                get         : getter,
+                set         : setter,
+                enumerable  : isEnumerable,
                 configurable: isConfigurable
             });
         },
@@ -179,7 +188,8 @@
                 for (propertyName in properties) {
                     if (properties.hasOwnProperty(propertyName)) {
                         property = properties[propertyName];
-                        if (self._isAccessor(property)) {
+
+                        if (dessert.isAccessor(property, true)) {
                             self._addAccessor.call(this,
                                 propertyName,
                                 property.get,
@@ -212,9 +222,10 @@
          * @param methods {object} Methods.
          */
         addMethod: function (methods) {
-            if (self._checkType(methods, 'function')) {
-                self.add.call(Base.getTarget.call(this), methods, false, true, false);
-            }
+            dessert.isAllFunctions(methods);
+
+            self.add.call(Base.getTarget.call(this), methods, false, true, false);
+
             return this;
         },
 
@@ -224,37 +235,13 @@
          * @param methods {object} Methods.
          */
         addPrivateMethod: function (methods) {
-            if (self._checkType(methods, 'function') &&
-                self._checkPrefix(methods, troop.privatePrefix)
-                ) {
-                self.add.call(Base.getTarget.call(this), methods, false, false, false);
-            }
+            dessert
+                .isAllFunctions(methods)
+                .isAllPrefixed(methods, troop.privatePrefix);
+
+            self.add.call(Base.getTarget.call(this), methods, false, false, false);
+
             return this;
-        },
-
-        /**
-         * Validates an object for being trait in the context
-         * of a host object.
-         * @param trait {object} Trait object.
-         * @param [host] {object} Host object.
-         * @private
-         * @static
-         */
-        _isTrait: function (trait, host) {
-            var result = false,
-                traitBase,
-                hostBase;
-
-            if (Object.prototype.isPrototypeOf(trait)) {
-                traitBase = Base.getBase.call(trait);
-                result = result || traitBase === Object.prototype;
-                if (Object.prototype.isPrototypeOf(host)) {
-                    hostBase = Base.getBase.call(host);
-                    result = result || traitBase.isPrototypeOf(hostBase) || traitBase === hostBase;
-                }
-            }
-
-            return result;
         },
 
         /**
@@ -270,9 +257,8 @@
                 propertyNames,
                 i, propertyName;
 
-            if (!self._isTrait(trait, this)) {
-                throw new TypeError("Trait doesn't satisfy common ancestor requirement.");
-            }
+            dessert
+                .isTrait(trait, this, "Trait doesn't satisfy common ancestor requirement.");
 
             propertyNames = Object.getOwnPropertyNames(traitTarget);
             for (i = 0; i < propertyNames.length; i++) {
@@ -305,9 +291,10 @@
          * @param properties {object} Properties and methods.
          */
         addPrivate: function (properties) {
-            if (self._checkPrefix(properties, troop.privatePrefix)) {
-                self.add.call(this, properties, true, false, false);
-            }
+            dessert.isAllPrefixed(properties, troop.privatePrefix);
+
+            self.add.call(this, properties, true, false, false);
+
             return this;
         },
 
@@ -326,9 +313,10 @@
          * @param properties {object} Constant properties.
          */
         addPrivateConstant: function (properties) {
-            if (self._checkPrefix(properties, troop.privatePrefix)) {
-                self.add.call(this, properties, false, false, false);
-            }
+            dessert.isAllPrefixed(properties, troop.privatePrefix);
+
+            self.add.call(this, properties, false, false, false);
+
             return this;
         },
 
@@ -363,9 +351,10 @@
          * @param methods {object} Mock methods.
          */
         addMock: function (methods) {
-            if (self._checkType(methods, 'function')) {
-                self.add.call(this, methods, false, true, true);
-            }
+            dessert.isAllFunctions(methods);
+
+            self.add.call(this, methods, false, true, true);
+
             return this;
         },
 
@@ -384,18 +373,18 @@
     };
 
     self.addMethod.call(troop.Base, {
-        addConstant: self.addConstant,
-        addMethod: self.addMethod,
-        addPrivate: self.addPrivate,
+        addConstant       : self.addConstant,
+        addMethod         : self.addMethod,
+        addPrivate        : self.addPrivate,
         addPrivateConstant: self.addPrivateConstant,
-        addPrivateMethod: self.addPrivateMethod,
-        addPublic: self.addPublic,
-        addPublicConstant: self.addConstant,
-        addPublicMethod: self.addMethod,
-        addTrait: self.addTrait,
-        elevateMethod: self.elevateMethod,
-        addMock: self.addMock,
-        removeMocks: self.removeMocks
+        addPrivateMethod  : self.addPrivateMethod,
+        addPublic         : self.addPublic,
+        addPublicConstant : self.addConstant,
+        addPublicMethod   : self.addMethod,
+        addTrait          : self.addTrait,
+        elevateMethod     : self.elevateMethod,
+        addMock           : self.addMock,
+        removeMocks       : self.removeMocks
     });
 
     self.addPublic.call(troop, {
