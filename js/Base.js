@@ -71,15 +71,34 @@
 
     // custom assertion for troop classes
     dessert.addTypes({
+        /**
+         * Verifies if `expr` is a Troop class.
+         * @param expr {troop.Base}
+         * @return {Boolean}
+         */
         isClass: function (expr) {
             return expr instanceof Object && self.isPrototypeOf(expr);
         },
 
+        /**
+         * Verifies if `expr` is a Troop class or is not defined.
+         * @param expr {troop.Base}
+         * @return {Boolean}
+         */
         isClassOptional: function (expr) {
-            return (
-                typeof expr === 'undefined' ||
-                expr instanceof Object && self.isPrototypeOf(expr)
-                );
+            return typeof expr === 'undefined' ||
+                   expr instanceof Object && self.isPrototypeOf(expr);
+        },
+
+        /**
+         * Verifies if `expr` is a descendant of the troop class `base`.
+         * @param expr {troop.Base} Troop class being verified.
+         * @param base {troop.Base}
+         */
+        isDerivedFrom: function (expr, base) {
+            return this.isClass(expr) &&
+                   this.isClass(base) &&
+                   base.isPrototypeOf(expr);
         }
     });
 
