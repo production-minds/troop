@@ -190,7 +190,7 @@
                 if (properties.hasOwnProperty(propertyName)) {
                     property = properties[propertyName];
 
-                    if (dessert.isAccessor(property, true)) {
+                    if (dessert.validators.isAccessor(property)) {
                         self._addAccessor.call(this,
                             propertyName,
                             property.get,

@@ -55,48 +55,38 @@
         );
     });
 
-    test("Prefix restriction", function () {
-        raises(function () {
-            dessert.isAllPrefixed({foo: 'hello', bar: 'world'}, 'f');
-        }, "Object properties fail prefix restriction");
+    test("Prefix restriction assertion", function () {
+        var v = dessert.validators;
 
         equal(
-            dessert.isAllPrefixed({foo: 'hello', far: 'world'}, 'f'),
-            dessert,
+            v.isAllPrefixed({foo: 'hello', bar: 'world'}, 'f'),
+            false,
+            "Object properties fail prefix restriction"
+        );
+
+        equal(
+            v.isAllPrefixed({foo: 'hello', far: 'world'}, 'f'),
+            true,
             "Object properties meet prefix restriction"
         );
     });
 
     test("Accessor validation", function () {
-        var derived = Object.create({});
+        var v = dessert.validators,
+            derived = Object.create({});
+
         derived.get = function () {};
 
-        raises(function () {
-            dessert.isAccessor(null);
-        }, "Null does not validate");
-
-        equal(dessert.isAccessor(null, true), false, "Null does not validate (soft mode)");
-
-        raises(function () {
-            dessert.isAccessor('a');
-        }, "Non-object does not validate");
-        raises(function () {
-            dessert.isAccessor({});
-        }, "Empty object does not validate");
-        raises(function () {
-            dessert.isAccessor({get: 'a'});
-        }, "Non-function 'get' does not validate");
-
-        equal(dessert.isAccessor({get: function () {}}), dessert, "Getter only validates");
-        equal(dessert.isAccessor({set: function () {}}), dessert, "Setter only validates");
-        equal(dessert.isAccessor({get: function () {}, set: function () {}}), dessert, "Full accessor validates");
-
-        raises(function () {
-            dessert.isAccessor({get: function () {}, foo: 'bar'});
-        }, "Dirty getter fails");
-        raises(function () {
-            dessert.isAccessor(derived);
-        }, "Derived object fails (even w/ valid getter-setter)");
+        equal(v.isAccessor(null), false, "Null does not validate");
+        equal(v.isAccessor(null), false, "Null does not validate (soft mode)");
+        equal(v.isAccessor('a'), false, "Non-object does not validate");
+        equal(v.isAccessor({}), false, "Empty object does not validate");
+        equal(v.isAccessor({get: 'a'}), false, "Non-function 'get' does not validate");
+        equal(v.isAccessor({get: function () {}}), true, "Getter only validates");
+        equal(v.isAccessor({set: function () {}}), true, "Setter only validates");
+        equal(v.isAccessor({get: function () {}, set: function () {}}), true, "Full accessor validates");
+        equal(v.isAccessor({get: function () {}, foo: 'bar'}), false, "Dirty getter fails");
+        equal(v.isAccessor(derived), false, "Derived object fails (even w/ valid getter-setter)");
     });
 
     test("Property addition", function () {
@@ -145,16 +135,16 @@
     });
 
     test("Trait validation", function () {
-        equal(dessert.isTrait({}, true), true, "Simple object validates as trait");
-
-        var base = {},
+        var v = dessert.validators,
+            base = {},
             child = Object.create(base),
             trait = Object.create(base),
             grandchild = Object.create(child);
 
-        equal(dessert.isTrait(trait, true), false, "Derived objects don't validate on their own");
-        equal(dessert.isTrait(trait, grandchild, true), true, "Object with immediate ancestor common with host validates");
-        equal(dessert.isTrait(trait, child, true), true, "Object with same base validates");
+        equal(v.isTrait({}), true, "Simple object validates as trait");
+        equal(v.isTrait(trait), false, "Derived objects don't validate on their own");
+        equal(v.isTrait(trait, grandchild), true, "Object with immediate ancestor common with host validates");
+        equal(v.isTrait(trait, child), true, "Object with same base validates");
     });
 
     test("Adding traits", function () {

@@ -37,20 +37,14 @@
         troop.testing = testing;
     });
 
-    test("Custom assertion", function () {
-        var extended = Base.extend();
+    test("Custom assertions", function () {
+        var v = dessert.validators,
+            extended = Base.extend();
 
-        equal(dessert.isClass(extended), dessert, "Troop class passes assertion");
-
-        raises(function () {
-            dessert.isClass({});
-        }, "Ordinary object fails assertion");
-
-        equal(dessert.isClassOptional(extended), dessert, "Troop class passes assertion (optional)");
-        equal(dessert.isClassOptional(), dessert, "Undefined passes assertion (optional)");
-
-        raises(function () {
-            dessert.isClassOptional({});
-        }, "Ordinary object fails assertion (optional)");
+        equal(v.isClass(extended), true, "Troop class passes assertion");
+        equal(v.isClass({}), false, "Ordinary object fails assertion");
+        equal(v.isClassOptional(extended), true, "Troop class passes assertion (optional)");
+        equal(v.isClassOptional(), true, "Undefined passes assertion (optional)");
+        equal(v.isClassOptional({}), false, "Ordinary object fails assertion (optional)");
     });
 }(troop.Base));
