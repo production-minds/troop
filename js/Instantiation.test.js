@@ -2,7 +2,7 @@
  * Inheritance unit tests
  */
 /*global troop, module, test, ok, equal, deepEqual, expect, raises */
-(function (Inheritance, Feature) {
+(function (Instantiation, Feature) {
     module("Instantiation");
 
     test("Instantiation", function () {
@@ -40,43 +40,88 @@
         );
     });
 
-    test("Surrogates", function () {
-        var base = troop.Base.extend()
+    test("Surrogate addition", function () {
+        var filter = function () {},
+            base = troop.Base.extend()
                 .addMethod({
                     init: function () {}
                 }),
             child = base.extend()
                 .addMethod({
-                    init: function (test) {
-                        equal(test, 'test', "Argument passed to filter");
-                    }
+                    init: function () {}
                 }),
             ns = {
                 base : base,
                 child: child
             };
 
-        expect(6);
-
         ok(!base.hasOwnProperty('surrogates'), "Class doesn't have surrogates");
 
-        base.addSurrogate(ns, 'child', function (test) {
-            ok("Filter triggered");
-            if (test === 'test') {
-                return true;
-            }
-        });
+        base.addSurrogate(ns, 'child', filter);
 
         equal(base.surrogates.length, 1, "New number of surrogates");
 
+        deepEqual(
+            base.surrogates,
+            [
+                {
+                    namespace: ns,
+                    className: 'child',
+                    filter   : filter
+                }
+            ],
+            "Surrogate info"
+        );
+    });
+
+    test("Finding surrogate", function () {
+        var ns = {};
+
+        ns.base = troop.Base.extend()
+            .addSurrogate(ns, 'child', function (test) {
+                ok("Filter triggered");
+                if (test === 'test') {
+                    return true;
+                }
+            });
+
+        ns.child = ns.base.extend();
+
+        equal(Instantiation._getSurrogate.call(ns.base, 'test'), ns.child, "Arguments fit surrogate");
+        equal(Instantiation._getSurrogate.call(ns.base, 'blah'), undefined, "Arguments don't fit a surrogate");
+    });
+
+    test("Surrogate integration test", function () {
+        var ns = {};
+
+        ns.base = troop.Base.extend()
+            .addSurrogate(ns, 'child', function (test) {
+                ok("Filter triggered");
+                if (test === 'test') {
+                    return true;
+                }
+            })
+            .addMethod({
+                init: function () {}
+            });
+
+        ns.child = ns.base.extend()
+            .addMethod({
+                init: function (test) {
+                    equal(test, 'test', "Argument passed to filter");
+                }
+            });
+
+        expect(4);
+
         // triggers filter & init
-        base.create('test');
+        ns.base.create('test');
 
         // triggers filter only
-        base.create('blah');
+        ns.base.create('blah');
 
         // triggers init only
-        child.create('test');
+        ns.child.create('test');
     });
 
     test("Custom instance value", function () {
@@ -180,14 +225,14 @@
     });
 
     test("Instantiation", function () {
-        var myInstance = Inheritance._instantiate.call(Object.prototype);
+        var myInstance = Instantiation._instantiate.call(Object.prototype);
 
         ok(Object.getPrototypeOf(myInstance) === Object.prototype, "Instantiated Object prototype");
     });
 
     test("Base validation", function () {
-        ok(Inheritance.isA.call({}, Object.prototype), "{} is an Object.prototype");
-        ok(Inheritance.isA.call([], Array.prototype), "[] is an Array.prototype");
+        ok(Instantiation.isA.call({}, Object.prototype), "{} is an Object.prototype");
+        ok(Instantiation.isA.call([], Array.prototype), "[] is an Array.prototype");
     });
 }(
     troop.Instantiation,

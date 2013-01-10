@@ -1,15 +1,16 @@
 /**
  * Inheritance & instantiation tools.
  */
-/*global troop */
+/*global dessert, troop */
 (function (Utils) {
     var self = troop.Instantiation = troop.Base.extend()
         .addPrivateMethod({
             /**
              * Creates an instance of a class, ie. creates a new object and adds writable
              * properties to it.
-             * @this {troop.Base} Class to instantiate.
+             * @this {troop.Base} Class
              * @return {object}
+             * @private
              */
             _instantiate: function () {
                 var result = Object.create(this);
@@ -23,6 +24,28 @@
                 }
 
                 return result;
+            },
+
+            /**
+             * Retrieves first surrogate fitting constructor arguments.
+             * @this {troop.Base} Class
+             * @return {troop.Base}
+             * @private
+             */
+            _getSurrogate: function () {
+                var surrogates = this.surrogates,
+                    i, surrogateInfo;
+
+                if (typeof surrogates !== 'undefined') {
+                    for (i = 0; i < surrogates.length; i++) {
+                        surrogateInfo = surrogates[i];
+
+                        // determining whether arguments fit next filter
+                        if (surrogateInfo.filter.apply(this, arguments)) {
+                            return surrogateInfo.namespace[surrogateInfo.className];
+                        }
+                    }
+                }
             }
         })
         .addMethod({
@@ -42,6 +65,8 @@
                     className = hostInfo.propertyName, // name of surrogate class
                     args = hostInfo.arguments, // rest of arguments
                     filter = args[0]; // filter function
+
+                dessert.isFunction(filter);
 
                 this.surrogates.push({
                     namespace: namespace,
@@ -63,29 +88,11 @@
              * var instance = someClass.create(someArgs);
              */
             create: function () {
-                var surrogates, i, surrogateInfo, surrogate,
-                    that,
+                var that,
                     result;
 
-                // checking surrogates
-                if (this.hasOwnProperty('surrogates')) {
-                    surrogates = this.surrogates;
-                    for (i = 0; i < surrogates.length; i++) {
-                        surrogateInfo = surrogates[i];
-                        if (surrogateInfo.filter.apply(this, arguments)) {
-                            // surrogate fits arguments
-                            surrogate = surrogateInfo.namespace[surrogateInfo.className];
-                            if (this !== surrogate) {
-                                // current class is not surrogate of base class(es)
-                                // instantiating surrogate class
-                                return surrogate.create.apply(surrogate, arguments);
-                            }
-                        }
-                    }
-                }
-
-                // instantiating class
-                that = self._instantiate.call(this);
+                // instantiating class or surrogate
+                that = self._instantiate.call(self._getSurrogate.call(this) || this);
 
                 // initializing instance properties
                 if (typeof this.init === 'function') {
@@ -100,10 +107,10 @@
                         return result;
                     } else {
                         // initializer returned something else
-                        throw new TypeError("Unrecognizable value returned by .init.");
+                        dessert.assert(false, "Unrecognizable value returned by .init.");
                     }
                 } else {
-                    throw new Error("Class implements no .init method.");
+                    dessert.assert(false, "Class implements no .init method.");
                 }
             },
 
