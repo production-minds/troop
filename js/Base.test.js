@@ -5,6 +5,27 @@
 (function (Base) {
     module("Base");
 
+    test("Method addition", function () {
+        equal(Base.hasOwnProperty('foo'), false, "Method not present previously");
+
+        raises(function () {
+            Base.addMethod('foo');
+        }, "Non-object throws error");
+
+        raises(function () {
+            Base.addMethod({
+                foo: 'bar'
+            });
+        }, "Non-function throws error");
+
+        var result = Base.addMethod({
+            foo: function () {}
+        });
+
+        equal(result, Base, "addMethod returns self");
+        equal(Base.hasOwnProperty('foo'), true, "Method added");
+    });
+
     test("Class extension", function () {
         var myClass = Base.extend.call(Object.prototype);
 

@@ -6,7 +6,35 @@
  */
 /*global dessert, troop */
 (function () {
-    var self = troop.Base = Object.create(Object.prototype, {
+    var self = troop.Base = {
+        /**
+         * Disposable method that adds further methods.
+         * @param methods {object} Object of methods.
+         */
+        addMethod: function (methods) {
+            dessert.isPlainObject(methods);
+
+            var methodName, method;
+
+            for (methodName in methods) {
+                if (methods.hasOwnProperty(methodName)) {
+                    method = methods[methodName];
+                    dessert.isFunction(method);
+
+                    Object.defineProperty(this, methodName, {
+                        value       : method,
+                        enumerable  : true,
+                        writable    : false,
+                        configurable: false
+                    });
+                }
+            }
+
+            return this;
+        }
+    };
+
+    self.addMethod({
         /**
          * Extends base class with methods.
          * Extended class will have methods as read-only own properties.
@@ -14,23 +42,18 @@
          * @this {troop.Base} Troop class.
          * @return {object}
          */
-        extend: {
-            writable    : false,
-            enumerable  : true,
-            configurable: false,
-            value       : function () {
-                var result = Object.create(this);
+        extend: function () {
+            var result = Object.create(this);
 
-                /**
-                 * Extending once more with no own properties
-                 * so that methods may be mocked on a static level.
-                 */
-                if (troop.testing === true) {
-                    result = Object.create(result);
-                }
-
-                return result;
+            /**
+             * Extending once more with no own properties
+             * so that methods may be mocked on a static level.
+             */
+            if (troop.testing === true) {
+                result = Object.create(result);
             }
+
+            return result;
         },
 
         /**
@@ -41,15 +64,10 @@
          * @function
          * @return {troop.Base}
          */
-        getTarget: {
-            writable    : false,
-            enumerable  : true,
-            configurable: false,
-            value       : function () {
-                return troop.testing === true ?
-                    Object.getPrototypeOf(this) :
-                    this;
-            }
+        getTarget: function () {
+            return troop.testing === true ?
+                Object.getPrototypeOf(this) :
+                this;
         },
 
         /**
@@ -57,15 +75,10 @@
          * @function
          * @return {troop.Base}
          */
-        getBase: {
-            writable    : false,
-            enumerable  : true,
-            configurable: false,
-            value       : function () {
-                return troop.testing === true ?
-                    Object.getPrototypeOf(Object.getPrototypeOf(this)) :
-                    Object.getPrototypeOf(this);
-            }
+        getBase: function () {
+            return troop.testing === true ?
+                Object.getPrototypeOf(Object.getPrototypeOf(this)) :
+                Object.getPrototypeOf(this);
         },
     });
 
@@ -88,17 +101,6 @@
         isClassOptional: function (expr) {
             return typeof expr === 'undefined' ||
                    expr instanceof Object && self.isPrototypeOf(expr);
-        },
-
-        /**
-         * Verifies if `expr` is a descendant of the troop class `base`.
-         * @param expr {troop.Base} Troop class being verified.
-         * @param base {troop.Base}
-         */
-        isDerivedFrom: function (expr, base) {
-            return this.isClass(expr) &&
-                   this.isClass(base) &&
-                   base.isPrototypeOf(expr);
         }
     });
 
