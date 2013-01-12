@@ -61,9 +61,9 @@
                             // generator returned a property value
                             // overwriting promise with actual property value
                             Object.defineProperty(host, propertyName, {
-                                value: value,
-                                writable: false,
-                                enumerable: true,
+                                value       : value,
+                                writable    : false,
+                                enumerable  : true,
                                 configurable: false
                             });
                         } else {
@@ -83,19 +83,24 @@
                     set: function (value) {
                         // overwriting promise with property value
                         Object.defineProperty(host, propertyName, {
-                            value: value,
-                            writable: false,
-                            enumerable: true,
+                            value       : value,
+                            writable    : false,
+                            enumerable  : true,
                             configurable: false
                         });
                     },
 
-                    enumerable: true,
+                    enumerable  : true,
                     configurable: true  // must be configurable in order to be re-defined
                 });
             }
         });
 
-    troop.unfulfilled = self.unfulfilled;
-    troop.promise = self.promise;
+    troop.Base.addConstant.call(troop, {
+        unfulfilled: self.unfulfilled
+    });
+
+    troop.Base.addMethod.call(troop, {
+        promise: self.promise
+    });
 }(troop.Utils));
