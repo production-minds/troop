@@ -2,10 +2,12 @@
  * Base class unit tests
  */
 /*global dessert, troop, module, test, ok, equal, notEqual, deepEqual, raises, expect, mock, unMock */
-(function (Base) {
+(function (Base, Feature) {
     module("Base");
 
     test("Method addition", function () {
+        var isES4 = !Feature.hasPropertyAttributes();
+
         equal(Base.hasOwnProperty('foo'), false, "Method not present previously");
 
         raises(function () {
@@ -24,23 +26,32 @@
             });
 
         equal(result, Base, "addMethod returns self");
-        deepEqual(Object.getOwnPropertyDescriptor(Base, 'foo'), {
-            value       : func,
-            enumerable  : true,
-            writable    : false,
-            configurable: false
-        }, "Method added");
+
+        if (isES4) {
+            equal(Base.hasOwnProperty('foo'), true, "Method added");
+        } else {
+            deepEqual(Object.getOwnPropertyDescriptor(Base, 'foo'), {
+                value       : func,
+                enumerable  : true,
+                writable    : false,
+                configurable: false
+            }, "Method added");
+        }
 
         Base.addPrivateMethod({
             _foo: func
         }, true);
 
-        deepEqual(Object.getOwnPropertyDescriptor(Base, '_foo'), {
-            value       : func,
-            enumerable  : false,
-            writable    : false,
-            configurable: false
-        }, "Private method added");
+        if (isES4) {
+            equal(Base.hasOwnProperty('_foo'), true, "Private method added");
+        } else {
+            deepEqual(Object.getOwnPropertyDescriptor(Base, '_foo'), {
+                value       : func,
+                enumerable  : false,
+                writable    : false,
+                configurable: false
+            }, "Private method added");
+        }
     });
 
     test("Class extension", function () {
@@ -85,4 +96,4 @@
         equal(v.isClassOptional(), true, "Undefined passes assertion (optional)");
         equal(v.isClassOptional({}), false, "Ordinary object fails assertion (optional)");
     });
-}(troop.Base));
+}(troop.Base, troop.Feature));
