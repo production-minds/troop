@@ -93,7 +93,7 @@
                     result;
 
                 // instantiating class or surrogate
-                that = self._instantiate.call(self._getSurrogate.call(this) || this);
+                that = self._instantiate.call(self._getSurrogate.apply(this, arguments) || this);
 
                 // initializing instance properties
                 if (typeof this.init === 'function') {

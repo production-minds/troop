@@ -112,13 +112,13 @@
                 }
             });
 
-        expect(4);
+        expect(6);
 
         // triggers filter & init
-        ns.base.create('test');
+        ok(ns.base.create('test').isA(ns.child), "Triggered filter changes class");
 
         // triggers filter only
-        ns.base.create('blah');
+        equal(ns.base.create('blah').isA(ns.child), false, "Constructor args don't satisfy filter");
 
         // triggers init only
         ns.child.create('test');
