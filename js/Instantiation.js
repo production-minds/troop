@@ -53,9 +53,10 @@
              * Adds surrogate class to this class.
              * When surrogate classes are present, instantiation is delegated
              * to the first surrogate satisfying the filter argument.
+             * params: namespace, className, filter
              * @this {troop.Base} Class object.
              */
-            addSurrogate: function (/* namespace, className, filter */) {
+            addSurrogate: function () {
                 if (!this.hasOwnProperty('surrogates')) {
                     this.addConstant({surrogates: []});
                 }
