@@ -6,27 +6,6 @@
     var self = troop.Instantiation = troop.Base.extend()
         .addPrivateMethod({
             /**
-             * Creates an instance of a class, ie. creates a new object and adds writable
-             * properties to it.
-             * @this {troop.Base} Class
-             * @return {object}
-             * @private
-             */
-            _instantiate: function () {
-                var result = Object.create(this);
-
-                /**
-                 * Extending once more with no own properties
-                 * so that methods may be mocked on a static level.
-                 */
-                if (troop.testing === true) {
-                    result = Object.create(result);
-                }
-
-                return result;
-            },
-
-            /**
              * Retrieves first surrogate fitting constructor arguments.
              * @this {troop.Base} Class
              * @return {troop.Base}
@@ -93,7 +72,7 @@
                     result;
 
                 // instantiating class or surrogate
-                that = self._instantiate.call(self._getSurrogate.apply(this, arguments) || this);
+                that = troop.Base.extend.call(self._getSurrogate.apply(this, arguments) || this);
 
                 // initializing instance properties
                 if (typeof this.init === 'function') {
@@ -121,6 +100,15 @@
              */
             isA: function (base) {
                 return base.isPrototypeOf(this);
+            },
+
+            /**
+             * Tests whether the current object is the immediate descendant of base.
+             * @param base {troop.Base}
+             * @return {Boolean}
+             */
+            instanceOf: function (base) {
+                return troop.Base.getBase.call(this) === base;
             }
         });
 
@@ -129,7 +117,7 @@
         addSurrogate: self.addSurrogate,
         create      : self.create,
         isA         : self.isA,
-        instanceOf  : self.isA
+        instanceOf  : self.instanceOf
     });
 
     return self;

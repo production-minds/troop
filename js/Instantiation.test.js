@@ -6,31 +6,32 @@
     module("Instantiation");
 
     test("Instantiation", function () {
-        var instance1, instance2;
+        var myClass = troop.Base.extend(),
+            instance1, instance2;
 
         expect(5);
 
-        troop.Base.init = function (arg) {
-            this.foo = "bar";
+        myClass.init = function (arg) {
+            this.test = "bar";
             equal(arg, 'testArgument', "Class init called");
         };
-        instance1 = troop.Base.create('testArgument');
-        equal(instance1.foo, "bar", "Instance initialized");
+        instance1 = myClass.create('testArgument');
+        equal(instance1.test, "bar", "Instance initialized");
 
-        troop.Base.init = function () {
+        myClass.init = function () {
             return instance1;
         };
-        instance2 = troop.Base.create();
+        instance2 = myClass.create();
         equal(instance2, instance1, "Instantiation returned a different object");
 
-        troop.Base.init = function () {
+        myClass.init = function () {
             return 5; // invalid type to return here
         };
         raises(function () {
-            instance2 = troop.Base.create();
+            instance2 = myClass.create();
         }, "Initializer returned invalid type");
 
-        delete troop.Base.init;
+        delete myClass.init;
 
         raises(
             function () {
@@ -224,15 +225,20 @@
         equal(troop.Base.getBase(), Object.prototype, "Troop.Base extends from Object.prototype");
     });
 
-    test("Instantiation", function () {
-        var myInstance = Instantiation._instantiate.call(Object.prototype);
-
-        ok(Object.getPrototypeOf(myInstance) === Object.prototype, "Instantiated Object prototype");
-    });
-
     test("Base validation", function () {
         ok(Instantiation.isA.call({}, Object.prototype), "{} is an Object.prototype");
         ok(Instantiation.isA.call([], Array.prototype), "[] is an Array.prototype");
+
+        var myBase = troop.Base.extend()
+                .addMethod({init: function () {}}),
+            myChild = myBase.extend()
+                .addMethod({init: function () {}});
+
+        ok(Instantiation.instanceOf.call(myChild, myBase), "Direct descendant");
+        ok(Instantiation.instanceOf.call(myBase, troop.Base), "Direct descendant");
+        ok(!Instantiation.instanceOf.call(myChild, troop.Base), "Not direct descendant");
+
+        ok(Instantiation.isA.call(myChild, troop.Base), "Not direct descendant");
     });
 }(
     troop.Instantiation,
