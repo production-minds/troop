@@ -102,7 +102,7 @@
                     if (typeof result === 'undefined') {
                         // initializer returned nothing, returning new instance
                         return that;
-                    } else if (result !== this && result instanceof this.constructor) {
+                    } else if (result !== this && this.isPrototypeOf(result)) {
                         // initializer returned a (different) instance of this class
                         return result;
                     } else {
@@ -119,7 +119,7 @@
              * @param base {troop.Base}
              */
             isA: function (base) {
-                return this instanceof base.constructor;
+                return base.isPrototypeOf(this);
             }
         });
 
