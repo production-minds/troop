@@ -6,24 +6,90 @@
  */
 /*global dessert, troop */
 (function () {
-    var self = troop.Base = {
+    var self;
+
+    // custom assertion for troop classes
+    dessert.addTypes({
         /**
-         * Disposable method that adds further methods.
+         * Checks whether properties of `expr` are *all* functions.
+         * @param expr {object}
+         * @return {Boolean}
+         */
+        isAllFunctions: function (expr) {
+            var methodName;
+
+            if (!this.isObject(expr)) {
+                return false;
+            }
+
+            for (methodName in expr) {
+                if (expr.hasOwnProperty(methodName) &&
+                    !this.isFunctionOptional(expr[methodName])) {
+                    return false;
+                }
+            }
+
+            return true;
+        },
+
+        /**
+         * Verifies if `expr` is a Troop class.
+         * @param expr {troop.Base}
+         * @return {Boolean}
+         */
+        isClass: function (expr) {
+            return expr instanceof Object && self.isPrototypeOf(expr);
+        },
+
+        /**
+         * Verifies if `expr` is a Troop class or is not defined.
+         * @param expr {troop.Base}
+         * @return {Boolean}
+         */
+        isClassOptional: function (expr) {
+            return typeof expr === 'undefined' ||
+                   expr instanceof Object && self.isPrototypeOf(expr);
+        }
+    });
+
+    self = troop.Base = {
+        /**
+         * Disposable method for adding further (public) methods.
+         * Will be replaced by Properties.
          * @param methods {object} Object of methods.
          */
         addMethod: function (methods) {
-            dessert.isPlainObject(methods);
+            dessert.isAllFunctions(methods);
 
-            var methodName, method;
-
+            var methodName;
             for (methodName in methods) {
                 if (methods.hasOwnProperty(methodName)) {
-                    method = methods[methodName];
-                    dessert.isFunction(method);
-
                     Object.defineProperty(this, methodName, {
-                        value       : method,
+                        value       : methods[methodName],
                         enumerable  : true,
+                        writable    : false,
+                        configurable: false
+                    });
+                }
+            }
+
+            return this;
+        },
+
+        /**
+         * Disposable method for adding further private methods.
+         * Will be replaced by Properties.
+         * @param methods {object} Object of methods.
+         */
+        addPrivateMethod: function (methods) {
+            dessert.isAllFunctions(methods);
+
+            var methodName;
+            for (methodName in methods) {
+                if (methods.hasOwnProperty(methodName)) {
+                    Object.defineProperty(this, methodName, {
+                        value       : methods[methodName],
+                        enumerable  : false,
                         writable    : false,
                         configurable: false
                     });
@@ -80,28 +146,6 @@
                 Object.getPrototypeOf(Object.getPrototypeOf(this)) :
                 Object.getPrototypeOf(this);
         },
-    });
-
-    // custom assertion for troop classes
-    dessert.addTypes({
-        /**
-         * Verifies if `expr` is a Troop class.
-         * @param expr {troop.Base}
-         * @return {Boolean}
-         */
-        isClass: function (expr) {
-            return expr instanceof Object && self.isPrototypeOf(expr);
-        },
-
-        /**
-         * Verifies if `expr` is a Troop class or is not defined.
-         * @param expr {troop.Base}
-         * @return {Boolean}
-         */
-        isClassOptional: function (expr) {
-            return typeof expr === 'undefined' ||
-                   expr instanceof Object && self.isPrototypeOf(expr);
-        }
     });
 
     return self;

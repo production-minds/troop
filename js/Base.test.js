@@ -18,12 +18,29 @@
             });
         }, "Non-function throws error");
 
-        var result = Base.addMethod({
-            foo: function () {}
-        });
+        var func = function () {},
+            result = Base.addMethod({
+                foo: func
+            });
 
         equal(result, Base, "addMethod returns self");
-        equal(Base.hasOwnProperty('foo'), true, "Method added");
+        deepEqual(Object.getOwnPropertyDescriptor(Base, 'foo'), {
+            value       : func,
+            enumerable  : true,
+            writable    : false,
+            configurable: false
+        }, "Method added");
+
+        Base.addPrivateMethod({
+            _foo: func
+        }, true);
+
+        deepEqual(Object.getOwnPropertyDescriptor(Base, '_foo'), {
+            value       : func,
+            enumerable  : false,
+            writable    : false,
+            configurable: false
+        }, "Private method added");
     });
 
     test("Class extension", function () {

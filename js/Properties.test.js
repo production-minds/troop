@@ -92,25 +92,16 @@
     test("Property addition", function () {
         var tmp;
 
-        expect(5);
-
         tmp = {};
-        Properties.add.call(tmp, {a: 'foo', b: 'bar'});
+        Properties._add.call(tmp, {a: 'foo', b: 'bar'});
         equal(tmp.a, 'foo', "Property added through object");
 
         tmp = {};
-        Properties.add.call(tmp, function () {
-            equal(this, tmp, "Generator function receives host object as this");
-            return {c: 'foo', d: 'bar'};
-        });
-        equal(tmp.c, 'foo', "Property added through generator function");
-
-        tmp = {};
-        Properties.add.call(tmp, {a: {get: function () {return this.b;}}, b: 'foo'});
+        Properties._add.call(tmp, {a: {get: function () {return this.b;}}, b: 'foo'});
         equal(tmp.a, 'foo', "Property added with getter");
 
         tmp = {};
-        Properties.add.call(tmp, {a: null});
+        Properties._add.call(tmp, {a: null});
         equal(tmp.a, null, "Null property added");
     });
 
@@ -118,7 +109,7 @@
         var tmp = {},
             descriptor;
 
-        Properties.add.call(tmp, {
+        Properties._add.call(tmp, {
                 test: function () {}
             },
             true,
@@ -224,7 +215,7 @@
             tmp = {},
             descriptor;
 
-        Properties.add.call(tmp, {
+        Properties._add.call(tmp, {
             test: function () {}
         });
 
@@ -242,7 +233,7 @@
         var tmp = {},
             descriptor;
 
-        Properties.add.call(tmp, {
+        Properties._add.call(tmp, {
             test: function () {}
         }, false, false, false);
 
@@ -263,7 +254,7 @@
             tmp = {},
             descriptor;
 
-        Properties.add.call(tmp, {
+        Properties._add.call(tmp, {
             test: function () {}
         }, false, false, false);
 
