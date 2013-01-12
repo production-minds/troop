@@ -3,7 +3,7 @@ Troop
 
 True OOP. Fast & transparent.
 
-Troop provides *base class* and a set of *tools* to build a close approximation of true classes in ECMAScript 5. Troop puts emphasis on:
+Troop provides *base class* and a set of *tools* to build a close approximation of true classes in ECMAScript 3/5. Troop puts emphasis on:
 
 - instantiation performance at multiple inheritance
 - code transparency & reflection: no more duck typing
@@ -11,6 +11,8 @@ Troop provides *base class* and a set of *tools* to build a close approximation 
 The price to pay for all this is there are no real privates in Troop. Pseudo-privates are supported, which are accessible from the outside, but not enumerable.
 
 The library is based on a series of posts at [Code Pristine](http://codepristine.com), demonstrating the advantages of the OOP model implemented by Troop.
+
+Troop requires assertion library "[dessert](https://github.com/danstocker/dessert)". Version requirements are specified in `js/troop.js`.
 
 Example
 -------
