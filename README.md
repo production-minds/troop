@@ -19,12 +19,6 @@ Example
 
 The following example defines and instantiates a class with (pseudo-)private & public members, read-only methods and constants.
 
-Also, check out these jsFiddles:
-
-- [Using Troop](http://jsfiddle.net/danstocker/n5jze/)
-- [Using Troop promises](http://jsfiddle.net/danstocker/YR374/)
-- [Surrogate classes in Troop](http://jsfiddle.net/danstocker/ZsZGy/)
-
 ```javascript
 var myClass = troop.Base.extend()
     .addPrivate({
@@ -48,5 +42,11 @@ var myInstance = myClass.create("Yonkers");
 ```
 
 ![myInstance in console](https://dl.dropbox.com/u/9258903/myInstance-0.2.2.png)
+
+Also, check out these jsFiddles:
+
+- [Using Troop](http://jsfiddle.net/danstocker/n5jze/)
+- [Using Troop promises](http://jsfiddle.net/danstocker/YR374/)
+- [Surrogate classes in Troop](http://jsfiddle.net/danstocker/ZsZGy/)
 
 See the [Troop wiki](https://github.com/production-minds/troop/wiki) for further details.
