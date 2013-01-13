@@ -1,5 +1,7 @@
 /**
- * ECMAScript 4 compatibility layer.
+ * ECMAScript 3 (JavaScript 1.5) compatibility layer.
+ *
+ * Intrusive: may overwrite / be overwritten by polyfill methods applied by other libs.
  */
 /*global troop */
 (function () {
