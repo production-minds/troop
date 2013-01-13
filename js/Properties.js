@@ -336,7 +336,7 @@
             }
         });
 
-    troop.Base.addMethod({
+    Base.addMethod({
         addConstant       : self.addConstant,
         addMethod         : self.addMethod,
         addPrivate        : self.addPrivate,

@@ -5,8 +5,8 @@
  * A promise means that the property will be evaluated upon first access.
  */
 /*global dessert, troop, console */
-(function (Utils) {
-    var self = troop.Promise = troop.Base.extend()
+(function (Base, Utils) {
+    var self = troop.Promise = Base.extend()
         .addConstant({
             //////////////////////////////
             // Constants
@@ -27,7 +27,7 @@
              * @param generator {function} Generates (and returns) property value.
              */
             promise: function (host, propertyName, generator) {
-                var hostInfo = Utils.extractHostInfo.apply(this, arguments),
+                var hostInfo = Utils.extractHostInfo.apply(Utils, arguments),
                     fullPath = hostInfo.fullPath,
                     generatorArguments;
 
@@ -96,11 +96,11 @@
             }
         });
 
-    troop.Base.addConstant.call(troop, {
+    Base.addConstant.call(troop, {
         unfulfilled: self.unfulfilled
     });
 
-    troop.Base.addMethod.call(troop, {
+    Base.addMethod.call(troop, {
         promise: self.promise
     });
-}(troop.Utils));
+}(troop.Base, troop.Utils));

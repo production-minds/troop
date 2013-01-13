@@ -2,6 +2,8 @@
  * Surrogate unit tests
  */
 /*global troop, module, test, ok, equal, deepEqual, expect, raises */
+var globalNs = {};
+
 (function (Surrogate) {
     module("Surrogate");
 
@@ -37,6 +39,8 @@
                 child: child
             };
 
+        globalNs.child = child;
+
         ok(!base.hasOwnProperty('surrogates'), "Class doesn't have surrogates");
 
         base.addSurrogate(ns, 'child', filter);
@@ -54,5 +58,9 @@
             ],
             "Surrogate info"
         );
+
+        base.addSurrogate('globalNs.child', filter);
+
+        equal(base.surrogates.length, 2, "New number of surrogates");
     });
 }(troop.Surrogate));

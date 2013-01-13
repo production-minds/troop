@@ -4,16 +4,17 @@
  * Static class.
  */
 /*globals dessert, troop */
-(function () {
-    var self = troop.Utils = troop.Base.extend()
-        .addConstant({
-            /**
-             * Shortcut to global scope.
-             * `window` in the browser, `global` in Node.js
-             * @type {window|global}
-             */
-            global: this,
-        })
+(function (Base) {
+    var global, self;
+
+    /**
+     * Shortcut to global scope.
+     * `window` in the browser, `global` in Node.js
+     * @type {window|global}
+     */
+    global = this;
+
+    self = troop.Utils = Base.extend()
         .addMethod({
             /**
              * Resolves a path on the global scope.
@@ -24,7 +25,7 @@
              * @static
              */
             resolve: function (path, context) {
-                var result = context || self.global;
+                var result = context || global;
                 while (path.length) {
                     result = result[path.shift()];
                     if (typeof result === 'undefined') {
@@ -89,4 +90,4 @@
                 };
             }
         });
-}());
+}(troop.Base));

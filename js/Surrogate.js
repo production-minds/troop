@@ -2,8 +2,8 @@
  * Surrogate Class Feature
  */
 /*global dessert, troop */
-(function (Utils) {
-    var self = troop.Surrogate = troop.Base.extend()
+(function (Base, Utils) {
+    var self = troop.Surrogate = Base.extend()
         .addMethod({
             /**
              * Retrieves first surrogate fitting constructor arguments.
@@ -39,7 +39,7 @@
                     this.addConstant({surrogates: []});
                 }
 
-                var hostInfo = Utils.extractHostInfo.apply(this, arguments),
+                var hostInfo = Utils.extractHostInfo.apply(Utils, arguments),
                     namespace = hostInfo.host, // namespace for surrogate class
                     className = hostInfo.propertyName, // name of surrogate class
                     args = hostInfo.arguments, // rest of arguments
@@ -58,9 +58,9 @@
         });
 
     // delegating public methods to troop.Base
-    troop.Base.addMethod({
+    Base.addMethod({
         addSurrogate: self.addSurrogate
     });
 
     return self;
-}(troop.Utils));
+}(troop.Base, troop.Utils));

@@ -2,10 +2,6 @@
 (function (Utils) {
     module("Utils");
 
-    test("Scope", function () {
-        equal(Utils.global, window, "Global scope in the browser");
-    });
-
     test("Scope resolution", function () {
         window.hello = {world: "bar"};
         equal(Utils.resolve(['hello', 'world']), "bar", "Resolving existing object");

@@ -2,8 +2,8 @@
  * Instantiation Feature
  */
 /*global dessert, troop */
-(function (Utils, Surrogate) {
-    var self = troop.Instantiation = troop.Base.extend()
+(function (Base, Surrogate) {
+    var self = troop.Instantiation = Base.extend()
         .addMethod({
             /**
              * Creates a class instance.
@@ -20,7 +20,7 @@
                     result;
 
                 // instantiating class or surrogate
-                that = troop.Base.extend.call(Surrogate.getSurrogate.apply(this, arguments) || this);
+                that = Base.extend.call(Surrogate.getSurrogate.apply(this, arguments) || this);
 
                 // initializing instance properties
                 if (typeof this.init === 'function') {
@@ -44,9 +44,9 @@
         });
 
     // delegating public methods to troop.Base
-    troop.Base.addMethod({
-        create      : self.create
+    Base.addMethod({
+        create: self.create
     });
 
     return self;
-}(troop.Utils, troop.Surrogate));
+}(troop.Base, troop.Surrogate));

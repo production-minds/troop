@@ -166,6 +166,4 @@
             return self.getBase.call(this) === base;
         }
     });
-
-    return self;
 }());

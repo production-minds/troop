@@ -11,10 +11,10 @@ js/troop.js
 js/Polyfill.js
 js/Feature.js
 js/Base.js
-js/Properties.js
 js/Utils.js
 js/Surrogate.js
 js/Instantiation.js
+js/Properties.js
 js/Promise.js
 js/exports.js
 "
