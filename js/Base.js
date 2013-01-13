@@ -1,8 +1,9 @@
 /**
  * Base Class.
  *
- * Supports extension, instantiation, property addition.
- * All base methods are non-enumerable.
+ * Most basic features required to build rest of the library
+ * are implemented here. Rest of its methods are implemented
+ * and applied by each feature separately.
  */
 /*global dessert, troop */
 (function () {
@@ -146,6 +147,24 @@
                 Object.getPrototypeOf(Object.getPrototypeOf(this)) :
                 Object.getPrototypeOf(this);
         },
+
+
+        /**
+         * Tests whether the current object is a descendant of base.
+         * @param base {troop.Base}
+         */
+        isA: function (base) {
+            return base.isPrototypeOf(this);
+        },
+
+        /**
+         * Tests whether the current object is the immediate descendant of base.
+         * @param base {troop.Base}
+         * @return {Boolean}
+         */
+        instanceOf: function (base) {
+            return self.getBase.call(this) === base;
+        }
     });
 
     return self;

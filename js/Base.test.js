@@ -96,4 +96,80 @@
         equal(v.isClassOptional(), true, "Undefined passes assertion (optional)");
         equal(v.isClassOptional({}), false, "Ordinary object fails assertion (optional)");
     });
+
+    test("Extension", function () {
+        var hasPropertyAttributes = Feature.hasPropertyAttributes(),
+            derived, keys,
+            instance;
+
+        function testMethod() {}
+
+        /**
+         * Initializer for derived class
+         */
+        function init() {
+            this
+                .addPrivate({
+                    _woo: "hoo"
+                }).addPublic({
+                    holy: "moly"
+                }).addConstant({
+                    pi: 3.14
+                });
+        }
+
+        derived = troop.Base.extend()
+            .addPrivate({
+                _hello: "world"
+            }).addPublic({
+                yo: "momma"
+            }).addMethod({
+                foo : testMethod,
+                init: init
+            });
+
+        keys = Object.keys(derived).sort();
+        deepEqual(
+            keys,
+            hasPropertyAttributes ?
+                ['foo', 'init', 'yo'] :
+                ['_hello', 'constructor', 'foo', 'init', 'yo'],
+            "Public class members"
+        );
+
+        equal(derived._hello, "world", "Private class member");
+
+        instance = derived.create();
+        keys = Object.keys(instance).sort();
+
+        deepEqual(
+            keys,
+            hasPropertyAttributes ?
+                ['holy', 'pi'] :
+                ['_woo', 'constructor', 'holy', 'pi'],
+            "Public instance members"
+        );
+
+        equal(instance._woo, "hoo", "Private instance member");
+
+        equal(instance.getBase(), derived, "Instance extends from derived");
+        equal(derived.getBase(), troop.Base, "Derived extends from troop.Base");
+        equal(troop.Base.getBase(), Object.prototype, "Troop.Base extends from Object.prototype");
+    });
+
+    test("Base validation", function () {
+        ok(Base.isA.call({}, Object.prototype), "{} is an Object.prototype");
+        ok(Base.isA.call([], Array.prototype), "[] is an Array.prototype");
+
+        var myBase = troop.Base.extend()
+                .addMethod({init: function () {}}),
+            myChild = myBase.extend()
+                .addMethod({init: function () {}});
+
+        ok(Base.instanceOf.call(myChild, myBase), "Direct descendant");
+        ok(Base.instanceOf.call(myBase, troop.Base), "Direct descendant");
+        ok(!Base.instanceOf.call(myChild, troop.Base), "Not direct descendant");
+
+        ok(Base.isA.call(myChild, troop.Base), "Not direct descendant");
+    });
 }(troop.Base, troop.Feature));
