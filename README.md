@@ -3,7 +3,7 @@ Troop
 
 True OOP. Fast & transparent.
 
-Troop provides *base class* and a set of *tools* to build a close approximation of true classes in ECMAScript 3/5. Troop puts emphasis on:
+Troop provides *base class* and a set of *tools* to build a close approximation of true classes in ECMAScript 5 (operable in JavaScript 1.5 with limitations). Troop puts emphasis on:
 
 - instantiation performance at multiple inheritance
 - code transparency & reflection: no more duck typing
