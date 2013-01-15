@@ -91,6 +91,23 @@
 
             o.constructor = F;
             return o;
+        },
+
+        /**
+         * Function.prototype.bind
+         * It's a very crude approximation as compared to:
+         * https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Function/bind
+         * @param that {Object} Externally supplied context
+         * @return {function} Function with the supplied context tied to it.
+         */
+        functionBind: function (that) {
+            var fn = this, // function to be bound
+                slice = Array.prototype.slice,
+                args = slice.call(arguments, 1);
+
+            return function () {
+                return fn.apply(that, args.concat(slice.call(arguments)));
+            };
         }
     };
 
@@ -116,5 +133,9 @@
 
     if (typeof Object.create !== 'function') {
         Object.create = self.create;
+    }
+
+    if (typeof Function.prototype.bind !== 'function') {
+        Function.prototype.bind = self.functionBind;
     }
 }());

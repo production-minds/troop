@@ -101,6 +101,24 @@
         equal(child1.constructor.prototype, base, "Immediate prototype");
         equal(child1.test, 'tset', "Applied property");
     });
+
+    test("Function binding", function () {
+        expect(6);
+
+        function test (arg1, arg2) {
+            equal(arg1, 'hello', "Argument 1 ok");
+            equal(arg2, 'world', "Argument 2 ok");
+            return this.foo;
+        }
+
+        equal(typeof test('hello', 'world'), 'undefined', "Foo not present on global scope");
+
+        var bound = Polyfill.functionBind.call(test, {
+            foo: "bar"
+        }, 'hello');
+
+        equal(bound('world'), "bar", "Function bound to context");
+    });
 }(
     troop.Polyfill
 ));
