@@ -294,17 +294,15 @@
             elevateMethod: function (methodName) {
                 dessert.isString(methodName);
 
-                var that = this, // instance or child class
-                    base = Base.getBase.call(this), // class or base class
-                    methods;
+                var base = Base.getBase.call(this), // class or base class
+                    baseMethod = base[methodName],
+                    elevatedMethod;
 
-                if (typeof base[methodName] === 'function') {
-                    methods = {};
-                    methods[methodName] = function () {
-                        return base[methodName].apply(that, arguments);
-                    };
-                    self.addMethod.call(this, methods);
-                }
+                dessert.isFunction(baseMethod, "Attempted to elevate non-method: " + methodName);
+
+                elevatedMethod = {};
+                elevatedMethod[methodName] = baseMethod.bind(this);
+                self.addMethod.call(this, elevatedMethod);
 
                 return this;
             },
