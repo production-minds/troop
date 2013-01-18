@@ -34,7 +34,7 @@
                 // applying normalized arguments
                 host = hostInfo.host;
                 propertyName = hostInfo.propertyName;
-                generator = hostInfo.arguments[0];
+                generator = hostInfo.arguments.shift();
 
                 dessert.isFunction(generator);
 
@@ -49,7 +49,7 @@
                 }
 
                 // rounding up rest of the arguments
-                generatorArguments = [host, propertyName].concat(Array.prototype.slice.call(arguments, 3));
+                generatorArguments = [host, propertyName].concat(hostInfo.arguments);
 
                 // placing class promise on namespace as getter
                 Object.defineProperty(host, propertyName, {

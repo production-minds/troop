@@ -2,6 +2,8 @@
  * Property management unit tests
  */
 /*global troop, module, test, expect, ok, equal, notEqual, deepEqual, raises */
+var ns = {}; // global namespace
+
 (function (Promise) {
     module("Promise");
 
@@ -37,6 +39,20 @@
             Promise.promise(ns, 'bar', "bar");
         }, "Invalid generator function passed");
         equal(ns.bar, "foo", "Property value after second attempt to apply promise");
+    });
+
+    test("Full path", function () {
+        expect(5);
+
+        Promise.promise('ns.bar', function (object, propertyName, param1, param2) {
+            ok(object === ns, "Object passed to generator");
+            equal(propertyName, 'bar', "Property name passed to generator");
+            equal(param1, 'param1', "Extra parameter passed to generator");
+            equal(param2, 'param2', "Extra parameter passed to generator");
+            return "foo";
+        }, "param1", "param2");
+
+        equal(ns.bar, "foo", "Accessing for the first time");
     });
 
     test("Promise with tracking", function () {
