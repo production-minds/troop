@@ -2,8 +2,13 @@
  * Top-Level Library Namespace
  */
 /*global exports, require */
-var troop = {},
+var troop,
     dessert;
+
+(function () {
+    /** @namespace */
+    troop = this.troop = {};
+}());
 
 // adding Node.js dependencies
 if (typeof exports === 'object' && typeof require === 'function') {
