@@ -1,4 +1,5 @@
 /*global troop, module, test, expect, ok, equal, notEqual, deepEqual, raises */
+/*global window */
 (function (Utils) {
     module("Utils");
 
@@ -18,7 +19,7 @@
         deepEqual(
             Utils.extractHostInfo('bar.path.prop', testFunc),
             {
-                fullPath        : 'bar.path.prop',
+                fullPath    : 'bar.path.prop',
                 host        : window.bar.path,
                 propertyName: 'prop',
                 arguments   : [testFunc]
@@ -29,7 +30,7 @@
         deepEqual(
             Utils.extractHostInfo('bar.path', 'prop', testFunc),
             {
-                fullPath        : 'bar.path.prop',
+                fullPath    : 'bar.path.prop',
                 host        : window.bar.path,
                 propertyName: 'prop',
                 arguments   : [testFunc]
@@ -40,7 +41,7 @@
         deepEqual(
             Utils.extractHostInfo(window.bar.path, 'prop', testFunc),
             {
-                fullPath        : undefined,
+                fullPath    : undefined,
                 host        : window.bar.path,
                 propertyName: 'prop',
                 arguments   : [testFunc]
