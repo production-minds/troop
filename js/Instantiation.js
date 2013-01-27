@@ -47,6 +47,4 @@
     Base.addMethod({
         create: self.create
     });
-
-    return self;
 }(troop.Base, troop.Surrogate));
