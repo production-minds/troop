@@ -78,9 +78,9 @@
                 }
 
                 dessert
-                    .isStringOptional(fullPath)
-                    .isObject(host)
-                    .isString(propertyName);
+                    .isStringOptional(fullPath, "Full path is not string")
+                    .isObject(host, "Host is not an object")
+                    .isString(propertyName, "Property name is not string");
 
                 return {
                     fullPath    : fullPath,
