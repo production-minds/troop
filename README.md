@@ -12,7 +12,7 @@ The price to pay for all this is there are no real privates in Troop. Pseudo-pri
 
 The library is based on a series of posts at [Code Pristine](http://codepristine.com), demonstrating the advantages of the OOP model implemented by Troop.
 
-Troop requires assertion library "[dessert](https://github.com/danstocker/dessert)". Version requirements are specified in `js/troop.js`.
+Troop requires assertion library "[dessert](https://github.com/danstocker/dessert)". Version requirements are specified in `js/namespace.js`.
 
 Example
 -------

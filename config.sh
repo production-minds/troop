@@ -7,7 +7,7 @@ LIB="troop"
 
 FILES="
 js/license.js
-js/troop.js
+js/namespace.js
 js/Polyfill.js
 js/Feature.js
 js/Base.js
