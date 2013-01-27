@@ -10,7 +10,7 @@
     /**
      * Shortcut to global scope.
      * `window` in the browser, `global` in Node.js
-     * @type {window|global}
+     * @type {Window|Object}
      */
     global = this;
 
