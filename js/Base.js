@@ -24,8 +24,7 @@
             }
 
             for (methodName in expr) {
-                if (expr.hasOwnProperty(methodName) &&
-                    !this.isFunctionOptional(expr[methodName])) {
+                if (expr.hasOwnProperty(methodName) && !this.isFunctionOptional(expr[methodName])) {
                     return false;
                 }
             }
@@ -148,7 +147,6 @@
                 Object.getPrototypeOf(this);
         },
 
-
         /**
          * Tests whether the current object is a descendant of base.
          * @param base {troop.Base}
@@ -164,6 +162,32 @@
          */
         instanceOf: function (base) {
             return self.getBase.call(this) === base;
+        }
+    });
+
+    self.addMethod.call(troop, {
+        /**
+         * Generates a function that substitutes require() with a dummy function
+         * returning a troop object on which methods may be mocked.
+         * @return {Function}
+         */
+        mockRequire: function () {
+            // registry of fake modules
+            var modules = {},
+                require;
+
+            require = function (moduleName) {
+                var module;
+                if (modules.hasOwnProperty(moduleName)) {
+                    return modules[moduleName];
+                } else {
+                    module = self.extend();
+                    modules[moduleName] = module;
+                    return module;
+                }
+            };
+
+            return require;
         }
     });
 }());

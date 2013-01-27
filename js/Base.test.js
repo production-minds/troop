@@ -1,7 +1,7 @@
 /**
  * Base class unit tests
  */
-/*global dessert, troop, module, test, ok, equal, notEqual, deepEqual, raises, expect, mock, unMock */
+/*global dessert, troop, module, test, ok, equal, notEqual, strictEqual, deepEqual, raises, expect, mock, unMock */
 (function (Base, Feature) {
     module("Base");
 
@@ -171,5 +171,16 @@
         ok(!Base.instanceOf.call(myChild, troop.Base), "Not direct descendant");
 
         ok(Base.isA.call(myChild, troop.Base), "Not direct descendant");
+    });
+
+    test("Mock require", function () {
+        var require = troop.mockRequire(),
+            module;
+
+        ok(typeof require === 'function', "Require is a function");
+
+        module = require('foo');
+        ok(module.isA(Base), "Fake module returned is a troop object");
+        strictEqual(require('foo'), module, "Once accessed, modules remain the same");
     });
 }(troop.Base, troop.Feature));
