@@ -133,7 +133,7 @@
             keys,
             hasPropertyAttributes ?
                 ['foo', 'init', 'yo'] :
-                ['_hello', 'constructor', 'foo', 'init', 'yo'],
+                ['_hello', 'foo', 'init', 'yo'],
             "Public class members"
         );
 
@@ -146,7 +146,7 @@
             keys,
             hasPropertyAttributes ?
                 ['holy', 'pi'] :
-                ['_woo', 'constructor', 'holy', 'pi'],
+                ['_woo', 'holy', 'pi'],
             "Public instance members"
         );
 
