@@ -15,4 +15,5 @@ js/Surrogate.js
 js/Instantiation.js
 js/Properties.js
 js/Promise.js
+js/exports.js
 "
