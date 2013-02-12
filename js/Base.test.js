@@ -172,15 +172,4 @@
 
         ok(Base.isA.call(myChild, troop.Base), "Not direct descendant");
     });
-
-    test("Mock require", function () {
-        var require = troop.mockRequire(),
-            module;
-
-        ok(typeof require === 'function', "Require is a function");
-
-        module = require('foo');
-        ok(module.isA(Base), "Fake module returned is a troop object");
-        strictEqual(require('foo'), module, "Once accessed, modules remain the same");
-    });
 }(troop.Base, troop.Feature));
