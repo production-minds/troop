@@ -156,6 +156,11 @@
         },
 
         /**
+         * Tests whether the current class is base of the provided object.
+         */
+        isBaseOf: Object.prototype.isPrototypeOf,
+
+        /**
          * Tests whether the current object is the immediate descendant of base.
          * @param base {troop.Base}
          * @return {Boolean}

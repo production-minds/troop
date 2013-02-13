@@ -171,5 +171,10 @@
         ok(!Base.instanceOf.call(myChild, troop.Base), "Not direct descendant");
 
         ok(Base.isA.call(myChild, troop.Base), "Not direct descendant");
+
+        ok(troop.Base.isBaseOf(myBase), "Troop base class is base to all others");
+        ok(myBase.isBaseOf(myChild), "Descendant");
+        ok(!myChild.isBaseOf(myBase), "Invalid relation");
+        ok(!myChild.isBaseOf(myChild), "Self is not base");
     });
 }(troop.Base, troop.Feature));
