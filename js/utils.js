@@ -18,7 +18,7 @@
             global :
             undefined;
 
-    self = troop.Utils = Base.extend()
+    self = troop.utils = Base.extend()
         .addMethod({
             /**
              * Resolves a path on the global scope.

@@ -103,4 +103,4 @@
     Base.addMethod.call(troop, {
         promise: self.promise
     });
-}(troop.Base, troop.Utils));
+}(troop.Base, troop.utils));

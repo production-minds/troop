@@ -5,7 +5,7 @@
 (function (Properties, Feature) {
     module("Properties");
 
-    test("Utils", function () {
+    test("utils", function () {
         if (!Feature.hasPropertyAttributes()) {
             // no need to check when we're in ES4
             expect(0);

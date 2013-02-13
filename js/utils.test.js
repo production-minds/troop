@@ -1,7 +1,7 @@
 /*global troop, module, test, expect, ok, equal, notEqual, deepEqual, raises */
 /*global window */
 (function (Utils) {
-    module("Utils");
+    module("utils");
 
     test("Scope resolution", function () {
         window.hello = {world: "bar"};
@@ -49,4 +49,4 @@
             "Promise args with host object & property name"
         );
     });
-}(troop.Utils));
+}(troop.utils));

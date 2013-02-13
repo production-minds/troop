@@ -61,4 +61,4 @@
     Base.addMethod({
         addSurrogate: self.addSurrogate
     });
-}(troop.Base, troop.Utils));
+}(troop.Base, troop.utils));
