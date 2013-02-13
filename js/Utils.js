@@ -3,16 +3,20 @@
  *
  * Static class.
  */
-/*globals dessert, troop */
+/*globals window, global, dessert, troop */
 (function (Base) {
-    var global, self;
+    var globalContext, self;
 
     /**
      * Shortcut to global scope.
      * `window` in the browser, `global` in Node.js
      * @type {Window|Object}
      */
-    global = this;
+    globalContext = typeof window === 'object' ?
+        window :
+        typeof global === 'object' ?
+            global :
+            undefined;
 
     self = troop.Utils = Base.extend()
         .addMethod({
@@ -25,7 +29,7 @@
              * @static
              */
             resolve: function (path, context) {
-                var result = context || global;
+                var result = context || globalContext;
                 while (path.length) {
                     result = result[path.shift()];
                     if (typeof result === 'undefined') {
