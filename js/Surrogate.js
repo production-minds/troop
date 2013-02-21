@@ -34,18 +34,15 @@
              * params: namespace, className, filter
              * @this {troop.Base} Class object.
              */
-            addSurrogate: function () {
+            addSurrogate: function (namespace, className, filter) {
                 if (!this.hasOwnProperty('surrogates')) {
                     this.addConstant({surrogates: []});
                 }
 
-                var hostInfo = Utils.extractHostInfo.apply(Utils, arguments),
-                    namespace = hostInfo.host, // namespace for surrogate class
-                    className = hostInfo.propertyName, // name of surrogate class
-                    args = hostInfo.arguments, // rest of arguments
-                    filter = args[0]; // filter function
-
-                dessert.isFunction(filter);
+                dessert
+                    .isPlainObject(namespace)
+                    .isString(className)
+                    .isFunction(filter);
 
                 this.surrogates.push({
                     namespace: namespace,

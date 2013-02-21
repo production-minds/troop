@@ -58,9 +58,5 @@ var globalNs = {};
             ],
             "Surrogate info"
         );
-
-        base.addSurrogate('globalNs.child', filter);
-
-        equal(base.surrogates.length, 2, "New number of surrogates");
     });
 }(troop.Surrogate));

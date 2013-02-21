@@ -7,15 +7,6 @@
 /*global dessert, troop, console */
 (function (Base, Utils) {
     var self = troop.Promise = Base.extend()
-        .addConstant({
-            //////////////////////////////
-            // Constants
-
-            /**
-             * Registry of unfulfilled promises.
-             */
-            unfulfilled: {}
-        })
         .addMethod({
             //////////////////////////////
             // Control
@@ -27,21 +18,13 @@
              * @param generator {function} Generates (and returns) property value.
              */
             promise: function (host, propertyName, generator) {
-                var hostInfo = Utils.extractHostInfo.apply(Utils, arguments),
-                    fullPath = hostInfo.fullPath,
+                var sliceArguments = Array.prototype.slice.bind(arguments),
                     generatorArguments;
 
-                // applying normalized arguments
-                host = hostInfo.host;
-                propertyName = hostInfo.propertyName;
-                generator = hostInfo.arguments.shift();
-
-                dessert.isFunction(generator);
-
-                if (fullPath) {
-                    // adding promise to registry
-                    self.unfulfilled[fullPath] = true;
-                }
+                dessert
+                    .isPlainObject(host)
+                    .isString(propertyName)
+                    .isFunction(generator);
 
                 // checking whether property is already defined
                 if (host.hasOwnProperty(propertyName)) {
@@ -49,7 +32,7 @@
                 }
 
                 // rounding up rest of the arguments
-                generatorArguments = [host, propertyName].concat(hostInfo.arguments);
+                generatorArguments = sliceArguments(0, 2).concat(sliceArguments(3));
 
                 // placing class promise on namespace as getter
                 Object.defineProperty(host, propertyName, {
@@ -72,11 +55,6 @@
                             value = host[propertyName];
                         }
 
-                        if (fullPath) {
-                            // removing promise form registry
-                            delete self.unfulfilled[fullPath];
-                        }
-
                         return value;
                     },
 
@@ -95,10 +73,6 @@
                 });
             }
         });
-
-    Base.addConstant.call(troop, {
-        unfulfilled: self.unfulfilled
-    });
 
     Base.addMethod.call(troop, {
         promise: self.promise
