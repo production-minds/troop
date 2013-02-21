@@ -10,7 +10,6 @@ js/license.js
 js/namespace.js
 js/Feature.js
 js/Base.js
-js/Utils.js
 js/Surrogate.js
 js/Instantiation.js
 js/Properties.js
