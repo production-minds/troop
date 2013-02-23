@@ -40,9 +40,9 @@
                 }
 
                 dessert
-                    .isPlainObject(namespace)
-                    .isString(className)
-                    .isFunction(filter);
+                    .isPlainObject(namespace, "Invalid namespace object")
+                    .isString(className, "Invalid class name")
+                    .isFunction(filter, "Invalid filter function");
 
                 this.surrogates.push({
                     namespace: namespace,

@@ -105,7 +105,7 @@
              */
             _addValue: function (propertyName, value, isWritable, isEnumerable, isConfigurable) {
                 dessert
-                    .isString((propertyName))
+                    .isString(propertyName, "Invalid property name")
                     .isBooleanOptional(isWritable)
                     .isBooleanOptional(isEnumerable)
                     .isBooleanOptional(isConfigurable);
@@ -129,7 +129,7 @@
              */
             _addAccessor: function (propertyName, getter, setter, isEnumerable, isConfigurable) {
                 dessert
-                    .isString((propertyName))
+                    .isString(propertyName, "Invalid property name")
                     .isFunctionOptional(getter)
                     .isFunctionOptional(setter)
                     .isBooleanOptional(isEnumerable)
@@ -202,8 +202,8 @@
              */
             addPrivateMethod: function (methods) {
                 dessert
-                    .isAllFunctions(methods)
-                    .isAllPrefixed(methods, troop.privatePrefix);
+                    .isAllFunctions(methods, "Some private methods are not functions.")
+                    .isAllPrefixed(methods, troop.privatePrefix, "Some private method names do not match the required prefix.");
 
                 self._add.call(Base.getTarget.call(this), methods, false, false, false);
 
@@ -256,7 +256,7 @@
              * @param properties {object} Properties and methods.
              */
             addPrivate: function (properties) {
-                dessert.isAllPrefixed(properties, troop.privatePrefix);
+                dessert.isAllPrefixed(properties, troop.privatePrefix, "Some private property names do not match the required prefix.");
 
                 self._add.call(this, properties, true, false, false);
 
@@ -278,7 +278,7 @@
              * @param properties {object} Constant properties.
              */
             addPrivateConstant: function (properties) {
-                dessert.isAllPrefixed(properties, troop.privatePrefix);
+                dessert.isAllPrefixed(properties, troop.privatePrefix, "Some private constant names do not match the required prefix.");
 
                 self._add.call(this, properties, false, false, false);
 
@@ -292,13 +292,13 @@
              * @param methodName {string} Name of method to elevate.
              */
             elevateMethod: function (methodName) {
-                dessert.isString(methodName);
+                dessert.isString(methodName, "Invalid method name");
 
                 var base = Base.getBase.call(this), // class or base class
                     baseMethod = base[methodName],
                     elevatedMethod;
 
-                dessert.isFunction(baseMethod, "Attempted to elevate non-method: " + methodName);
+                dessert.isFunction(baseMethod, "Attempted to elevate non-method.", methodName);
 
                 elevatedMethod = {};
                 elevatedMethod[methodName] = baseMethod.bind(this);
@@ -313,7 +313,7 @@
              * @param methods {object} Mock methods.
              */
             addMock: function (methods) {
-                dessert.isAllFunctions(methods);
+                dessert.isAllFunctions(methods, "Some mock methods are not functions.");
 
                 self._add.call(this, methods, false, true, true);
 

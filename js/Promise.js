@@ -22,9 +22,9 @@
                     generatorArguments;
 
                 dessert
-                    .isPlainObject(host)
-                    .isString(propertyName)
-                    .isFunction(generator);
+                    .isPlainObject(host, "Host is not a direct descendant of Object.prototype.")
+                    .isString(propertyName, "Invalid property name")
+                    .isFunction(generator, "Invalid generator function");
 
                 // checking whether property is already defined
                 if (host.hasOwnProperty(propertyName)) {

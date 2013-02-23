@@ -59,7 +59,7 @@
          * @param methods {object} Object of methods.
          */
         addMethod: function (methods) {
-            dessert.isAllFunctions(methods);
+            dessert.isAllFunctions(methods, "Some methods are not functions.");
 
             var methodName;
             for (methodName in methods) {
@@ -82,7 +82,7 @@
          * @param methods {object} Object of methods.
          */
         addPrivateMethod: function (methods) {
-            dessert.isAllFunctions(methods);
+            dessert.isAllFunctions(methods, "Some private methods are not functions.");
 
             var methodName;
             for (methodName in methods) {

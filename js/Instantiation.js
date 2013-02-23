@@ -35,10 +35,10 @@
                         return result;
                     } else {
                         // initializer returned something else
-                        dessert.assert(false, "Unrecognizable value returned by .init.");
+                        dessert.assert(false, "Unrecognizable value returned by .init().", result);
                     }
                 } else {
-                    dessert.assert(false, "Class implements no .init method.");
+                    dessert.assert(false, "Class implements no .init() method.");
                 }
             }
         });
