@@ -146,7 +146,7 @@
             /**
              * Adds properties to object with the specified attributes.
              * @this {object}
-             * @param properties {object|function} Property object or its generator function.
+             * @param {object|function} properties Property object or its generator function.
              * @param {boolean} [isWritable]
              * @param {boolean} [isEnumerable]
              * @param {boolean} [isConfigurable]
