@@ -13,7 +13,7 @@
     dessert.addTypes({
         /**
          * Checks whether properties of `expr` are *all* functions.
-         * @param expr {object}
+         * @param {object} expr
          * @return {Boolean}
          */
         isAllFunctions: function (expr) {
@@ -34,7 +34,7 @@
 
         /**
          * Verifies if `expr` is a Troop class.
-         * @param expr {troop.Base}
+         * @param {troop.Base} expr
          * @return {Boolean}
          */
         isClass: function (expr) {
@@ -43,7 +43,7 @@
 
         /**
          * Verifies if `expr` is a Troop class or is not defined.
-         * @param expr {troop.Base}
+         * @param {troop.Base} expr
          * @return {Boolean}
          */
         isClassOptional: function (expr) {
@@ -56,7 +56,7 @@
         /**
          * Disposable method for adding further (public) methods.
          * Will be replaced by Properties.
-         * @param methods {object} Object of methods.
+         * @param {object} methods Object of methods.
          */
         addMethod: function (methods) {
             dessert.isAllFunctions(methods, "Some methods are not functions.");
@@ -79,7 +79,7 @@
         /**
          * Disposable method for adding further private methods.
          * Will be replaced by Properties.
-         * @param methods {object} Object of methods.
+         * @param {object} methods Object of methods.
          */
         addPrivateMethod: function (methods) {
             dessert.isAllFunctions(methods, "Some private methods are not functions.");
@@ -149,7 +149,7 @@
 
         /**
          * Tests whether the current object is a descendant of base.
-         * @param base {troop.Base}
+         * @param {troop.Base} base
          */
         isA: function (base) {
             return base.isPrototypeOf(this);
@@ -162,7 +162,7 @@
 
         /**
          * Tests whether the current object is the immediate descendant of base.
-         * @param base {troop.Base}
+         * @param {troop.Base} base
          * @return {Boolean}
          */
         instanceOf: function (base) {

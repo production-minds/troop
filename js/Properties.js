@@ -10,8 +10,8 @@
     dessert.addTypes({
         /**
          * Checks property names against prefix.
-         * @param expr {object} Host object.
-         * @param prefix {string} Prefix.
+         * @param {object} expr Host object.
+         * @param {string} prefix Prefix.
          * @return {boolean} Whether all properties on the object satisfy the prefix condition.
          */
         isAllPrefixed: function (expr, prefix) {
@@ -35,7 +35,7 @@
 
         /**
          * Tells whether an object holds a getter / setter pair.
-         * @param expr {object} Host object.
+         * @param {object} expr Host object.
          * @return {boolean}
          */
         isAccessor: function (expr) {
@@ -54,8 +54,8 @@
         /**
          * Validates an object for being trait in the context of a host object.
          * Compares the immediate base classes of the trait and the host.
-         * @param trait {object} Trait object.
-         * @param [host] {object} Host object.
+         * @param {object} trait Trait object.
+         * @param {object} [host] Host object.
          */
         isTrait: function (trait, host) {
             if (this.isPlainObject(trait)) {
@@ -79,9 +79,9 @@
             /**
              * Assigns a property to the object using an ES5 property descriptor.
              * Uses either Object.defineProperty, or assignment.
-             * @param object {object}
-             * @param propertyName {string}
-             * @param descriptor {object} ES5 property descriptor.
+             * @param {object} object
+             * @param {string} propertyName
+             * @param {object} descriptor ES5 property descriptor.
              * @private
              * @static
              */
@@ -96,11 +96,11 @@
 
             /**
              * Adds single value property.
-             * @param propertyName {string} Property name.
+             * @param {string} propertyName Property name.
              * @param value {*} Property value to be assigned.
-             * @param [isWritable] {boolean}
-             * @param [isEnumerable] {boolean}
-             * @param [isConfigurable] {boolean}
+             * @param {boolean} [isWritable]
+             * @param {boolean} [isEnumerable]
+             * @param {boolean} [isConfigurable]
              * @private
              */
             _addValue: function (propertyName, value, isWritable, isEnumerable, isConfigurable) {
@@ -120,11 +120,11 @@
 
             /**
              * Adds single accessor property.
-             * @param propertyName {string} Property name.
-             * @param [getter] {function} Property getter.
-             * @param [setter] {function} Property setter.
-             * @param [isEnumerable] {boolean}
-             * @param [isConfigurable] {boolean}
+             * @param {string} propertyName Property name.
+             * @param {function} [getter] Property getter.
+             * @param {function} [setter] Property setter.
+             * @param {boolean} [isEnumerable]
+             * @param {boolean} [isConfigurable]
              * @private
              */
             _addAccessor: function (propertyName, getter, setter, isEnumerable, isConfigurable) {
@@ -147,9 +147,9 @@
              * Adds properties to object with the specified attributes.
              * @this {object}
              * @param properties {object|function} Property object or its generator function.
-             * @param [isWritable] {boolean}
-             * @param [isEnumerable] {boolean}
-             * @param [isConfigurable] {boolean}
+             * @param {boolean} [isWritable]
+             * @param {boolean} [isEnumerable]
+             * @param {boolean} [isConfigurable]
              */
             _add: function (properties, isWritable, isEnumerable, isConfigurable) {
                 var propertyName, property;
@@ -185,7 +185,7 @@
             /**
              * Adds public read-only methods to class.
              * @this {troop.Base} Class object.
-             * @param methods {object} Methods.
+             * @param {object} methods Methods.
              */
             addMethod: function (methods) {
                 dessert.isAllFunctions(methods);
@@ -198,7 +198,7 @@
             /**
              * Adds private read-only methods to class.
              * @this {troop.Base} Class object.
-             * @param methods {object} Methods.
+             * @param {object} methods Methods.
              */
             addPrivateMethod: function (methods) {
                 dessert
@@ -214,7 +214,7 @@
              * Copies properties and methods from an object
              * and adds them preserving all property attributes.
              * In testing mode, only copies methods!
-             * @param trait {object} Object containing traits.
+             * @param {object} trait Object containing traits.
              */
             addTrait: function (trait) {
                 // obtaining all property names (including non-enumerable)
@@ -244,7 +244,7 @@
             /**
              * Adds public writable members to class or instance.
              * @this {troop.Base} Class or instance object.
-             * @param properties {object} Properties and methods.
+             * @param {object} properties Properties and methods.
              */
             addPublic: function (properties) {
                 return self._add.call(this, properties, true, true, false);
@@ -253,7 +253,7 @@
             /**
              * Adds pseudo-private writable members to class or instance.
              * @this {troop.Base} Class or instance object.
-             * @param properties {object} Properties and methods.
+             * @param {object} properties Properties and methods.
              */
             addPrivate: function (properties) {
                 dessert.isAllPrefixed(properties, troop.privatePrefix, "Some private property names do not match the required prefix.");
@@ -266,7 +266,7 @@
             /**
              * Adds public constant (read-only) members to instance.
              * @this {troop.Base} Instance object.
-             * @param properties {object} Constant properties.
+             * @param {object} properties Constant properties.
              */
             addConstant: function (properties) {
                 return self._add.call(this, properties, false, true, false);
@@ -275,7 +275,7 @@
             /**
              * Adds private constant (read-only & non-enumerable) members to instance.
              * @this {troop.Base} Instance object.
-             * @param properties {object} Constant properties.
+             * @param {object} properties Constant properties.
              */
             addPrivateConstant: function (properties) {
                 dessert.isAllPrefixed(properties, troop.privatePrefix, "Some private constant names do not match the required prefix.");
@@ -289,7 +289,7 @@
              * Elevates method from class level to instance level.
              * (Or from base class to child class.)
              * Ties context to the object it was elevated to.
-             * @param methodName {string} Name of method to elevate.
+             * @param {string} methodName Name of method to elevate.
              */
             elevateMethod: function (methodName) {
                 dessert.isString(methodName, "Invalid method name");
@@ -310,7 +310,7 @@
             /**
              * Adds public mock methods (read-only, but removable) members to instance or class.
              * @this {troop.Base} Instance or class object.
-             * @param methods {object} Mock methods.
+             * @param {object} methods Mock methods.
              */
             addMock: function (methods) {
                 dessert.isAllFunctions(methods, "Some mock methods are not functions.");

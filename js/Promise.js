@@ -13,9 +13,9 @@
 
             /**
              * Promises a property definition (read-only).
-             * @param host {object} Host object.
-             * @param propertyName {string} Property name.
-             * @param generator {function} Generates (and returns) property value.
+             * @param {object} host Host object.
+             * @param {string} propertyName Property name.
+             * @param {function} generator Generates (and returns) property value.
              */
             promise: function (host, propertyName, generator) {
                 var sliceArguments = Array.prototype.slice.bind(arguments),
