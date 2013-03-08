@@ -3,6 +3,9 @@
  */
 /*global troop */
 (function () {
+    /**
+     * @class troop.Feature
+     */
     var self = troop.Feature = {
         /**
          * Determines whether read-only properties may be

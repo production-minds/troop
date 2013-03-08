@@ -2,16 +2,20 @@
  * Instantiation Feature
  */
 /*global dessert, troop */
-(function (Base, Surrogate) {
-    var self = troop.Instantiation = Base.extend()
-        .addMethod({
+(function () {
+    /**
+     * @class troop.Instantiation
+     * @extends troop.Base
+     */
+    var self = troop.Instantiation = troop.Base.extend()
+        .addMethod(/** @lends troop.Instantiation */{
             /**
              * Creates a class instance.
              * The derived class must implement an .init method
              * which decorates the instance with necessary properties.
              * @static
              * @this {troop.Base} Class.
-             * @return {troop.Base} Instance.
+             * @return {troop.Base|undefined} Instance.
              * @example
              * var instance = someClass.create(someArgs);
              */
@@ -20,7 +24,7 @@
                     result;
 
                 // instantiating class or surrogate
-                that = Base.extend.call(Surrogate.getSurrogate.apply(this, arguments) || this);
+                that = troop.Base.extend.call(troop.Surrogate.getSurrogate.apply(this, arguments) || this);
 
                 // initializing instance properties
                 if (typeof this.init === 'function') {
@@ -44,7 +48,8 @@
         });
 
     // delegating public methods to troop.Base
-    Base.addMethod({
+    troop.Base.addMethod(/** @lends troop.Base */{
+        /** @function */
         create: self.create
     });
-}(troop.Base, troop.Surrogate));
+}());

@@ -2,14 +2,17 @@
  * Surrogate Class Feature
  */
 /*global dessert, troop */
-(function (Base, Utils) {
-    var self = troop.Surrogate = Base.extend()
-        .addMethod({
+(function () {
+    /**
+     * @class troop.Surrogate
+     * @extends troop.Base
+     */
+    var self = troop.Surrogate = troop.Base.extend()
+        .addMethod(/** @lends troop.Surrogate */{
             /**
              * Retrieves first surrogate fitting constructor arguments.
              * @this {troop.Base} Class
-             * @return {troop.Base}
-             * @private
+             * @return {troop.Base|undefined}
              */
             getSurrogate: function () {
                 var surrogates = this.surrogates,
@@ -55,7 +58,7 @@
         });
 
     // delegating public methods to troop.Base
-    Base.addMethod({
+    troop.Base.addMethod(/** @lends troop.Base*/{
         addSurrogate: self.addSurrogate
     });
-}(troop.Base, troop.utils));
+}());

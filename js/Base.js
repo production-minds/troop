@@ -10,7 +10,7 @@
     var self;
 
     // custom assertion for troop classes
-    dessert.addTypes({
+    dessert.addTypes(/** @lends dessert */{
         /**
          * Checks whether properties of `expr` are *all* functions.
          * @param {object} expr
@@ -52,6 +52,9 @@
         }
     });
 
+    /**
+     * @class troop.Base
+     */
     self = troop.Base = {
         /**
          * Disposable method for adding further (public) methods.
@@ -100,13 +103,13 @@
         }
     };
 
-    self.addMethod({
+    self.addMethod(/** @lends troop.Base */{
         /**
          * Extends base class with methods.
          * Extended class will have methods as read-only own properties.
          * @function
          * @this {troop.Base} Troop class.
-         * @return {object}
+         * @return {troop.Base}
          */
         extend: function () {
             var result = Object.create(this);
@@ -157,6 +160,7 @@
 
         /**
          * Tests whether the current class is base of the provided object.
+         * @function
          */
         isBaseOf: Object.prototype.isPrototypeOf,
 

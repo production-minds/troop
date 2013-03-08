@@ -5,9 +5,13 @@
  * A promise means that the property will be evaluated upon first access.
  */
 /*global dessert, troop, console */
-(function (Base, Utils) {
-    var self = troop.Promise = Base.extend()
-        .addMethod({
+(function () {
+    /**
+     * @class troop.Promise
+     * @extends troop.Base
+     */
+    var self = troop.Promise = troop.Base.extend()
+        .addMethod(/** @lends troop.Promise */{
             //////////////////////////////
             // Control
 
@@ -74,7 +78,8 @@
             }
         });
 
-    Base.addMethod.call(troop, {
+    troop.Base.addMethod.call(troop, /** @lends troop */{
+        /** @function */
         promise: self.promise
     });
-}(troop.Base, troop.utils));
+}());

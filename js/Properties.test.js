@@ -298,7 +298,8 @@
     });
 
     test("Method elevation", function () {
-        var base = {test: function () {return this;}},
+        var base = troop.Base.extend()
+                .addMethod({test: function () {return this;}}),
             instance = Object.create(base);
 
         equal(instance.test, base.test, "Instance method same as class method");
@@ -327,6 +328,6 @@
         deepEqual(tmp, {}, "Mock methods removed");
     });
 }(
-    troop.Properties,
-    troop.Feature
-));
+        troop.Properties,
+        troop.Feature
+    ));
