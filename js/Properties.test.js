@@ -327,7 +327,4 @@
 
         deepEqual(tmp, {}, "Mock methods removed");
     });
-}(
-        troop.Properties,
-        troop.Feature
-    ));
+}(troop.Properties, troop.Feature));

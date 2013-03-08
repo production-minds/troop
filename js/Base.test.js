@@ -6,7 +6,7 @@
     module("Base");
 
     test("Method addition", function () {
-        var isES4 = !Feature.hasPropertyAttributes();
+        var isES3 = !Feature.hasPropertyAttributes();
 
         equal(Base.hasOwnProperty('foo'), false, "Method not present previously");
 
@@ -27,7 +27,7 @@
 
         equal(result, Base, "addMethod returns self");
 
-        if (isES4) {
+        if (isES3) {
             equal(Base.hasOwnProperty('foo'), true, "Method added");
         } else {
             deepEqual(Object.getOwnPropertyDescriptor(Base, 'foo'), {
@@ -42,7 +42,7 @@
             _foo: func
         }, true);
 
-        if (isES4) {
+        if (isES3) {
             equal(Base.hasOwnProperty('_foo'), true, "Private method added");
         } else {
             deepEqual(Object.getOwnPropertyDescriptor(Base, '_foo'), {
