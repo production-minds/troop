@@ -38,7 +38,7 @@
          * @return {Boolean}
          */
         isClass: function (expr) {
-            return expr instanceof Object && self.isPrototypeOf(expr);
+            return self.isPrototypeOf(expr);
         },
 
         /**
@@ -48,7 +48,7 @@
          */
         isClassOptional: function (expr) {
             return typeof expr === 'undefined' ||
-                   expr instanceof Object && self.isPrototypeOf(expr);
+                   self.isPrototypeOf(expr);
         }
     });
 
