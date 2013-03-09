@@ -77,29 +77,6 @@
             }
 
             return this;
-        },
-
-        /**
-         * Disposable method for adding further private methods.
-         * Will be replaced by Properties.
-         * @param {object} methods Object of methods.
-         */
-        addPrivateMethod: function (methods) {
-            dessert.isAllFunctions(methods, "Some private methods are not functions.");
-
-            var methodName;
-            for (methodName in methods) {
-                if (methods.hasOwnProperty(methodName)) {
-                    Object.defineProperty(this, methodName, {
-                        value       : methods[methodName],
-                        enumerable  : false,
-                        writable    : false,
-                        configurable: false
-                    });
-                }
-            }
-
-            return this;
         }
     };
 
