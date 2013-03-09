@@ -5,76 +5,66 @@
  * A promise means that the property will be evaluated upon first access.
  */
 /*global dessert, troop, console */
-(function () {
+troop.Base.addMethod.call(troop, /** @lends troop */{
     /**
-     * @class troop.Promise
+     * Promises a property definition (read-only).
+     * @param {object} host Host object.
+     * @param {string} propertyName Property name.
+     * @param {function} generator Generates (and returns) property value.
      */
-    var self = troop.Promise = {
-        /**
-         * Promises a property definition (read-only).
-         * @param {object} host Host object.
-         * @param {string} propertyName Property name.
-         * @param {function} generator Generates (and returns) property value.
-         */
-        promise: function (host, propertyName, generator) {
-            var sliceArguments = Array.prototype.slice.bind(arguments),
-                generatorArguments;
+    promise: function (host, propertyName, generator) {
+        var sliceArguments = Array.prototype.slice.bind(arguments),
+            generatorArguments;
 
-            dessert
-                .isPlainObject(host, "Host is not a direct descendant of Object.prototype.")
-                .isString(propertyName, "Invalid property name")
-                .isFunction(generator, "Invalid generator function");
+        dessert
+            .isPlainObject(host, "Host is not a direct descendant of Object.prototype.")
+            .isString(propertyName, "Invalid property name")
+            .isFunction(generator, "Invalid generator function");
 
-            // checking whether property is already defined
-            if (host.hasOwnProperty(propertyName)) {
-                return;
-            }
+        // checking whether property is already defined
+        if (host.hasOwnProperty(propertyName)) {
+            return;
+        }
 
-            // rounding up rest of the arguments
-            generatorArguments = sliceArguments(0, 2).concat(sliceArguments(3));
+        // rounding up rest of the arguments
+        generatorArguments = sliceArguments(0, 2).concat(sliceArguments(3));
 
-            // placing class promise on namespace as getter
-            Object.defineProperty(host, propertyName, {
-                get: function () {
-                    // obtaining property value
-                    var value = generator.apply(this, generatorArguments);
+        // placing class promise on namespace as getter
+        Object.defineProperty(host, propertyName, {
+            get: function () {
+                // obtaining property value
+                var value = generator.apply(this, generatorArguments);
 
-                    if (typeof value !== 'undefined') {
-                        // generator returned a property value
-                        // overwriting promise with actual property value
-                        Object.defineProperty(host, propertyName, {
-                            value       : value,
-                            writable    : false,
-                            enumerable  : true,
-                            configurable: false
-                        });
-                    } else {
-                        // no return value
-                        // generator supposedly assigned value to property
-                        value = host[propertyName];
-                    }
-
-                    return value;
-                },
-
-                set: function (value) {
-                    // overwriting promise with property value
+                if (typeof value !== 'undefined') {
+                    // generator returned a property value
+                    // overwriting promise with actual property value
                     Object.defineProperty(host, propertyName, {
                         value       : value,
                         writable    : false,
                         enumerable  : true,
                         configurable: false
                     });
-                },
+                } else {
+                    // no return value
+                    // generator supposedly assigned value to property
+                    value = host[propertyName];
+                }
 
-                enumerable  : true,
-                configurable: true  // must be configurable in order to be re-defined
-            });
-        }
-    };
+                return value;
+            },
 
-    troop.Base.addMethod.call(troop, /** @lends troop */{
-        /** @function */
-        promise: self.promise
-    });
-}());
+            set: function (value) {
+                // overwriting promise with property value
+                Object.defineProperty(host, propertyName, {
+                    value       : value,
+                    writable    : false,
+                    enumerable  : true,
+                    configurable: false
+                });
+            },
+
+            enumerable  : true,
+            configurable: true  // must be configurable in order to be re-defined
+        });
+    }
+});

@@ -2,7 +2,7 @@
  * Inheritance unit tests
  */
 /*global troop, module, test, ok, equal, deepEqual, expect, raises */
-(function (Instantiation, Feature) {
+(function () {
     module("Instantiation");
 
     test("Instantiation", function () {
@@ -113,7 +113,4 @@
         troop.testing = false;
         delete troop.Base.init;
     });
-}(
-    troop.Instantiation,
-    troop.Feature
-));
+}());

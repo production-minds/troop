@@ -6,7 +6,7 @@
     /**
      * @class troop.Surrogate
      */
-    var self = troop.Surrogate = {
+    troop.Surrogate = {
         /**
          * Retrieves first surrogate fitting constructor arguments.
          * @this {troop.Base} Class
@@ -26,8 +26,10 @@
                     }
                 }
             }
-        },
+        }
+    };
 
+    troop.Base.addMethod(/** @lends troop.Base */{
         /**
          * Adds surrogate class to this class.
          * When surrogate classes are present, instantiation is delegated
@@ -53,11 +55,5 @@
 
             return this;
         }
-    };
-
-    // delegating public methods to troop.Base
-    troop.Base.addMethod(/** @lends troop.Base */{
-        /** @function */
-        addSurrogate: self.addSurrogate
     });
 }());

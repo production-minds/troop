@@ -4,7 +4,7 @@
 /*global troop, module, test, expect, ok, equal, notEqual, deepEqual, raises */
 var ns = {}; // global namespace
 
-(function (Promise) {
+(function () {
     module("Promise");
 
     test("Promise", function () {
@@ -12,7 +12,7 @@ var ns = {}; // global namespace
 
         expect(11);
 
-        Promise.promise(ns, 'bar', function (object, propertyName, param1, param2) {
+        troop.promise(ns, 'bar', function (object, propertyName, param1, param2) {
             ok(object === ns, "Object passed to generator");
             equal(propertyName, 'bar', "Property name passed to generator");
             equal(param1, 'param1', "Extra parameter passed to generator");
@@ -28,7 +28,7 @@ var ns = {}; // global namespace
 
         ns = {};
 
-        Promise.promise(ns, 'bar', function () {
+        troop.promise(ns, 'bar', function () {
             ns.bar = 'foo';
         });
 
@@ -36,10 +36,8 @@ var ns = {}; // global namespace
         equal(ns.bar, "foo", "Accessing for the first time");
 
         raises(function () {
-            Promise.promise(ns, 'bar', "bar");
+            troop.promise(ns, 'bar', "bar");
         }, "Invalid generator function passed");
         equal(ns.bar, "foo", "Property value after second attempt to apply promise");
     });
-}(
-    troop.Promise
-));
+}());

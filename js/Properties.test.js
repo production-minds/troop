@@ -2,7 +2,7 @@
  * Property management unit tests
  */
 /*global dessert, troop, module, test, expect, ok, equal, notEqual, deepEqual, raises */
-(function (Properties, Feature) {
+(function (Properties, Base, Feature) {
     module("Properties");
 
     test("utils", function () {
@@ -161,13 +161,13 @@
         raises(
             function () {
                 destination = Object.create({});
-                Properties.addTrait.call(destination, trait);
+                Base.addTrait.call(destination, trait);
             },
             "Trait prototype must match host's"
         );
 
         destination = Object.create(base);
-        Properties.addTrait.call(destination, trait);
+        Base.addTrait.call(destination, trait);
 
         deepEqual(
             Object.getOwnPropertyDescriptor(destination, 'foo'),
@@ -183,7 +183,7 @@
         troop.testing = true;
 
         destination = Object.create(base);
-        Properties.addTrait.call(destination, trait);
+        Base.addTrait.call(destination, trait);
 
         deepEqual(
             Object.getOwnPropertyDescriptor(Object.getPrototypeOf(destination), 'boo'),
@@ -203,7 +203,7 @@
         var tmp = {},
             result;
 
-        result = Properties.addMethod.call(tmp, {
+        result = Base.addMethod.call(tmp, {
             foo: function () {}
         });
 
@@ -273,16 +273,16 @@
 
         function testMethod() {}
 
-        Properties.addMethod.call(tmp, {
+        Base.addMethod.call(tmp, {
             test: testMethod
         });
 
-        Properties.addConstant.call(tmp, {
+        Base.addConstant.call(tmp, {
             foo: "foo"
         });
 
         raises(function () {
-            Properties.addPrivate.call(tmp, {
+            Base.addPrivate.call(tmp, {
                 bar: "bar"
             });
         }, "Invalid private property");
@@ -303,7 +303,7 @@
             instance = Object.create(base);
 
         equal(instance.test, base.test, "Instance method same as class method");
-        Properties.elevateMethod.call(instance, 'test');
+        Base.elevateMethod.call(instance, 'test');
         notEqual(instance.test, base.test, "Instance method differs from class method");
 
         var test = instance.test;
@@ -315,7 +315,7 @@
 
         function testMethod() {}
 
-        Properties.addMock.call(tmp, {
+        Base.addMock.call(tmp, {
             foo: testMethod
         });
 
@@ -323,8 +323,8 @@
             foo: testMethod
         }, "Mock method added");
 
-        Properties.removeMocks.call(tmp);
+        Base.removeMocks.call(tmp);
 
         deepEqual(tmp, {}, "Mock methods removed");
     });
-}(troop.Properties, troop.Feature));
+}(troop.Properties, troop.Base, troop.Feature));
