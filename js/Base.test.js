@@ -5,55 +5,6 @@
 (function (Base, Feature) {
     module("Base");
 
-    test("Method addition", function () {
-        var isES3 = !Feature.hasPropertyAttributes();
-
-        equal(Base.hasOwnProperty('foo'), false, "Method not present previously");
-
-        raises(function () {
-            Base.addMethod('foo');
-        }, "Non-object throws error");
-
-        raises(function () {
-            Base.addMethod({
-                foo: 'bar'
-            });
-        }, "Non-function throws error");
-
-        var func = function () {},
-            result = Base.addMethod({
-                foo: func
-            });
-
-        equal(result, Base, "addMethod returns self");
-
-        if (isES3) {
-            equal(Base.hasOwnProperty('foo'), true, "Method added");
-        } else {
-            deepEqual(Object.getOwnPropertyDescriptor(Base, 'foo'), {
-                value       : func,
-                enumerable  : true,
-                writable    : false,
-                configurable: false
-            }, "Method added");
-        }
-
-        Base.addPrivateMethod({
-            _foo: func
-        }, true);
-
-        if (isES3) {
-            equal(Base.hasOwnProperty('_foo'), true, "Private method added");
-        } else {
-            deepEqual(Object.getOwnPropertyDescriptor(Base, '_foo'), {
-                value       : func,
-                enumerable  : false,
-                writable    : false,
-                configurable: false
-            }, "Private method added");
-        }
-    });
-
     test("Class extension", function () {
         var myClass = Base.extend.call(Object.prototype);
 
