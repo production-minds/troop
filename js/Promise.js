@@ -17,7 +17,7 @@ troop.Base.addMethod.call(troop, /** @lends troop */{
             generatorArguments;
 
         dessert
-            .isPlainObject(host, "Host is not a direct descendant of Object.prototype.")
+            .isObject(host, "Host is not an Object")
             .isString(propertyName, "Invalid property name")
             .isFunction(generator, "Invalid generator function");
 

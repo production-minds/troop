@@ -50,7 +50,7 @@ troop.Base.addMethod(/** @lends troop.Base */{
         }
 
         dessert
-            .isPlainObject(namespace, "Invalid namespace object")
+            .isObject(namespace, "Invalid namespace object")
             .isString(className, "Invalid class name")
             .isFunction(filter, "Invalid filter function");
 
