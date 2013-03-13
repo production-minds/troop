@@ -13,21 +13,20 @@ troop.Base.addMethod(/** @lends troop.Base */{
      * var instance = someClass.create(someArgs);
      */
     create: function () {
-        var that,
+        // instantiating class or surrogate
+        var self = troop.Surrogate.getSurrogate.apply(this, arguments) || this,
+            that = troop.Base.extend.call(self),
             result;
 
-        // instantiating class or surrogate
-        that = troop.Base.extend.call(troop.Surrogate.getSurrogate.apply(this, arguments) || this);
-
         // initializing instance properties
-        if (typeof this.init === 'function') {
+        if (typeof self.init === 'function') {
             // running instance initializer
-            result = this.init.apply(that, arguments);
+            result = self.init.apply(that, arguments);
 
             if (typeof result === 'undefined') {
                 // initializer returned nothing, returning new instance
                 return that;
-            } else if (result !== this && this.isPrototypeOf(result)) {
+            } else if (result !== self && self.isPrototypeOf(result)) {
                 // initializer returned a (different) instance of this class
                 return result;
             } else {

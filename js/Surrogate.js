@@ -13,10 +13,17 @@ troop.Surrogate = {
      * @return {troop.Base|undefined}
      */
     getSurrogate: function () {
-        var surrogates = this.surrogates,
+        var surrogates,
             i, surrogateInfo;
 
-        if (typeof surrogates !== 'undefined') {
+        /**
+         * Surrogates property must be the class' own property
+         * otherwise surrogates would be checked on instantiating
+         * every descendant of the current class, too.
+         * This would be wasteful, unnecessary, and confusing.
+         */
+        if (this.hasOwnProperty('surrogates')) {
+            surrogates = this.surrogates;
             for (i = 0; i < surrogates.length; i++) {
                 surrogateInfo = surrogates[i];
 

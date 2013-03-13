@@ -44,6 +44,9 @@
     test("Surrogate integration test", function () {
         var ns = {};
 
+        /**
+         * Base class for surrogate testing.
+         */
         ns.base = troop.Base.extend()
             .addSurrogate(ns, 'child', function (test) {
                 ok("Filter triggered");
@@ -51,10 +54,16 @@
                     return true;
                 }
             })
+            .addSurrogate(ns, 'initless', function (test) {
+                return test === 'initless';
+            })
             .addMethod({
                 init: function () {}
             });
 
+        /**
+         * Child class that also serves as a surrogate for base.
+         */
         ns.child = ns.base.extend()
             .addMethod({
                 init: function (test) {
@@ -62,16 +71,28 @@
                 }
             });
 
-        expect(6);
+        /**
+         * Init-less class for checking whether instantiation
+         * verifies init() on the extended class.
+         */
+        ns.initless = ns.base.extend();
 
-        // triggers filter & init
+        expect(8);
+
+        // triggers filter & init (1 + 2)
         ok(ns.base.create('test').isA(ns.child), "Triggered filter changes class");
 
-        // triggers filter only
+        // triggers filter only (1 + 1)
         equal(ns.base.create('blah').isA(ns.child), false, "Constructor args don't satisfy filter");
 
-        // triggers init only
+        // triggers init only (1)
         ns.child.create('test');
+
+        // triggers filter(s) only (1 + 1)
+        ok(ns.base.create('initless').isA(ns.initless), "Init-less child class instantiated");
+
+        // does not trigger anything (0)
+        ns.initless.create('test');
     });
 
     test("Custom instance value", function () {
