@@ -6,7 +6,6 @@
 LIB="troop"
 
 FILES="
-js/license.js
 js/namespace.js
 js/Feature.js
 js/Base.js
@@ -16,3 +15,4 @@ js/Properties.js
 js/Promise.js
 js/exports.js
 "
+LICENSE="js/license.js"
