@@ -22,7 +22,7 @@ troop.Base.addMethod.call(troop, /** @lends troop */{
             .isFunction(generator, "Invalid generator function");
 
         // checking whether property is already defined
-        if (host.hasOwnProperty(propertyName)) {
+        if (Object.prototype.hasOwnProperty.call(host, propertyName)) {
             return;
         }
 
