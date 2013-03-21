@@ -72,10 +72,12 @@
         }
     });
 
+    var self;
+
     /**
      * @class troop.Properties
      */
-    var Properties = troop.Properties = {
+    troop.Properties = self = {
         /**
          * Assigns a property to the object using an ES5 property descriptor.
          * Uses either Object.defineProperty, or assignment.
@@ -110,7 +112,7 @@
                 .isBooleanOptional(isEnumerable)
                 .isBooleanOptional(isConfigurable);
 
-            Properties._defineProperty(this, propertyName, {
+            self._defineProperty(this, propertyName, {
                 value       : value,
                 writable    : isWritable || troop.messy,
                 enumerable  : isEnumerable,
@@ -135,7 +137,7 @@
                 .isBooleanOptional(isEnumerable)
                 .isBooleanOptional(isConfigurable);
 
-            Properties._defineProperty(this, propertyName, {
+            self._defineProperty(this, propertyName, {
                 get         : getter,
                 set         : setter,
                 enumerable  : isEnumerable,
@@ -159,7 +161,7 @@
                     property = properties[propertyName];
 
                     if (dessert.validators.isAccessor(property)) {
-                        Properties._addAccessor.call(this,
+                        self._addAccessor.call(this,
                             propertyName,
                             property.get,
                             property.set,
@@ -167,7 +169,7 @@
                             isConfigurable
                         );
                     } else {
-                        Properties._addValue.call(this,
+                        self._addValue.call(this,
                             propertyName,
                             property,
                             isWritable,
@@ -191,7 +193,7 @@
         addMethod: function (methods) {
             dessert.isAllFunctions(methods);
 
-            Properties._add.call(troop.Base.getTarget.call(this), methods, false, true, false);
+            self._add.call(troop.Base.getTarget.call(this), methods, false, true, false);
 
             return this;
         },
@@ -206,7 +208,7 @@
                 .isAllFunctions(methods, "Some private methods are not functions.")
                 .isAllPrefixed(methods, troop.privatePrefix, "Some private method names do not match the required prefix.");
 
-            Properties._add.call(troop.Base.getTarget.call(this), methods, false, false, false);
+            self._add.call(troop.Base.getTarget.call(this), methods, false, false, false);
 
             return this;
         },
@@ -229,7 +231,7 @@
             propertyNames = Object.getOwnPropertyNames(traitTarget);
             for (i = 0; i < propertyNames.length; i++) {
                 propertyName = propertyNames[i];
-                Properties._defineProperty(
+                self._defineProperty(
                     hostTarget,
                     propertyName,
                     Object.getOwnPropertyDescriptor(traitTarget, propertyName)
@@ -248,7 +250,7 @@
          * @param {object} properties Properties and methods.
          */
         addPublic: function (properties) {
-            return Properties._add.call(this, properties, true, true, false);
+            return self._add.call(this, properties, true, true, false);
         },
 
         /**
@@ -259,7 +261,7 @@
         addPrivate: function (properties) {
             dessert.isAllPrefixed(properties, troop.privatePrefix, "Some private property names do not match the required prefix.");
 
-            Properties._add.call(this, properties, true, false, false);
+            self._add.call(this, properties, true, false, false);
 
             return this;
         },
@@ -270,7 +272,7 @@
          * @param {object} properties Constant properties.
          */
         addConstant: function (properties) {
-            return Properties._add.call(this, properties, false, true, false);
+            return self._add.call(this, properties, false, true, false);
         },
 
         /**
@@ -281,7 +283,7 @@
         addPrivateConstant: function (properties) {
             dessert.isAllPrefixed(properties, troop.privatePrefix, "Some private constant names do not match the required prefix.");
 
-            Properties._add.call(this, properties, false, false, false);
+            self._add.call(this, properties, false, false, false);
 
             return this;
         },
@@ -316,7 +318,7 @@
         addMock: function (methods) {
             dessert.isAllFunctions(methods, "Some mock methods are not functions.");
 
-            Properties._add.call(this, methods, false, true, true);
+            self._add.call(this, methods, false, true, true);
 
             return this;
         },

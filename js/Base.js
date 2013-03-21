@@ -55,7 +55,7 @@
     /**
      * @class troop.Base
      */
-    self = troop.Base = {
+    troop.Base = self = {
         /**
          * Disposable method for adding further (public) methods.
          * Will be replaced by Properties.
