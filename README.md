@@ -1,49 +1,59 @@
 Troop
 =====
 
-True OOP. Fast & transparent.
+*Full-featured, testable OOP*
 
-Troop provides *base class* and a set of *tools* to build a close approximation of true classes in ECMAScript 5 (operable in JavaScript 1.5 with limitations). Troop puts emphasis on:
+Troop is an OOP layer aiming to provide static structure for JavaScript applications.
 
-- instantiation performance at multiple inheritance
-- code transparency & reflection: no more duck typing
+Having a static structure leads to
 
-The price to pay for all this is there are no real privates in Troop. Pseudo-privates are supported, which are accessible from the outside, but not enumerable.
+- applications scaling better
+- maintainable codebase
 
-The library is based on a series of posts at [Code Pristine](http://codepristine.com), demonstrating the advantages of the OOP model implemented by Troop.
+Troop features
+--------------
 
-Troop requires assertion library "[dessert](https://github.com/danstocker/dessert)". Version requirements are specified in `js/namespace.js`.
+- classic OO structures like classes, instances, traits
+- taking full advantage of ES5 property attributes
+    - pseudo-privates that are non-enumerable
+    - constants are actually read-only
+- testing mode for applying mock methods
+- on-demand dependency resolution
+
+Troop is distinguished from other OOP-related libs such as MooTools or Backbone by
+
+- not littering *your* classes and instances with its own meta-properties
+- non-declarative API leads to better IDE integration
+- offering simpler unit testing with built-in mocks to speed up TDD process
 
 Example
 -------
 
-The following example defines and instantiates a class with (pseudo-)private & public members, read-only methods and constants.
-
 ```javascript
-var myClass = troop.Base.extend()
+var MyClass = troop.Base.extend()
     .addPrivate({
-        _secret: "ufo"
+        _secret: "ufo" // static private property
     })
     .addPublic({
-        hello: "world"
+        hello: "world" // static public property
     })
     .addConstant({
-        pi: 3.14
+        pi: 3.14 // static public constant
     })
     .addMethod({
-        init: function (place) {
+        init: function (who) {
             this.addPublic({
-                hello: place
+                hello: who
             });
         }
     });
 
-var myInstance = myClass.create("Yonkers");
+var myInstance = MyClass.create("all");
 ```
 
-![myInstance in console](https://dl.dropbox.com/u/9258903/myInstance-0.2.2.png)
+![myInstance in console](https://dl.dropbox.com/u/9258903/myInstance-0.3.0.png)
 
-Also, check out these jsFiddles:
+Check out these jsFiddles for more examples:
 
 - [Using Troop](http://jsfiddle.net/danstocker/n5jze/)
 - [Using Troop promises](http://jsfiddle.net/danstocker/YR374/)
