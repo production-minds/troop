@@ -19,6 +19,7 @@ Troop features
     - constants are actually read-only
 - testing mode for applying mock methods
 - on-demand dependency resolution
+- delegation of instantiation with surrogates
 
 Troop is distinguished from other OOP-related libs such as MooTools or Backbone by
 
