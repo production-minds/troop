@@ -8,5 +8,5 @@ var troop = {},
 
 // adding Node.js dependencies
 if (typeof require === 'function') {
-    dessert = require('dessert').dessert;
+    dessert = dessert || require('dessert').dessert;
 }
