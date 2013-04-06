@@ -4,11 +4,10 @@
 /*global dessert, troop */
 troop.Base.addMethod(/** @lends troop.Base */{
     /**
-     * Creates a class instance.
-     * The derived class must implement an .init method
+     * Creates instance of a class.
+     * Class must implement an .init method
      * which decorates the instance with necessary properties.
-     * @this {troop.Base} Class.
-     * @return {troop.Base|undefined} Instance.
+     * @return {troop.Base} Instance.
      * @example
      * var instance = someClass.create(someArgs);
      */
@@ -36,5 +35,7 @@ troop.Base.addMethod(/** @lends troop.Base */{
         } else {
             dessert.assert(false, "Class implements no .init() method.");
         }
+
+        return result;
     }
 });
