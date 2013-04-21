@@ -9,7 +9,7 @@
         "url" : "https://github.com/production-minds/troop.git"
     },
     "dependencies": {
-        "dessert": ">=0.2.4"
+        "dessert": ">=0.2.6"
     },
     "files"       : ["out/troop.js"],
     "main"        : "out/troop.js"
