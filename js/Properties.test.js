@@ -2,13 +2,13 @@
  * Property management unit tests
  */
 /*global dessert, troop, module, test, expect, ok, equal, notEqual, deepEqual, raises */
-(function (Properties, Base, Feature) {
+(function () {
     "use strict";
 
     module("Properties");
 
     test("utils", function () {
-        if (!Feature.hasPropertyAttributes()) {
+        if (!troop.Feature.hasPropertyAttributes()) {
             // no need to check when we're in ES4
             expect(0);
             return;
@@ -18,7 +18,7 @@
 
         troop.sloppy = true;
 
-        Properties._defineProperty(tmp, 'foo', {
+        troop.Properties._defineProperty(tmp, 'foo', {
             value       : "bar",
             writable    : false,
             enumerable  : false,
@@ -38,7 +38,7 @@
 
         troop.sloppy = false;
 
-        Properties._defineProperty(tmp, 'foo', {
+        troop.Properties._defineProperty(tmp, 'foo', {
             value       : "bar",
             writable    : false,
             enumerable  : false,
@@ -95,15 +95,15 @@
         var tmp;
 
         tmp = {};
-        Properties._add.call(tmp, {a: 'foo', b: 'bar'});
+        troop.Properties._add.call(tmp, {a: 'foo', b: 'bar'});
         equal(tmp.a, 'foo', "Property added through object");
 
         tmp = {};
-        Properties._add.call(tmp, {a: {get: function () {return this.b;}}, b: 'foo'});
+        troop.Properties._add.call(tmp, {a: {get: function () {return this.b;}}, b: 'foo'});
         equal(tmp.a, 'foo', "Property added with getter");
 
         tmp = {};
-        Properties._add.call(tmp, {a: null});
+        troop.Properties._add.call(tmp, {a: null});
         equal(tmp.a, null, "Null property added");
     });
 
@@ -111,7 +111,7 @@
         var tmp = {},
             descriptor;
 
-        Properties._add.call(tmp, {
+        troop.Properties._add.call(tmp, {
                 test: function () {}
             },
             true,
@@ -141,7 +141,7 @@
     });
 
     test("Adding traits", function () {
-        var hasPropertyAttributes = Feature.hasPropertyAttributes(),
+        var hasPropertyAttributes = troop.Feature.hasPropertyAttributes(),
             base = {},
             trait = Object.create(base),
             destination;
@@ -163,13 +163,13 @@
         raises(
             function () {
                 destination = Object.create({});
-                Base.addTrait.call(destination, trait);
+                troop.Base.addTrait.call(destination, trait);
             },
             "Trait prototype must match host's"
         );
 
         destination = Object.create(base);
-        Base.addTrait.call(destination, trait);
+        troop.Base.addTrait.call(destination, trait);
 
         deepEqual(
             Object.getOwnPropertyDescriptor(destination, 'foo'),
@@ -185,7 +185,7 @@
         troop.testing = true;
 
         destination = Object.create(base);
-        Base.addTrait.call(destination, trait);
+        troop.Base.addTrait.call(destination, trait);
 
         deepEqual(
             Object.getOwnPropertyDescriptor(Object.getPrototypeOf(destination), 'boo'),
@@ -205,7 +205,7 @@
         var tmp = {},
             result;
 
-        result = Base.addMethod.call(tmp, {
+        result = troop.Base.addMethod.call(tmp, {
             foo: function () {}
         });
 
@@ -213,11 +213,11 @@
     });
 
     test("Flags not set", function () {
-        var hasPropertyAttributes = Feature.hasPropertyAttributes(),
+        var hasPropertyAttributes = troop.Feature.hasPropertyAttributes(),
             tmp = {},
             descriptor;
 
-        Properties._add.call(tmp, {
+        troop.Properties._add.call(tmp, {
             test: function () {}
         });
 
@@ -235,7 +235,7 @@
         var tmp = {},
             descriptor;
 
-        Properties._add.call(tmp, {
+        troop.Properties._add.call(tmp, {
             test: function () {}
         }, false, false, false);
 
@@ -252,11 +252,11 @@
     test("Messy", function () {
         troop.messy = true;
 
-        var hasPropertyAttributes = Feature.hasPropertyAttributes(),
+        var hasPropertyAttributes = troop.Feature.hasPropertyAttributes(),
             tmp = {},
             descriptor;
 
-        Properties._add.call(tmp, {
+        troop.Properties._add.call(tmp, {
             test: function () {}
         }, false, false, false);
 
@@ -275,16 +275,16 @@
 
         function testMethod() {}
 
-        Base.addMethod.call(tmp, {
+        troop.Base.addMethod.call(tmp, {
             test: testMethod
         });
 
-        Base.addConstant.call(tmp, {
+        troop.Base.addConstant.call(tmp, {
             foo: "foo"
         });
 
         raises(function () {
-            Base.addPrivate.call(tmp, {
+            troop.Base.addPrivate.call(tmp, {
                 bar: "bar"
             });
         }, "Invalid private property");
@@ -305,7 +305,7 @@
             instance = Object.create(base);
 
         equal(instance.test, base.test, "Instance method same as class method");
-        Base.elevateMethod.call(instance, 'test');
+        troop.Base.elevateMethod.call(instance, 'test');
         notEqual(instance.test, base.test, "Instance method differs from class method");
 
         var test = instance.test;
@@ -317,7 +317,7 @@
 
         function testMethod() {}
 
-        Base.addMock.call(tmp, {
+        troop.Base.addMock.call(tmp, {
             foo: testMethod
         });
 
@@ -325,8 +325,8 @@
             foo: testMethod
         }, "Mock method added");
 
-        Base.removeMocks.call(tmp);
+        troop.Base.removeMocks.call(tmp);
 
         deepEqual(tmp, {}, "Mock methods removed");
     });
-}(troop.Properties, troop.Base, troop.Feature));
+}());

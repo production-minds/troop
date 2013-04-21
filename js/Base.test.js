@@ -2,13 +2,13 @@
  * Base class unit tests
  */
 /*global dessert, troop, module, test, ok, equal, notEqual, strictEqual, deepEqual, raises, expect, mock, unMock */
-(function (Base, Feature) {
+(function () {
     "use strict";
 
     module("Base");
 
     test("Class extension", function () {
-        var myClass = Base.extend.call(Object.prototype);
+        var myClass = troop.Base.extend.call(Object.prototype);
 
         ok(Object.getPrototypeOf(myClass) === Object.prototype, "Immediate prototype is base");
     });
@@ -16,7 +16,7 @@
     test("Extension while in test mode", function () {
         troop.testing = true;
 
-        var myClass = Base.extend.call(Object.prototype);
+        var myClass = troop.Base.extend.call(Object.prototype);
 
         ok(Object.getPrototypeOf(myClass) !== Object.prototype, "Immediate prototype not base");
         ok(Object.getPrototypeOf(Object.getPrototypeOf(myClass)) === Object.prototype, "Second prototype is base");
@@ -30,18 +30,18 @@
 
         troop.testing = false;
         extended = troop.Base.extend();
-        equal(Base.getBase.call(extended), troop.Base, "Getting base class in live mode");
+        equal(troop.Base.getBase.call(extended), troop.Base, "Getting base class in live mode");
 
         troop.testing = true;
         extended = troop.Base.extend();
-        equal(Base.getBase.call(extended), troop.Base, "Getting base class in testing mode");
+        equal(troop.Base.getBase.call(extended), troop.Base, "Getting base class in testing mode");
 
         troop.testing = testing;
     });
 
     test("Custom assertions", function () {
         var v = dessert.validators,
-            extended = Base.extend();
+            extended = troop.Base.extend();
 
         equal(v.isClass(extended), true, "Troop class passes assertion");
         equal(v.isClass({}), false, "Ordinary object fails assertion");
@@ -51,7 +51,7 @@
     });
 
     test("Extension", function () {
-        var hasPropertyAttributes = Feature.hasPropertyAttributes(),
+        var hasPropertyAttributes = troop.Feature.hasPropertyAttributes(),
             derived, keys,
             instance;
 
@@ -115,23 +115,23 @@
     });
 
     test("Base validation", function () {
-        ok(Base.isA.call({}, Object.prototype), "{} is an Object.prototype");
-        ok(Base.isA.call([], Array.prototype), "[] is an Array.prototype");
+        ok(troop.Base.isA.call({}, Object.prototype), "{} is an Object.prototype");
+        ok(troop.Base.isA.call([], Array.prototype), "[] is an Array.prototype");
 
         var myBase = troop.Base.extend()
                 .addMethod({init: function () {}}),
             myChild = myBase.extend()
                 .addMethod({init: function () {}});
 
-        ok(Base.instanceOf.call(myChild, myBase), "Direct descendant");
-        ok(Base.instanceOf.call(myBase, troop.Base), "Direct descendant");
-        ok(!Base.instanceOf.call(myChild, troop.Base), "Not direct descendant");
+        ok(troop.Base.instanceOf.call(myChild, myBase), "Direct descendant");
+        ok(troop.Base.instanceOf.call(myBase, troop.Base), "Direct descendant");
+        ok(!troop.Base.instanceOf.call(myChild, troop.Base), "Not direct descendant");
 
-        ok(Base.isA.call(myChild, troop.Base), "Not direct descendant");
+        ok(troop.Base.isA.call(myChild, troop.Base), "Not direct descendant");
 
         ok(troop.Base.isBaseOf(myBase), "Troop base class is base to all others");
         ok(myBase.isBaseOf(myChild), "Descendant");
         ok(!myChild.isBaseOf(myBase), "Invalid relation");
         ok(!myChild.isBaseOf(myChild), "Self is not base");
     });
-}(troop.Base, troop.Feature));
+}());

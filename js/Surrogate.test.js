@@ -4,7 +4,7 @@
 /*global troop, module, test, ok, equal, deepEqual, expect, raises */
 var globalNs = {};
 
-(function (Surrogate) {
+(function () {
     "use strict";
 
     module("Surrogate");
@@ -22,8 +22,8 @@ var globalNs = {};
 
         ns.child = ns.base.extend();
 
-        equal(Surrogate.getSurrogate.call(ns.base, 'test'), ns.child, "Arguments fit surrogate");
-        equal(Surrogate.getSurrogate.call(ns.base, 'blah'), undefined, "Arguments don't fit a surrogate");
+        equal(troop.Surrogate.getSurrogate.call(ns.base, 'test'), ns.child, "Arguments fit surrogate");
+        equal(troop.Surrogate.getSurrogate.call(ns.base, 'blah'), undefined, "Arguments don't fit a surrogate");
     });
 
     test("Surrogate addition", function () {
@@ -61,4 +61,4 @@ var globalNs = {};
             "Surrogate info"
         );
     });
-}(troop.Surrogate));
+}());
