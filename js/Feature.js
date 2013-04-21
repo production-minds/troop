@@ -2,59 +2,72 @@
  * Feature detection.
  */
 /*global troop */
-
-/**
- * @class troop.Feature
- */
-troop.Feature = {
-    /**
-     * Determines whether read-only properties may be
-     * covered up by assignment.
-     * @return {boolean}
-     */
-    canAssignToReadOnly: function () {
-        var base, child;
-
-        // creating base object with read-only property
-        base = Object.defineProperty({}, 'p', {
-            writable: false,
-            value   : false
-        });
-
-        // deriving object
-        child = Object.create(base);
-
-        // attempting to change read-only property on base
-        child.p = true;
-
-        // determining whether change was successful
-        return child.p === true;
-    },
+(function () {
+    "use strict";
 
     /**
-     * Determines whether defineProperty is ES5 or polyfill.
+     * @class troop.Feature
      */
-    hasPropertyAttributes: function () {
-        // creating object with read-only property
-        var o = Object.defineProperty({}, 'p', {
-            writable: false,
-            value   : false
-        });
+    troop.Feature = {
+        /**
+         * Determines whether read-only properties may be
+         * covered up by assignment.
+         * @return {boolean}
+         */
+        canAssignToReadOnly: function () {
+            var base, child;
 
-        // attempting to change property
-        o.p = true;
+            // creating base object with read-only property
+            base = Object.defineProperty({}, 'p', {
+                writable: false,
+                value   : false
+            });
 
-        // when property can be changed, defineProperty is sure to be polyfill
-        return !o.p;
-    }
-};
+            // deriving object
+            child = Object.create(base);
 
-/**
- * Whether methods should be writable (environmental)
- */
-troop.writable = !troop.Feature.canAssignToReadOnly();
+            // attempting to change read-only property on base
+            try {
+                child.p = true;
+            } catch (e) {
+                // change failed, property is RO
+                return false;
+            }
 
-/**
- * Whether Troop is in testing mode (application state)
- */
-troop.testing = false;
+            // determining whether change was successful
+            return child.p === true;
+        },
+
+        /**
+         * Determines whether defineProperty is ES5 or polyfill.
+         */
+        hasPropertyAttributes: function () {
+            // creating object with read-only property
+            var o = Object.defineProperty({}, 'p', {
+                writable: false,
+                value   : false
+            });
+
+            // attempting to change property
+            try {
+                o.p = true;
+            } catch (e) {
+                // change failed, property is RO
+                return true;
+            }
+
+            // when property can be changed, defineProperty is sure to be polyfill
+            return !o.p;
+        }
+    };
+
+    /**
+     * Whether methods should be writable (environmental)
+     */
+    troop.writable = !troop.Feature.canAssignToReadOnly();
+
+    /**
+     * Whether Troop is in testing mode (application state)
+     */
+    troop.testing = false;
+}());

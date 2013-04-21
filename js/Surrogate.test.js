@@ -5,6 +5,8 @@
 var globalNs = {};
 
 (function (Surrogate) {
+    "use strict";
+
     module("Surrogate");
 
     test("Finding surrogate", function () {

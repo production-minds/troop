@@ -3,6 +3,8 @@
  */
 /*global dessert, troop, module, test, expect, ok, equal, notEqual, deepEqual, raises */
 (function (Properties, Base, Feature) {
+    "use strict";
+
     module("Properties");
 
     test("utils", function () {

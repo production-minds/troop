@@ -5,6 +5,8 @@
  */
 /*global dessert, troop, console */
 (function () {
+    "use strict";
+
     dessert.addTypes(/** @lends dessert */{
         /**
          * Checks property names against prefix.

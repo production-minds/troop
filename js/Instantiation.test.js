@@ -3,6 +3,8 @@
  */
 /*global troop, module, test, ok, equal, deepEqual, expect, raises */
 (function () {
+    "use strict";
+
     module("Instantiation");
 
     test("Instantiation", function () {

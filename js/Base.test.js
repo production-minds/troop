@@ -3,6 +3,8 @@
  */
 /*global dessert, troop, module, test, ok, equal, notEqual, strictEqual, deepEqual, raises, expect, mock, unMock */
 (function (Base, Feature) {
+    "use strict";
+
     module("Base");
 
     test("Class extension", function () {
@@ -62,9 +64,11 @@
             this
                 .addPrivate({
                     _woo: "hoo"
-                }).addPublic({
+                })
+                .addPublic({
                     holy: "moly"
-                }).addConstant({
+                })
+                .addConstant({
                     pi: 3.14
                 });
         }
@@ -72,9 +76,11 @@
         derived = troop.Base.extend()
             .addPrivate({
                 _hello: "world"
-            }).addPublic({
+            })
+            .addPublic({
                 yo: "momma"
-            }).addMethod({
+            })
+            .addMethod({
                 foo : testMethod,
                 init: init
             });

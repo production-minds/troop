@@ -5,6 +5,8 @@
 var ns = {}; // global namespace
 
 (function () {
+    "use strict";
+
     module("Promise");
 
     test("Promise", function () {

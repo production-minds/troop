@@ -7,6 +7,8 @@
  */
 /*global dessert, troop */
 (function () {
+    "use strict";
+
     var self;
 
     // custom assertion for troop classes
