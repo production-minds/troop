@@ -5,6 +5,8 @@
 (function () {
     "use strict";
 
+    var hOP = Object.prototype.hasOwnProperty;
+
     /**
      * @class troop.Surrogate
      */
@@ -24,7 +26,7 @@
              * every descendant of the current class, too.
              * This would be wasteful, unnecessary, and confusing.
              */
-            if (this.hasOwnProperty('surrogates')) {
+            if (hOP.call(this, 'surrogates')) {
                 surrogates = this.surrogates;
                 for (i = 0; i < surrogates.length; i++) {
                     surrogateInfo = surrogates[i];
@@ -47,7 +49,7 @@
          * @this {troop.Base} Class object.
          */
         addSurrogate: function (namespace, className, filter) {
-            if (!this.hasOwnProperty('surrogates')) {
+            if (!hOP.call(this, 'surrogates')) {
                 this.addConstant({surrogates: []});
             }
 
