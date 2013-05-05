@@ -49,14 +49,20 @@
          * @this {troop.Base} Class object.
          */
         addSurrogate: function (namespace, className, filter) {
-            if (!hOP.call(this, 'surrogates')) {
-                this.addConstant({surrogates: []});
-            }
-
             dessert
                 .isObject(namespace, "Invalid namespace object")
                 .isString(className, "Invalid class name")
                 .isFunction(filter, "Invalid filter function");
+
+            if (!hOP.call(this, 'surrogates')) {
+                this.addConstant(/** @lends troop.Base */{
+                    /**
+                     * Container for surrogate descriptors
+                     * @type {object[]}
+                     */
+                    surrogates: []
+                });
+            }
 
             this.surrogates.push({
                 namespace: namespace,
