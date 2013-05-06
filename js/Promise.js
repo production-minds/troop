@@ -8,6 +8,8 @@
 (function () {
     "use strict";
 
+    var hOP = Object.prototype.hasOwnProperty;
+
     troop.Base.addMethod.call(troop, /** @lends troop */{
         /**
          * Promises a property definition (read-only).
@@ -16,16 +18,16 @@
          * @param {function} generator Generates (and returns) property value.
          */
         promise: function (host, propertyName, generator) {
-            var sliceArguments = Array.prototype.slice.bind(arguments),
-                generatorArguments;
-
             dessert
                 .isObject(host, "Host is not an Object")
                 .isString(propertyName, "Invalid property name")
                 .isFunction(generator, "Invalid generator function");
 
+            var sliceArguments = Array.prototype.slice.bind(arguments),
+                generatorArguments;
+
             // checking whether property is already defined
-            if (Object.prototype.hasOwnProperty.call(host, propertyName)) {
+            if (hOP.call(host, propertyName)) {
                 return;
             }
 

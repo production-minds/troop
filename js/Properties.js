@@ -15,18 +15,18 @@
          * @return {boolean} Whether all properties on the object satisfy the prefix condition.
          */
         isAllPrefixed: function (expr, prefix) {
-            var propertyName;
+            var propertyNames,
+                i;
 
             if (!this.isString(prefix) || !this.isPlainObject(expr)) {
                 return false;
             }
 
-            for (propertyName in expr) {
-                if (expr.hasOwnProperty(propertyName)) {
-                    if (propertyName.substr(0, prefix.length) !== prefix) {
-                        // prefix doesn't match property name
-                        return false;
-                    }
+            propertyNames = Object.keys(expr);
+            for (i = 0; i < propertyNames.length; i++) {
+                if (propertyNames[i].substr(0, prefix.length) !== prefix) {
+                    // prefix doesn't match property name
+                    return false;
                 }
             }
 
