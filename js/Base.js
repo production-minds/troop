@@ -19,14 +19,16 @@
          * @return {Boolean}
          */
         isAllFunctions: function (expr) {
-            var methodName;
+            var methodNames,
+                i;
 
             if (!this.isObject(expr)) {
                 return false;
             }
 
-            for (methodName in expr) {
-                if (expr.hasOwnProperty(methodName) && !this.isFunctionOptional(expr[methodName])) {
+            methodNames = Object.keys(expr);
+            for (i = 0; i < methodNames.length; i++) {
+                if (!this.isFunctionOptional(expr[methodNames[i]])) {
                     return false;
                 }
             }
