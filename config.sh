@@ -9,6 +9,7 @@ FILES="
 js/namespace.js
 js/Feature.js
 js/Base.js
+js/Memoization.js
 js/Surrogate.js
 js/Instantiation.js
 js/Properties.js
