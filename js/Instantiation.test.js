@@ -1,7 +1,7 @@
 /**
  * Inheritance unit tests
  */
-/*global troop, module, test, ok, equal, deepEqual, expect, raises */
+/*global troop, module, test, ok, equal, strictEqual, deepEqual, expect, raises */
 (function () {
     "use strict";
 
@@ -43,6 +43,31 @@
         );
     });
 
+    test("Memoized instantiation", function () {
+        var MyClass = troop.Base.extend()
+                .setInstanceMapper(function (name) {
+                    return name;
+                })
+                .addMethod({
+                    init: function () {}
+                }),
+            instance;
+
+        ok(!MyClass.hasOwnProperty('instanceRegistry'), "Initially, instance registry is empty");
+
+        instance = MyClass.create('foo');
+
+        deepEqual(
+            MyClass.instanceRegistry,
+            {
+                foo: instance
+            },
+            "Instance stored in registry"
+        );
+
+        strictEqual(MyClass.create('foo'), instance, "Same constructor args fetch same instance");
+    });
+
     test("Surrogate integration test", function () {
         var ns = {};
 
@@ -52,9 +77,7 @@
         ns.base = troop.Base.extend()
             .addSurrogate(ns, 'child', function (test) {
                 ok("Filter triggered");
-                if (test === 'test') {
-                    return true;
-                }
+                return test === 'test';
             })
             .addSurrogate(ns, 'initless', function (test) {
                 return test === 'initless';
@@ -95,6 +118,43 @@
 
         // does not trigger anything (0)
         ns.initless.create('test');
+    });
+
+    test("Surrogate / memoized", function () {
+        var ns = {};
+
+        ns.Base = troop.Base.extend()
+            .setInstanceMapper(function (foo) {
+                return foo;
+            })
+            .addSurrogate(ns, 'Child', function (foo) {
+                return foo === 'bar';
+            })
+            .addMethod({
+                init: function () {}
+            });
+
+        ns.Child = ns.Base.extend();
+
+        // creating instances
+        var base = ns.Base.create('foo'),
+            child = ns.Base.create('bar');
+
+        ok(base.instanceOf(ns.Base), "Base class instance");
+        ok(child.instanceOf(ns.Child), "Child class instance");
+
+        strictEqual(ns.Child.instanceRegistry, ns.Base.instanceRegistry, "Child sees base's instance registry");
+
+        ok(!(ns.Child.hasOwnProperty('instanceRegistry')), "Child class has no instance registry of its own");
+
+        deepEqual(
+            ns.Base.instanceRegistry,
+            {
+                foo: base,
+                bar: child
+            },
+            "Instances added to registry"
+        );
     });
 
     test("Custom instance value", function () {

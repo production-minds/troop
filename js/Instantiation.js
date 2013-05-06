@@ -5,6 +5,10 @@
 (function () {
     "use strict";
 
+    var Memoization = troop.Memoization,
+        Surrogate = troop.Surrogate,
+        Base = troop.Base;
+
     troop.Base.addMethod(/** @lends troop.Base */{
         /**
          * Creates instance of a class.
@@ -15,10 +19,22 @@
          * var instance = someClass.create(someArgs);
          */
         create: function () {
-            // instantiating class or surrogate
-            var self = troop.Surrogate.getSurrogate.apply(this, arguments) || this,
-                that = troop.Base.extend.call(self),
+            var isMemoized = this.isMemoized(),
+                instanceKey,
                 result;
+
+            // attempting to fetch memoized instance
+            if (isMemoized) {
+                instanceKey = Memoization.mapInstance.apply(this, arguments);
+                result = Memoization.getInstance.call(this, instanceKey);
+                if (result) {
+                    return result;
+                }
+            }
+
+            // instantiating class or surrogate
+            var self = Surrogate.getSurrogate.apply(this, arguments) || this,
+                that = Base.extend.call(self);
 
             // initializing instance properties
             if (typeof self.init === 'function') {
@@ -27,16 +43,19 @@
 
                 if (typeof result === 'undefined') {
                     // initializer returned nothing, returning new instance
-                    return that;
-                } else if (result !== self && self.isPrototypeOf(result)) {
-                    // initializer returned a (different) instance of this class
-                    return result;
-                } else {
-                    // initializer returned something else
+                    result = that;
+                } else if (!(result !== self && self.isPrototypeOf(result))) {
+                    // initializer did not return a valid instance
+                    // (instance of the same or derived class)
                     dessert.assert(false, "Unrecognizable value returned by .init().", result);
                 }
             } else {
                 dessert.assert(false, "Class implements no .init() method.");
+            }
+
+            // storing instance for memoized class
+            if (isMemoized) {
+                Memoization.addInstance.call(self, instanceKey, result);
             }
 
             return result;
