@@ -20,6 +20,7 @@ Troop features
 - testing mode for applying mock methods
 - on-demand dependency resolution
 - delegation of instantiation with surrogates
+- support for instance memoization
 
 Troop is distinguished from other OOP-related libs such as MooTools or Backbone by
 
