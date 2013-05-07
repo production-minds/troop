@@ -14,7 +14,7 @@
         /**
          * Retrieves first surrogate fitting constructor arguments.
          * @this {troop.Base} Class
-         * @return {troop.Base|undefined}
+         * @return {troop.Base}
          */
         getSurrogate: function () {
             var surrogates,
@@ -37,6 +37,9 @@
                     }
                 }
             }
+
+            // returning caller as fallback
+            return this;
         }
     };
 

@@ -23,7 +23,7 @@ var globalNs = {};
         ns.child = ns.base.extend();
 
         equal(troop.Surrogate.getSurrogate.call(ns.base, 'test'), ns.child, "Arguments fit surrogate");
-        equal(troop.Surrogate.getSurrogate.call(ns.base, 'blah'), undefined, "Arguments don't fit a surrogate");
+        equal(troop.Surrogate.getSurrogate.call(ns.base, 'blah'), ns.base, "Arguments don't fit a surrogate");
     });
 
     test("Surrogate addition", function () {

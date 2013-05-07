@@ -19,7 +19,7 @@
          * var instance = someClass.create(someArgs);
          */
         create: function () {
-            var isMemoized = this.isMemoized(),
+            var isMemoized = this.instanceMapper,
                 instanceKey,
                 result;
 
@@ -33,7 +33,9 @@
             }
 
             // instantiating class or surrogate
-            var self = Surrogate.getSurrogate.apply(this, arguments) || this,
+            var self = this.surrogates ?
+                    Surrogate.getSurrogate.apply(this, arguments) :
+                    this,
                 that = Base.extend.call(self);
 
             // initializing instance properties
