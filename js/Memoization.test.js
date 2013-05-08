@@ -39,10 +39,10 @@
                 }),
             instance;
 
-        equal(
-            typeof MyClass.instanceRegistry,
-            'undefined',
-            "Instance registry is initially empty (until first instantiation)"
+        deepEqual(
+            MyClass.instanceRegistry,
+            {},
+            "Instance registry is initially empty"
         );
 
         // fake instance
@@ -69,5 +69,40 @@
         troop.Memoization.addInstance.call(MyClass, 'foo', instance);
 
         strictEqual(troop.Memoization.getInstance.call(MyClass, 'foo'), instance, "Instance fetched from registry");
+    });
+
+    test("Clearing instance registry", function () {
+        var MyClass = troop.Base.extend()
+                .setInstanceMapper(function keyMapper(name) {
+                    return name;
+                }),
+            ChildClass = MyClass.extend(),
+            instance = {};
+
+        troop.Memoization.addInstance.call(MyClass, 'foo', instance);
+
+        deepEqual(
+            MyClass.instanceRegistry,
+            {foo: instance},
+            "Registry before clearing"
+        );
+
+        deepEqual(
+            ChildClass.instanceRegistry,
+            {foo: instance},
+            "Registry before clearing (as seen from child class)"
+        );
+
+        raises(function () {
+            ChildClass.clearInstanceRegistry();
+        }, "Can't clear instances from derived class");
+
+        MyClass.clearInstanceRegistry();
+
+        deepEqual(
+            MyClass.instanceRegistry,
+            {},
+            "Registry after clearing"
+        );
     });
 }());

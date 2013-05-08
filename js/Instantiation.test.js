@@ -53,7 +53,7 @@
                 }),
             instance;
 
-        ok(!MyClass.hasOwnProperty('instanceRegistry'), "Initially, instance registry is empty");
+        deepEqual(MyClass.instanceRegistry, {}, "Initially, instance registry is empty");
 
         instance = MyClass.create('foo');
 

@@ -18,18 +18,6 @@
          * @param {troop.Base} instance Instance to be memoized
          */
         addInstance: function (key, instance) {
-            // checking instance registry
-            // doesn't have to be own property, may be on parent class
-            if (!(this.instanceRegistry instanceof Object)) {
-                this.addConstant(/** @lends troop.Base */{
-                    /**
-                     * Lookup registry for instances of the memoized class
-                     * @type {object}
-                     */
-                    instanceRegistry: {}
-                });
-            }
-
             this.instanceRegistry[key] = instance;
         },
 
@@ -64,15 +52,19 @@
                 .isFunction(instanceMapper, "Invalid instance key calculator")
                 .assert(!hOP.call(this, 'instanceMapper'), "Instance mapper already set");
 
-            // adding memoization-related properties to class
-            this.addConstant(/** @lends troop.Base */{
-                /**
-                 * Maps constructor arguments to instance keys in the registry.
-                 * @type {function}
-                 * @return {string}
-                 */
-                instanceMapper: instanceMapper
-            });
+            /**
+             * Maps constructor arguments to instance keys in the registry.
+             * @type {function}
+             * @return {string}
+             */
+            this.instanceMapper = instanceMapper;
+
+            /**
+             * Lookup registry for instances of the memoized class.
+             * Has to be own property as child classes may put their instances here, too.
+             * @type {object}
+             */
+            this.instanceRegistry = {};
 
             return this;
         },
@@ -83,6 +75,16 @@
          */
         isMemoized: function () {
             return typeof this.instanceMapper === 'function';
+        },
+
+        /**
+         * Clears instance registry and therefore frees memory.
+         * (Unless instances are still referenced from other objects & scopes.)
+         */
+        clearInstanceRegistry: function () {
+            dessert.assert(hOP.call(this, 'instanceRegistry'), "Class doesn't own an instance registry");
+            this.instanceRegistry = {};
+            return this;
         }
     });
 }());
