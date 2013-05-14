@@ -86,10 +86,9 @@
          * @param {object} object
          * @param {string} propertyName
          * @param {object} descriptor ES5 property descriptor.
-         * @private
          * @static
          */
-        _defineProperty: function (object, propertyName, descriptor) {
+        defineProperty: function (object, propertyName, descriptor) {
             if (troop.sloppy && descriptor.hasOwnProperty('value')) {
                 // in sloppy mode, value definitions revert to simple assignments
                 object[propertyName] = descriptor.value;
@@ -105,16 +104,15 @@
          * @param {boolean} [isWritable]
          * @param {boolean} [isEnumerable]
          * @param {boolean} [isConfigurable]
-         * @private
          */
-        _addValue: function (propertyName, value, isWritable, isEnumerable, isConfigurable) {
+        addProperty: function (propertyName, value, isWritable, isEnumerable, isConfigurable) {
             dessert
                 .isString(propertyName, "Invalid property name")
                 .isBooleanOptional(isWritable)
                 .isBooleanOptional(isEnumerable)
                 .isBooleanOptional(isConfigurable);
 
-            self._defineProperty(this, propertyName, {
+            self.defineProperty(this, propertyName, {
                 value       : value,
                 writable    : isWritable || troop.messy,
                 enumerable  : isEnumerable,
@@ -129,9 +127,8 @@
          * @param {function} [setter] Property setter.
          * @param {boolean} [isEnumerable]
          * @param {boolean} [isConfigurable]
-         * @private
          */
-        _addAccessor: function (propertyName, getter, setter, isEnumerable, isConfigurable) {
+        addAccessor: function (propertyName, getter, setter, isEnumerable, isConfigurable) {
             dessert
                 .isString(propertyName, "Invalid property name")
                 .isFunctionOptional(getter)
@@ -139,7 +136,7 @@
                 .isBooleanOptional(isEnumerable)
                 .isBooleanOptional(isConfigurable);
 
-            self._defineProperty(this, propertyName, {
+            self.defineProperty(this, propertyName, {
                 get         : getter,
                 set         : setter,
                 enumerable  : isEnumerable,
@@ -155,7 +152,7 @@
          * @param {boolean} [isEnumerable]
          * @param {boolean} [isConfigurable]
          */
-        _add: function (properties, isWritable, isEnumerable, isConfigurable) {
+        addProperties: function (properties, isWritable, isEnumerable, isConfigurable) {
             var propertyName, property;
 
             for (propertyName in properties) {
@@ -163,7 +160,7 @@
                     property = properties[propertyName];
 
                     if (dessert.validators.isAccessor(property)) {
-                        self._addAccessor.call(this,
+                        self.addAccessor.call(this,
                             propertyName,
                             property.get,
                             property.set,
@@ -171,7 +168,7 @@
                             isConfigurable
                         );
                     } else {
-                        self._addValue.call(this,
+                        self.addProperty.call(this,
                             propertyName,
                             property,
                             isWritable,
@@ -195,7 +192,7 @@
         addMethod: function (methods) {
             dessert.isAllFunctions(methods);
 
-            self._add.call(troop.Base.getTarget.call(this), methods, false, true, false);
+            self.addProperties.call(troop.Base.getTarget.call(this), methods, false, true, false);
 
             return this;
         },
@@ -210,7 +207,7 @@
                 .isAllFunctions(methods, "Some private methods are not functions.")
                 .isAllPrefixed(methods, troop.privatePrefix, "Some private method names do not match the required prefix.");
 
-            self._add.call(troop.Base.getTarget.call(this), methods, false, false, false);
+            self.addProperties.call(troop.Base.getTarget.call(this), methods, false, false, false);
 
             return this;
         },
@@ -233,7 +230,7 @@
             propertyNames = Object.getOwnPropertyNames(traitTarget);
             for (i = 0; i < propertyNames.length; i++) {
                 propertyName = propertyNames[i];
-                self._defineProperty(
+                self.defineProperty(
                     hostTarget,
                     propertyName,
                     Object.getOwnPropertyDescriptor(traitTarget, propertyName)
@@ -252,7 +249,7 @@
          * @param {object} properties Properties and methods.
          */
         addPublic: function (properties) {
-            return self._add.call(this, properties, true, true, false);
+            return self.addProperties.call(this, properties, true, true, false);
         },
 
         /**
@@ -263,7 +260,7 @@
         addPrivate: function (properties) {
             dessert.isAllPrefixed(properties, troop.privatePrefix, "Some private property names do not match the required prefix.");
 
-            self._add.call(this, properties, true, false, false);
+            self.addProperties.call(this, properties, true, false, false);
 
             return this;
         },
@@ -274,7 +271,7 @@
          * @param {object} properties Constant properties.
          */
         addConstant: function (properties) {
-            return self._add.call(this, properties, false, true, false);
+            return self.addProperties.call(this, properties, false, true, false);
         },
 
         /**
@@ -285,7 +282,7 @@
         addPrivateConstant: function (properties) {
             dessert.isAllPrefixed(properties, troop.privatePrefix, "Some private constant names do not match the required prefix.");
 
-            self._add.call(this, properties, false, false, false);
+            self.addProperties.call(this, properties, false, false, false);
 
             return this;
         },
@@ -320,7 +317,7 @@
         addMock: function (methods) {
             dessert.isAllFunctions(methods, "Some mock methods are not functions.");
 
-            self._add.call(this, methods, false, true, true);
+            self.addProperties.call(this, methods, false, true, true);
 
             return this;
         },

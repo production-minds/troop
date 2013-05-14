@@ -18,7 +18,7 @@
 
         troop.sloppy = true;
 
-        troop.Properties._defineProperty(tmp, 'foo', {
+        troop.Properties.defineProperty(tmp, 'foo', {
             value       : "bar",
             writable    : false,
             enumerable  : false,
@@ -38,7 +38,7 @@
 
         troop.sloppy = false;
 
-        troop.Properties._defineProperty(tmp, 'foo', {
+        troop.Properties.defineProperty(tmp, 'foo', {
             value       : "bar",
             writable    : false,
             enumerable  : false,
@@ -95,15 +95,15 @@
         var tmp;
 
         tmp = {};
-        troop.Properties._add.call(tmp, {a: 'foo', b: 'bar'});
+        troop.Properties.addProperties.call(tmp, {a: 'foo', b: 'bar'});
         equal(tmp.a, 'foo', "Property added through object");
 
         tmp = {};
-        troop.Properties._add.call(tmp, {a: {get: function () {return this.b;}}, b: 'foo'});
+        troop.Properties.addProperties.call(tmp, {a: {get: function () {return this.b;}}, b: 'foo'});
         equal(tmp.a, 'foo', "Property added with getter");
 
         tmp = {};
-        troop.Properties._add.call(tmp, {a: null});
+        troop.Properties.addProperties.call(tmp, {a: null});
         equal(tmp.a, null, "Null property added");
     });
 
@@ -111,7 +111,7 @@
         var tmp = {},
             descriptor;
 
-        troop.Properties._add.call(tmp, {
+        troop.Properties.addProperties.call(tmp, {
                 test: function () {}
             },
             true,
@@ -217,7 +217,7 @@
             tmp = {},
             descriptor;
 
-        troop.Properties._add.call(tmp, {
+        troop.Properties.addProperties.call(tmp, {
             test: function () {}
         });
 
@@ -235,7 +235,7 @@
         var tmp = {},
             descriptor;
 
-        troop.Properties._add.call(tmp, {
+        troop.Properties.addProperties.call(tmp, {
             test: function () {}
         }, false, false, false);
 
@@ -256,7 +256,7 @@
             tmp = {},
             descriptor;
 
-        troop.Properties._add.call(tmp, {
+        troop.Properties.addProperties.call(tmp, {
             test: function () {}
         }, false, false, false);
 
