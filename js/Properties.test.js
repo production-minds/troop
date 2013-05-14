@@ -7,56 +7,6 @@
 
     module("Properties");
 
-    test("utils", function () {
-        if (!troop.Feature.hasPropertyAttributes()) {
-            // no need to check when we're in ES4
-            expect(0);
-            return;
-        }
-
-        var tmp = {};
-
-        troop.sloppy = true;
-
-        troop.Properties.defineProperty(tmp, 'foo', {
-            value       : "bar",
-            writable    : false,
-            enumerable  : false,
-            configurable: false
-        });
-
-        deepEqual(
-            Object.getOwnPropertyDescriptor(tmp, 'foo'),
-            {
-                value       : "bar",
-                writable    : true,
-                enumerable  : true,
-                configurable: true
-            },
-            "Assigned property descriptor (sloppy mode)"
-        );
-
-        troop.sloppy = false;
-
-        troop.Properties.defineProperty(tmp, 'foo', {
-            value       : "bar",
-            writable    : false,
-            enumerable  : false,
-            configurable: false
-        });
-
-        deepEqual(
-            Object.getOwnPropertyDescriptor(tmp, 'foo'),
-            {
-                value       : "bar",
-                writable    : false,
-                enumerable  : false,
-                configurable: false
-            },
-            "Defined property descriptor (normal mode)"
-        );
-    });
-
     test("Prefix restriction assertion", function () {
         var v = dessert.validators;
 
@@ -227,26 +177,6 @@
         equal(descriptor.writable, !hasPropertyAttributes, "Writable");
         equal(descriptor.enumerable, !hasPropertyAttributes, "Enumerable");
         equal(descriptor.configurable, !hasPropertyAttributes, "Configurable");
-    });
-
-    test("Sloppy", function () {
-        troop.sloppy = true;
-
-        var tmp = {},
-            descriptor;
-
-        troop.Properties.addProperties.call(tmp, {
-            test: function () {}
-        }, false, false, false);
-
-        descriptor = Object.getOwnPropertyDescriptor(tmp, 'test');
-
-        equal(typeof descriptor.value, 'function', "Value type");
-        equal(descriptor.writable, true, "Writable");
-        equal(descriptor.enumerable, true, "Enumerable");
-        equal(descriptor.configurable, true, "Configurable");
-
-        troop.sloppy = false;
     });
 
     test("Messy", function () {

@@ -81,23 +81,6 @@
      */
     troop.Properties = self = {
         /**
-         * Assigns a property to the object using an ES5 property descriptor.
-         * Uses either Object.defineProperty, or assignment.
-         * @param {object} object
-         * @param {string} propertyName
-         * @param {object} descriptor ES5 property descriptor.
-         * @static
-         */
-        defineProperty: function (object, propertyName, descriptor) {
-            if (troop.sloppy && descriptor.hasOwnProperty('value')) {
-                // in sloppy mode, value definitions revert to simple assignments
-                object[propertyName] = descriptor.value;
-            } else {
-                Object.defineProperty(object, propertyName, descriptor);
-            }
-        },
-
-        /**
          * Adds single value property.
          * @param {string} propertyName Property name.
          * @param value {*} Property value to be assigned.
@@ -112,7 +95,7 @@
                 .isBooleanOptional(isEnumerable)
                 .isBooleanOptional(isConfigurable);
 
-            self.defineProperty(this, propertyName, {
+            Object.defineProperty(this, propertyName, {
                 value       : value,
                 writable    : isWritable || troop.messy,
                 enumerable  : isEnumerable,
@@ -136,7 +119,7 @@
                 .isBooleanOptional(isEnumerable)
                 .isBooleanOptional(isConfigurable);
 
-            self.defineProperty(this, propertyName, {
+            Object.defineProperty(this, propertyName, {
                 get         : getter,
                 set         : setter,
                 enumerable  : isEnumerable,
@@ -230,7 +213,7 @@
             propertyNames = Object.getOwnPropertyNames(traitTarget);
             for (i = 0; i < propertyNames.length; i++) {
                 propertyName = propertyNames[i];
-                self.defineProperty(
+                Object.defineProperty(
                     hostTarget,
                     propertyName,
                     Object.getOwnPropertyDescriptor(traitTarget, propertyName)
@@ -342,13 +325,6 @@
          * @type {string}
          */
         privatePrefix: '_',
-
-        /**
-         * When true, plain assignment is used instead of ES5 property
-         * definition when applying properties.
-         * @type {boolean}
-         */
-        sloppy: false,
 
         /**
          * When true, all properties are writable, so they can be
