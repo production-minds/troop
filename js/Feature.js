@@ -5,12 +5,10 @@
 (function () {
     "use strict";
 
-    var self;
-
     /**
      * @class troop.Feature
      */
-    troop.Feature = self = {
+    troop.Feature = {
         /**
          * Determines whether read-only properties may be
          * covered up by assignment.
@@ -66,7 +64,7 @@
     /**
      * Whether methods should be writable (environmental)
      */
-    troop.writable = !self.canAssignToReadOnly();
+    troop.writable = !troop.Feature.canAssignToReadOnly();
 
     /**
      * Whether Troop is in testing mode (application state)

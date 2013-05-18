@@ -9,8 +9,6 @@
 (function () {
     "use strict";
 
-    var self;
-
     // custom assertion for troop classes
     dessert.addTypes(/** @lends dessert */{
         /**
@@ -59,7 +57,7 @@
     /**
      * @class troop.Base
      */
-    troop.Base = self = {
+    troop.Base = {
         /**
          * Disposable method for adding further (public) methods.
          * Will be replaced by Properties.
@@ -83,6 +81,8 @@
             return this;
         }
     };
+
+    var self = troop.Base;
 
     self.addMethod(/** @lends troop.Base */{
         /**

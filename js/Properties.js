@@ -74,12 +74,10 @@
         }
     });
 
-    var self;
-
     /**
      * @class troop.Properties
      */
-    troop.Properties = self = {
+    troop.Properties = {
         /**
          * Adds single value property.
          * @param {string} propertyName Property name.
@@ -165,6 +163,8 @@
             return this;
         }
     };
+
+    var self = troop.Properties;
 
     troop.Base.addMethod(/** @lends troop.Base */{
         /**
