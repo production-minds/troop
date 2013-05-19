@@ -309,12 +309,23 @@
          * Removes all mock methods from class or instance.
          */
         removeMocks: function () {
-            var key;
-            for (key in this) {
-                if (this.hasOwnProperty(key) && typeof this[key] === 'function') {
+            var keys = Object.keys(this),
+                i, key, property;
+
+            for (i = 0; i < keys.length; i++) {
+                key = keys[i];
+                property = this[key];
+                if (typeof property === 'function' && !(property instanceof RegExp)) {
+                    /**
+                     * All enumerable function properties are considered mocks
+                     * and will be removed (unless non-configurable).
+                     * RegExp check: in older browsers (eg. Safari 4.0.5) typeof /regexp/
+                     * evaluates to 'function' and should be excluded.
+                     */
                     delete this[key];
                 }
             }
+
             return this;
         }
     });
