@@ -7,7 +7,20 @@
 (function () {
     "use strict";
 
+    var hOP = Object.prototype.hasOwnProperty;
+
     dessert.addTypes(/** @lends dessert */{
+        /**
+         * Checks whether host object has propertyName defined as its
+         * own property.
+         * @param {string} propertyName
+         * @param {object} host
+         * @return {Boolean}
+         */
+        isPropertyNameAvailable: function (propertyName, host) {
+            return !hOP.call(host, propertyName);
+        },
+
         /**
          * Checks property names against prefix.
          * @param {object} expr Host object.
@@ -138,10 +151,12 @@
                 i, propertyName, property;
 
             for (i = 0; i < propertyNames.length; i++) {
-                // current property
+                // making sure property name is available
                 propertyName = propertyNames[i];
-                property = properties[propertyName];
+                dessert.isPropertyNameAvailable(propertyName, this, "Direct property conflict");
 
+                // adding accessor / property
+                property = properties[propertyName];
                 if (dessert.validators.isAccessor(property)) {
                     self.addAccessor.call(this,
                         propertyName,

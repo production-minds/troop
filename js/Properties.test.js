@@ -45,8 +45,12 @@
         var tmp;
 
         tmp = {};
-        troop.Properties.addProperties.call(tmp, {a: 'foo', b: 'bar'});
+        troop.Properties.addProperties.call(tmp, {a: 'foo', b: 'bar'}, true, true, true);
         equal(tmp.a, 'foo', "Property added through object");
+
+        raises(function () {
+            troop.Properties.addProperties.call(tmp, {a: 'blah'});
+        }, "Property name conflict");
 
         tmp = {};
         troop.Properties.addProperties.call(tmp, {a: {get: function () {return this.b;}}, b: 'foo'});
