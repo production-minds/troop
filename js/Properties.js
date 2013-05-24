@@ -134,29 +134,30 @@
          * @param {boolean} [isConfigurable]
          */
         addProperties: function (properties, isWritable, isEnumerable, isConfigurable) {
-            var propertyName, property;
+            var propertyNames = Object.keys(properties),
+                i, propertyName, property;
 
-            for (propertyName in properties) {
-                if (properties.hasOwnProperty(propertyName)) {
-                    property = properties[propertyName];
+            for (i = 0; i < propertyNames.length; i++) {
+                // current property
+                propertyName = propertyNames[i];
+                property = properties[propertyName];
 
-                    if (dessert.validators.isAccessor(property)) {
-                        self.addAccessor.call(this,
-                            propertyName,
-                            property.get,
-                            property.set,
-                            isEnumerable,
-                            isConfigurable
-                        );
-                    } else {
-                        self.addProperty.call(this,
-                            propertyName,
-                            property,
-                            isWritable,
-                            isEnumerable,
-                            isConfigurable
-                        );
-                    }
+                if (dessert.validators.isAccessor(property)) {
+                    self.addAccessor.call(this,
+                        propertyName,
+                        property.get,
+                        property.set,
+                        isEnumerable,
+                        isConfigurable
+                    );
+                } else {
+                    self.addProperty.call(this,
+                        propertyName,
+                        property,
+                        isWritable,
+                        isEnumerable,
+                        isConfigurable
+                    );
                 }
             }
 
@@ -309,12 +310,12 @@
          * Removes all mock methods from class or instance.
          */
         removeMocks: function () {
-            var keys = Object.keys(this),
-                i, key, property;
+            var propertyNames = Object.keys(this),
+                i, propertyName, property;
 
-            for (i = 0; i < keys.length; i++) {
-                key = keys[i];
-                property = this[key];
+            for (i = 0; i < propertyNames.length; i++) {
+                propertyName = propertyNames[i];
+                property = this[propertyName];
                 if (typeof property === 'function' && !(property instanceof RegExp)) {
                     /**
                      * All enumerable function properties are considered mocks
@@ -322,7 +323,7 @@
                      * RegExp check: in older browsers (eg. Safari 4.0.5) typeof /regexp/
                      * evaluates to 'function' and should be excluded.
                      */
-                    delete this[key];
+                    delete this[propertyName];
                 }
             }
 
