@@ -66,16 +66,16 @@
         addMethod: function (methods) {
             dessert.isAllFunctions(methods, "Some methods are not functions.");
 
-            var methodName;
-            for (methodName in methods) {
-                if (methods.hasOwnProperty(methodName)) {
-                    Object.defineProperty(this, methodName, {
-                        value       : methods[methodName],
-                        enumerable  : true,
-                        writable    : false,
-                        configurable: false
-                    });
-                }
+            var methodNames = Object.keys(methods),
+                i, methodName;
+            for (i = 0; i < methodNames.length; i++) {
+                methodName = methodNames[i];
+                Object.defineProperty(this, methodName, {
+                    value       : methods[methodName],
+                    enumerable  : true,
+                    writable    : false,
+                    configurable: false
+                });
             }
 
             return this;
