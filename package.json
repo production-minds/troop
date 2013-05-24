@@ -1,15 +1,15 @@
 {
     "name"        : "troop",
-    "version"     : "0.3.6",
+    "version"     : "0.3.7",
     "description" : "Full-featured, testable OOP",
     "keywords"    : ["oop", "class", "inheritance", "testing", "mocks", "memoization"],
     "author"      : "Dan Stocker <dan@kwaia.com>",
     "repository"  : {
         "type": "git",
-        "url" : "https://github.com/production-minds/troop.git"
+        "url" : "git@github.com:production-minds/troop.git"
     },
     "dependencies": {
-        "dessert": "~0.2.7"
+        "dessert": "~0.2.8"
     },
     "files"       : ["out/troop.js"],
     "main"        : "out/troop.js"
