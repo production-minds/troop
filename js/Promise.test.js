@@ -1,7 +1,7 @@
 /**
  * Property management unit tests
  */
-/*global troop, module, test, expect, ok, equal, notEqual, deepEqual, raises */
+/*global phil, troop, module, test, expect, ok, equal, notEqual, deepEqual, raises */
 var ns = {}; // global namespace
 
 (function () {
@@ -12,7 +12,11 @@ var ns = {}; // global namespace
     test("Promise", function () {
         var ns = {};
 
-        expect(11);
+        if (phil.hasGetterSetter()) {
+            expect(11);
+        } else {
+            expect(9);
+        }
 
         troop.promise(ns, 'bar', function (object, propertyName, param1, param2) {
             ok(object === ns, "Object passed to generator");
@@ -22,7 +26,9 @@ var ns = {}; // global namespace
             return "foo";
         }, "param1", "param2");
 
-        equal(typeof Object.getOwnPropertyDescriptor(ns, 'bar').value, 'undefined', "Value before fulfilling promise");
+        if (phil.hasGetterSetter()) {
+            equal(typeof Object.getOwnPropertyDescriptor(ns, 'bar').value, 'undefined', "Value before fulfilling promise");
+        }
 
         // first access will fulfill the promise
         equal(ns.bar, "foo", "Accessing for the first time");
@@ -34,7 +40,11 @@ var ns = {}; // global namespace
             ns.bar = 'foo';
         });
 
-        equal(typeof Object.getOwnPropertyDescriptor(ns, 'bar').value, 'undefined', "Value before fulfilling promise");
+        if (phil.hasGetterSetter()) {
+            // promise fulfillment via setter requires real setters
+            equal(typeof Object.getOwnPropertyDescriptor(ns, 'bar').value, 'undefined', "Value before fulfilling promise");
+        }
+
         equal(ns.bar, "foo", "Accessing for the first time");
 
         raises(function () {

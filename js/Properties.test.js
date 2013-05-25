@@ -1,7 +1,7 @@
 /**
  * Property management unit tests
  */
-/*global dessert, troop, module, test, expect, ok, equal, notEqual, deepEqual, raises */
+/*global phil, dessert, troop, module, test, expect, ok, equal, notEqual, deepEqual, raises */
 (function () {
     "use strict";
 
@@ -52,9 +52,13 @@
             troop.Properties.addProperties.call(tmp, {a: 'blah'});
         }, "Property name conflict");
 
-        tmp = {};
-        troop.Properties.addProperties.call(tmp, {a: {get: function () {return this.b;}}, b: 'foo'});
-        equal(tmp.a, 'foo', "Property added with getter");
+        if (phil.hasGetterSetter()) {
+            // environments where getters and setters are not available
+            // can only work with static getter property descriptors
+            tmp = {};
+            troop.Properties.addProperties.call(tmp, {a: {get: function () {return this.b;}}, b: 'foo'});
+            equal(tmp.a, 'foo', "Property added with getter");
+        }
 
         tmp = {};
         troop.Properties.addProperties.call(tmp, {a: null});
