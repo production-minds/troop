@@ -164,10 +164,30 @@
             result;
 
         result = troop.Base.addMethod.call(tmp, {
-            foo: function () {}
+            foo: function () { return 'foo'; }
         });
 
         equal(result, tmp, "addMethod returns input object");
+        equal(typeof result.foo, 'function', "Method added");
+        equal(result.foo(), 'foo', "Method invoked");
+    });
+
+    test("Overriding built-in methods", function () {
+        var tmp = {},
+            delta = {
+                toString: function () {
+                    return 'foo';
+                }
+            };
+
+        ok(delta.hasOwnProperty('toString'), "Override on object literal");
+        equal(delta.toString(), 'foo', "Serialization invoked");
+        equal(tmp.toString(), '[object Object]', "Built-in serializer");
+
+        troop.Base.addMethod.call(tmp, delta);
+
+        equal(typeof tmp.toString, 'function', "Override added");
+        equal(tmp.toString(), 'foo', "Serialization invoked");
     });
 
     test("Flags not set", function () {
