@@ -3,3 +3,4 @@
 /out/
 /build*.sh
 /targets.sh
+/*.tgz
