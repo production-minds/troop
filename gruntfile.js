@@ -2,7 +2,6 @@
 module.exports = function (grunt) {
     "use strict";
 
-    // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
@@ -28,6 +27,13 @@ module.exports = function (grunt) {
             }
         },
 
+        min: {
+            dist: {
+                src : ['out/<%= pkg.name %>.js'],
+                dest: 'out/<%= pkg.name %>-<%= pkg.version %>.min.js'
+            }
+        },
+
         jshint: {
             options: {
                 globals: {
@@ -45,11 +51,15 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.loadNpmTasks('grunt-jstestdriver');
-    grunt.loadNpmTasks('grunt-contrib-concat');
+    // test-related tasks
     grunt.loadNpmTasks('grunt-contrib-jshint');
-
-    grunt.registerTask('build', ['concat']);
+    grunt.loadNpmTasks('grunt-jstestdriver');
     grunt.registerTask('test', ['jshint', 'jstestdriver']);
-    grunt.registerTask('default', ['jstestdriver']);
+
+    // build-related tasks
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-yui-compressor');
+    grunt.registerTask('build', ['test', 'concat', 'min']);
+
+    grunt.registerTask('default', ['test']);
 };

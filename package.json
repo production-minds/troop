@@ -23,7 +23,8 @@
     "grunt": "~0.4.1",
     "grunt-jstestdriver": "2.2.0",
     "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-jshint": "~0.5.4"
+    "grunt-contrib-jshint": "~0.5.4",
+    "grunt-yui-compressor": "~0.3.0"
   },
   "files": [
     "out/troop.js"
