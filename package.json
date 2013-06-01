@@ -1,6 +1,6 @@
 {
   "name": "troop",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "description": "Full-featured, testable OOP",
   "keywords": [
     "oop",
@@ -24,7 +24,8 @@
     "grunt-jstestdriver": "2.2.0",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-jshint": "~0.5.4",
-    "grunt-yui-compressor": "~0.3.0"
+    "grunt-yui-compressor": "~0.3.0",
+    "grunt-contrib-copy": "~0.4.1"
   },
   "files": [
     "out/troop.js"

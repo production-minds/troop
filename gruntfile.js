@@ -34,6 +34,14 @@ module.exports = function (grunt) {
             }
         },
 
+        copy: {
+            main: {
+                files: [
+                    {src: 'out/<%= pkg.name %>.js', dest: 'out/<%= pkg.name %>-<%= pkg.version %>.js'}
+                ]
+            }
+        },
+
         jshint: {
             options: {
                 globals: {
@@ -59,7 +67,8 @@ module.exports = function (grunt) {
     // build-related tasks
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-yui-compressor');
-    grunt.registerTask('build', ['test', 'concat', 'min']);
+    grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.registerTask('build', ['test', 'concat', 'min', 'copy']);
 
     grunt.registerTask('default', ['test']);
 };
