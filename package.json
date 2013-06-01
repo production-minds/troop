@@ -12,7 +12,9 @@
         "dessert": "~0.2.9"
     },
     "devDependencies": {
-        "phil": "~0.2.0"
+        "grunt"             : "~0.4.1",
+        "grunt-jstestdriver": "2.2.0",
+        "phil"              : "~0.2.0"
     },
     "files"          : ["out/troop.js"],
     "main"           : "out/troop.js"
