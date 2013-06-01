@@ -2,6 +2,5 @@
 /lib/
 /node_modules/
 /out/
-/build*.sh
-/targets.sh
+/targets.json
 /*.tgz
