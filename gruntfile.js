@@ -2,7 +2,7 @@
 module.exports = function (grunt) {
     "use strict";
 
-    grunt.initConfig({
+    var config = {
         pkg: grunt.file.readJSON('package.json'),
 
         config: grunt.file.readJSON('config.json'),
@@ -36,10 +36,6 @@ module.exports = function (grunt) {
                 files: [
                     {src: '<%= filePath %>', dest: '<%= filePathVersion %>'}
                 ]
-            },
-
-            push: {
-                files: grunt.file.readJSON('targets.json')
             }
         },
 
@@ -55,7 +51,31 @@ module.exports = function (grunt) {
         jstestdriver: {
             files: '<%= config.test %>'
         }
-    });
+    };
+
+    /**
+     * Preparing targets
+     * Targets are a list of folders relative to the current folder
+     * to where the built file should be copied (versioned, uncompressed)
+     * Invoke a push by "> grunt copy:push"
+     */
+    var targets;
+    if (grunt.file.exists('targets.json')) {
+        targets = grunt.file.readJSON('targets.json')
+            .map(function (item) {
+                return     {
+                    expand: true,
+                    cwd   : '<%= outPath %>',
+                    src   : '<%= fileNameVersion %>',
+                    dest  : item
+                };
+            });
+
+        // adding push copy to config
+        config.copy.push = {files: targets};
+    }
+
+    grunt.initConfig(config);
 
     // test-related tasks
     grunt.loadNpmTasks('grunt-contrib-jshint');
