@@ -1,36 +1,36 @@
 {
-  "name": "troop",
-  "version": "0.3.9",
-  "description": "Full-featured, testable OOP",
-  "keywords": [
-    "oop",
-    "class",
-    "inheritance",
-    "testing",
-    "mocks",
-    "memoization"
-  ],
-  "author": "Dan Stocker <dan@kwaia.com>",
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:production-minds/troop.git"
-  },
-  "dependencies": {
-    "dessert": "~0.2.9"
-  },
-  "devDependencies": {
-    "phil": "~0.2.0",
-    "grunt": "~0.4.1",
-    "grunt-jstestdriver": "2.2.0",
-    "grunt-contrib-concat": "~0.3.0",
-    "grunt-contrib-jshint": "~0.5.4",
-    "grunt-yui-compressor": "~0.3.0",
-    "grunt-contrib-copy": "~0.4.1",
-    "common-gruntfile": "git://github.com/danstocker/common-gruntfile.git",
-    "QUnitAdapter": "https://dl.dropboxusercontent.com/u/9258903/packages/QUnitAdapter-1.1.0.tgz"
-  },
-  "files": [
-    "out/troop.js"
-  ],
-  "main": "out/troop.js"
+    "name"           : "troop",
+    "version"        : "0.3.9",
+    "description"    : "Full-featured, testable OOP",
+    "keywords"       : [
+        "oop",
+        "class",
+        "inheritance",
+        "testing",
+        "mocks",
+        "memoization"
+    ],
+    "author"         : "Dan Stocker <dan@kwaia.com>",
+    "repository"     : {
+        "type": "git",
+        "url" : "git@github.com:production-minds/troop.git"
+    },
+    "dependencies"   : {
+        "dessert": "~0.2.9"
+    },
+    "devDependencies": {
+        "phil"                : "~0.2.0",
+        "grunt"               : "~0.4.1",
+        "grunt-jstestdriver"  : "2.2.0",
+        "grunt-contrib-concat": "~0.3.0",
+        "grunt-contrib-jshint": "~0.5.4",
+        "grunt-yui-compressor": "~0.3.0",
+        "grunt-contrib-copy"  : "~0.4.1",
+        "common-gruntfile"    : "git://github.com/danstocker/common-gruntfile.git",
+        "QUnitAdapter"        : "https://dl.dropboxusercontent.com/u/9258903/packages/QUnitAdapter-1.1.0.tgz"
+    },
+    "files"          : [
+        "out/troop.js"
+    ],
+    "main"           : "out/troop.js"
 }
