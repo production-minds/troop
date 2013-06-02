@@ -25,7 +25,8 @@
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-jshint": "~0.5.4",
     "grunt-yui-compressor": "~0.3.0",
-    "grunt-contrib-copy": "~0.4.1"
+    "grunt-contrib-copy": "~0.4.1",
+    "common-gruntfile": "git://github.com/danstocker/common-gruntfile.git"
   },
   "files": [
     "out/troop.js"
