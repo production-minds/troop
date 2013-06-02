@@ -5,6 +5,8 @@ module.exports = function (grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
+        config: grunt.file.readJSON('config.json'),
+
         outPath           : 'out',
         fileNameVersion   : '<%= pkg.name %>-<%= pkg.version %>.js',
         filePath          : '<%= outPath %>/<%= pkg.name %>.js',
@@ -17,18 +19,7 @@ module.exports = function (grunt) {
             },
 
             dist: {
-                src : [
-                    'js/license.js',
-                    'js/namespace.js',
-                    'js/Feature.js',
-                    'js/Base.js',
-                    'js/Memoization.js',
-                    'js/Surrogate.js',
-                    'js/Instantiation.js',
-                    'js/Properties.js',
-                    'js/Promise.js',
-                    'js/exports.js'
-                ],
+                src : '<%= config.files %>',
                 dest: '<%= filePath %>'
             }
         },
@@ -54,10 +45,7 @@ module.exports = function (grunt) {
 
         jshint: {
             options: {
-                globals: {
-                    dessert: true
-                },
-
+                globals: '<%= config.globals %>',
                 ignores: ['js/*.test.js']
             },
 
@@ -65,7 +53,7 @@ module.exports = function (grunt) {
         },
 
         jstestdriver: {
-            files: ["js/jsTestDriver.conf"]
+            files: '<%= config.test %>'
         }
     });
 
