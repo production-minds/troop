@@ -45,7 +45,7 @@ module.exports = function (grunt) {
                 ignores: ['js/*.test.js']
             },
 
-            all: ['gruntfile.js', 'js/*.js']
+            all: ['_gruntfile.js', 'js/*.js']
         },
 
         jstestdriver: {
