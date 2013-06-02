@@ -42,10 +42,10 @@ module.exports = function (grunt) {
         jshint: {
             options: {
                 globals: '<%= config.globals %>',
-                ignores: ['js/*.test.js']
+                ignores: ['js/**/*.test.js']
             },
 
-            all: ['Gruntfile.js', 'js/*.js']
+            all: ['Gruntfile.js', 'js/**/*.js']
         },
 
         jstestdriver: {
