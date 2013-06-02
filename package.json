@@ -21,7 +21,7 @@
     "devDependencies": {
         "phil"                : "~0.2.0",
         "grunt"               : "~0.4.1",
-        "grunt-jstestdriver"  : "2.2.0",
+        "grunt-jstestdriver"  : "git://github.com/danstocker/grunt-jstestdriver.git",
         "grunt-contrib-concat": "~0.3.0",
         "grunt-contrib-jshint": "~0.5.4",
         "grunt-yui-compressor": "~0.3.0",
