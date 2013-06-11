@@ -17,7 +17,7 @@
          * @param {string} propertyName Property name.
          * @param {function} generator Generates (and returns) property value.
          */
-        promise: function (host, propertyName, generator) {
+        postpone: function (host, propertyName, generator) {
             dessert
                 .isObject(host, "Host is not an Object")
                 .isString(propertyName, "Invalid property name")
@@ -34,7 +34,7 @@
             // rounding up rest of the arguments
             generatorArguments = sliceArguments(0, 2).concat(sliceArguments(3));
 
-            // placing class promise on namespace as getter
+            // placing class placeholder on namespace as getter
             Object.defineProperty(host, propertyName, {
                 get: function () {
                     // obtaining property value
@@ -42,7 +42,7 @@
 
                     if (typeof value !== 'undefined') {
                         // generator returned a property value
-                        // overwriting promise with actual property value
+                        // overwriting placeholder with actual property value
                         Object.defineProperty(host, propertyName, {
                             value       : value,
                             writable    : false,
@@ -59,7 +59,7 @@
                 },
 
                 set: function (value) {
-                    // overwriting promise with property value
+                    // overwriting placeholder with property value
                     Object.defineProperty(host, propertyName, {
                         value       : value,
                         writable    : false,
