@@ -10,7 +10,7 @@
 
     var hOP = Object.prototype.hasOwnProperty;
 
-    troop.Base.addMethod.call(troop, /** @lends troop */{
+    troop.Base.addMethods.call(troop, /** @lends troop */{
         /**
          * Promises a property definition (read-only).
          * @param {object} host Host object.

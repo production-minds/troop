@@ -41,7 +41,7 @@
         }
     };
 
-    troop.Base.addMethod(/** @lends troop.Base */{
+    troop.Base.addMethods(/** @lends troop.Base */{
         /**
          * Assigns instance key calculator to
          * @param {function} instanceMapper Instance key mapper function

@@ -9,7 +9,7 @@
         Surrogate = troop.Surrogate,
         Base = troop.Base;
 
-    troop.Base.addMethod(/** @lends troop.Base */{
+    troop.Base.addMethods(/** @lends troop.Base */{
         /**
          * Creates instance of a class.
          * Class must implement an .init method

@@ -63,7 +63,7 @@
          * Will be replaced by Properties.
          * @param {object} methods Object of methods.
          */
-        addMethod: function (methods) {
+        addMethods: function (methods) {
             dessert.isAllFunctions(methods, "Some methods are not functions.");
 
             var methodNames = Object.keys(methods),
@@ -84,7 +84,7 @@
 
     var self = troop.Base;
 
-    self.addMethod(/** @lends troop.Base */{
+    self.addMethods(/** @lends troop.Base */{
         /**
          * Extends base class with methods.
          * Extended class will have methods as read-only own properties.
@@ -115,7 +115,7 @@
          * @return {troop.Base}
          */
         getTarget: function () {
-            return troop.testing === true ?
+            return /** @type {troop.Base} */ troop.testing === true ?
                 Object.getPrototypeOf(this) :
                 this;
         },
@@ -126,7 +126,7 @@
          * @return {troop.Base}
          */
         getBase: function () {
-            return troop.testing === true ?
+            return /** @type {troop.Base} */ troop.testing === true ?
                 Object.getPrototypeOf(Object.getPrototypeOf(this)) :
                 Object.getPrototypeOf(this);
         },

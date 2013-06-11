@@ -61,6 +61,7 @@
          * Initializer for derived class
          */
         function init() {
+            /*jshint validthis:true */
             this
                 .addPrivate({
                     _woo: "hoo"
@@ -68,7 +69,7 @@
                 .addPublic({
                     holy: "moly"
                 })
-                .addConstant({
+                .addConstants({
                     pi: 3.14
                 });
         }
@@ -80,7 +81,7 @@
             .addPublic({
                 yo: "momma"
             })
-            .addMethod({
+            .addMethods({
                 foo : testMethod,
                 init: init
             });
@@ -119,9 +120,9 @@
         ok(troop.Base.isA.call([], Array.prototype), "[] is an Array.prototype");
 
         var myBase = troop.Base.extend()
-                .addMethod({init: function () {}}),
+                .addMethods({init: function () {}}),
             myChild = myBase.extend()
-                .addMethod({init: function () {}});
+                .addMethods({init: function () {}});
 
         ok(troop.Base.instanceOf.call(myChild, myBase), "Direct descendant");
         ok(troop.Base.instanceOf.call(myBase, troop.Base), "Direct descendant");

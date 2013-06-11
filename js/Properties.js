@@ -182,13 +182,13 @@
 
     var self = troop.Properties;
 
-    troop.Base.addMethod(/** @lends troop.Base */{
+    troop.Base.addMethods(/** @lends troop.Base */{
         /**
          * Adds public read-only methods to class.
          * @this {troop.Base} Class object.
          * @param {object} methods Methods.
          */
-        addMethod: function (methods) {
+        addMethods: function (methods) {
             dessert.isAllFunctions(methods);
 
             self.addProperties.call(troop.Base.getTarget.call(this), methods, false, true, false);
@@ -201,7 +201,7 @@
          * @this {troop.Base} Class object.
          * @param {object} methods Methods.
          */
-        addPrivateMethod: function (methods) {
+        addPrivateMethods: function (methods) {
             dessert
                 .isAllFunctions(methods, "Some private methods are not functions.")
                 .isAllPrefixed(methods, troop.privatePrefix, "Some private method names do not match the required prefix.");
@@ -269,7 +269,7 @@
          * @this {troop.Base} Instance object.
          * @param {object} properties Constant properties.
          */
-        addConstant: function (properties) {
+        addConstants: function (properties) {
             return self.addProperties.call(this, properties, false, true, false);
         },
 
@@ -278,7 +278,7 @@
          * @this {troop.Base} Instance object.
          * @param {object} properties Constant properties.
          */
-        addPrivateConstant: function (properties) {
+        addPrivateConstants: function (properties) {
             dessert.isAllPrefixed(properties, troop.privatePrefix, "Some private constant names do not match the required prefix.");
 
             self.addProperties.call(this, properties, false, false, false);
@@ -303,7 +303,7 @@
 
             elevatedMethod = {};
             elevatedMethod[methodName] = baseMethod.bind(this);
-            troop.Base.addMethod.call(this, elevatedMethod);
+            troop.Base.addMethods.call(this, elevatedMethod);
 
             return this;
         },
@@ -313,7 +313,7 @@
          * @this {troop.Base} Instance or class object.
          * @param {object} methods Mock methods.
          */
-        addMock: function (methods) {
+        addMocks: function (methods) {
             dessert.isAllFunctions(methods, "Some mock methods are not functions.");
 
             self.addProperties.call(this, methods, false, true, true);

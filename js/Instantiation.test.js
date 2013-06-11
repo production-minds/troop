@@ -48,7 +48,7 @@
                 .setInstanceMapper(function (name) {
                     return name;
                 })
-                .addMethod({
+                .addMethods({
                     init: function () {}
                 }),
             instance;
@@ -82,7 +82,7 @@
             .addSurrogate(ns, 'initless', function (test) {
                 return test === 'initless';
             })
-            .addMethod({
+            .addMethods({
                 init: function () {}
             });
 
@@ -90,7 +90,7 @@
          * Child class that also serves as a surrogate for base.
          */
         ns.child = ns.base.extend()
-            .addMethod({
+            .addMethods({
                 init: function (test) {
                     equal(test, 'test', "Argument passed to filter");
                 }
@@ -130,7 +130,7 @@
             .addSurrogate(ns, 'Child', function (foo) {
                 return foo === 'bar';
             })
-            .addMethod({
+            .addMethods({
                 init: function () {}
             });
 

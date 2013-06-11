@@ -43,7 +43,7 @@
         }
     };
 
-    troop.Base.addMethod(/** @lends troop.Base */{
+    troop.Base.addMethods(/** @lends troop.Base */{
         /**
          * Adds surrogate class to this class.
          * When surrogate classes are present, instantiation is delegated
@@ -58,7 +58,7 @@
                 .isFunction(filter, "Invalid filter function");
 
             if (!hOP.call(this, 'surrogates')) {
-                this.addConstant(/** @lends troop.Base */{
+                this.addConstants(/** @lends troop.Base */{
                     /**
                      * Container for surrogate descriptors
                      * @type {object[]}

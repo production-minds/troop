@@ -163,11 +163,11 @@
         var tmp = {},
             result;
 
-        result = troop.Base.addMethod.call(tmp, {
+        result = troop.Base.addMethods.call(tmp, {
             foo: function () { return 'foo'; }
         });
 
-        equal(result, tmp, "addMethod returns input object");
+        equal(result, tmp, "addMethods returns input object");
         equal(typeof result.foo, 'function', "Method added");
         equal(result.foo(), 'foo', "Method invoked");
     });
@@ -184,7 +184,7 @@
         equal(delta.toString(), 'foo', "Serialization invoked");
         equal(tmp.toString(), '[object Object]', "Built-in serializer");
 
-        troop.Base.addMethod.call(tmp, delta);
+        troop.Base.addMethods.call(tmp, delta);
 
         equal(typeof tmp.toString, 'function', "Override added");
         equal(tmp.toString(), 'foo', "Serialization invoked");
@@ -233,11 +233,11 @@
 
         function testMethod() {}
 
-        troop.Base.addMethod.call(tmp, {
+        troop.Base.addMethods.call(tmp, {
             test: testMethod
         });
 
-        troop.Base.addConstant.call(tmp, {
+        troop.Base.addConstants.call(tmp, {
             foo: "foo"
         });
 
@@ -259,7 +259,7 @@
 
     test("Method elevation", function () {
         var base = troop.Base.extend()
-                .addMethod({test: function () {return this;}}),
+                .addMethods({test: function () {return this;}}),
             instance = Object.create(base);
 
         equal(instance.test, base.test, "Instance method same as class method");
@@ -275,7 +275,7 @@
 
         function testMethod() {}
 
-        troop.Base.addMock.call(tmp, {
+        troop.Base.addMocks.call(tmp, {
             foo: testMethod
         });
 

@@ -29,11 +29,11 @@ var globalNs = {};
     test("Surrogate addition", function () {
         var filter = function () {},
             base = troop.Base.extend()
-                .addMethod({
+                .addMethods({
                     init: function () {}
                 }),
             child = base.extend()
-                .addMethod({
+                .addMethods({
                     init: function () {}
                 }),
             ns = {
