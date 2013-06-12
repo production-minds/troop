@@ -18,7 +18,7 @@ Troop features
     - pseudo-privates that are non-enumerable
     - constants are actually read-only
 - testing mode for applying mock methods
-- on-demand dependency resolution
+- postponed, on-demand property definitions
 - delegation of instantiation with surrogates
 - support for instance memoization
 
@@ -39,10 +39,10 @@ var MyClass = troop.Base.extend()
     .addPublic({
         hello: "world" // static public property
     })
-    .addConstant({
+    .addConstants({
         pi: 3.14 // static public constant
     })
-    .addMethod({
+    .addMethods({
         init: function (who) {
             this.addPublic({
                 hello: who
@@ -53,7 +53,7 @@ var MyClass = troop.Base.extend()
 var myInstance = MyClass.create("all");
 ```
 
-![myInstance in console](https://dl.dropbox.com/u/9258903/myInstance-0.3.0.png)
+![myInstance in console](https://dl.dropboxusercontent.com/u/9258903/myInstance-0.4.0.png)
 
 Check out these jsFiddles for more examples:
 
