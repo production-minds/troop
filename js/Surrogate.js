@@ -12,28 +12,61 @@
      */
     troop.Surrogate = {
         /**
+         * Adds surrogates buffer to class.
+         */
+        initSurrogates: function () {
+            this.addConstants(/** @lends troop.Base */{
+                /**
+                 * Container for surrogate info
+                 * @type {object}
+                 */
+                surrogateInfo: {
+                    /**
+                     * @type {function}
+                     */
+                    preparationHandler: undefined,
+
+                    /**
+                     * @type {object[]}
+                     */
+                    descriptors: []
+                }
+            });
+        },
+
+        /**
          * Retrieves first surrogate fitting constructor arguments.
          * @this {troop.Base} Class
          * @return {troop.Base}
          */
         getSurrogate: function () {
-            var surrogates,
-                i, surrogateInfo;
+            var args = arguments,
+                preparationHandler,
+                descriptors,
+                i, descriptor;
 
             /**
-             * Surrogates property must be the class' own property
+             * Surrogate info property must be the class' own property
              * otherwise surrogates would be checked on instantiating
              * every descendant of the current class, too.
              * This would be wasteful, unnecessary, and confusing.
              */
-            if (hOP.call(this, 'surrogates')) {
-                surrogates = this.surrogates;
-                for (i = 0; i < surrogates.length; i++) {
-                    surrogateInfo = surrogates[i];
+            if (hOP.call(this, 'surrogateInfo')) {
+                // dealing with preparation handler
+                preparationHandler = this.surrogateInfo.preparationHandler;
+                if (preparationHandler) {
+                    args = Array.prototype.slice.call(arguments);
+                    args.push(preparationHandler.apply(this, arguments));
+                }
+
+                // going through descriptors and determining surrogate
+                descriptors = this.surrogateInfo.descriptors;
+                for (i = 0; i < descriptors.length; i++) {
+                    descriptor = descriptors[i];
 
                     // determining whether arguments fit next filter
-                    if (surrogateInfo.filter.apply(this, arguments)) {
-                        return surrogateInfo.namespace[surrogateInfo.className];
+                    if (descriptor.filter.apply(this, args)) {
+                        return descriptor.namespace[descriptor.className];
                     }
                 }
             }
@@ -45,10 +78,30 @@
 
     troop.Base.addMethods(/** @lends troop.Base */{
         /**
+         * Adds a handler to be called before evaluating any surrogates.
+         * Handler is expected to return a value that is passed to all
+         * surrogate filters.
+         * @param {function} handler
+         */
+        prepareSurrogates: function (handler) {
+            dessert.isFunction(handler, "Invalid handler");
+
+            if (!hOP.call(this, 'surrogateInfo')) {
+                troop.Surrogate.initSurrogates.call(this);
+            }
+
+            this.surrogateInfo.preparationHandler = handler;
+
+            return this;
+        },
+
+        /**
          * Adds surrogate class to this class.
          * When surrogate classes are present, instantiation is delegated
          * to the first surrogate satisfying the filter argument.
-         * params: namespace, className, filter
+         * @param {object} namespace
+         * @param {string} className
+         * @param {function} filter
          * @this {troop.Base} Class object.
          */
         addSurrogate: function (namespace, className, filter) {
@@ -57,17 +110,11 @@
                 .isString(className, "Invalid class name")
                 .isFunction(filter, "Invalid filter function");
 
-            if (!hOP.call(this, 'surrogates')) {
-                this.addConstants(/** @lends troop.Base */{
-                    /**
-                     * Container for surrogate descriptors
-                     * @type {object[]}
-                     */
-                    surrogates: []
-                });
+            if (!hOP.call(this, 'surrogateInfo')) {
+                troop.Surrogate.initSurrogates.call(this);
             }
 
-            this.surrogates.push({
+            this.surrogateInfo.descriptors.push({
                 namespace: namespace,
                 className: className,
                 filter   : filter

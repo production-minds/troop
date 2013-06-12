@@ -33,7 +33,7 @@
             }
 
             // instantiating class or surrogate
-            var self = this.surrogates ?
+            var self = this.surrogateInfo ?
                     Surrogate.getSurrogate.apply(this, arguments) :
                     this,
                 that = Base.extend.call(self);

@@ -26,6 +26,32 @@ var globalNs = {};
         equal(troop.Surrogate.getSurrogate.call(ns.base, 'blah'), ns.base, "Arguments don't fit a surrogate");
     });
 
+    test("Surrogate preparation", function () {
+        expect(2);
+
+        var base = troop.Base.extend()
+                .addMethods({
+                    init: function () {}
+                }),
+            child = base.extend(),
+            ns = {
+                base : base,
+                child: child
+            };
+
+        base
+            .prepareSurrogates(function () {
+                return 'foo';
+            })
+            .addSurrogate(ns, 'child', function (bar, extry) {
+                equal(extry, 'foo', "Preparation handler result added");
+                equal(bar, 'bar', "Constructor argument ok");
+                return bar === 'bar';
+            });
+
+        base.create('bar');
+    });
+
     test("Surrogate addition", function () {
         var filter = function () {},
             base = troop.Base.extend()
@@ -47,10 +73,10 @@ var globalNs = {};
 
         base.addSurrogate(ns, 'child', filter);
 
-        equal(base.surrogates.length, 1, "New number of surrogates");
+        equal(base.surrogateInfo.descriptors.length, 1, "New number of surrogates");
 
         deepEqual(
-            base.surrogates,
+            base.surrogateInfo.descriptors,
             [
                 {
                     namespace: ns,
