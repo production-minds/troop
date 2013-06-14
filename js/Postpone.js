@@ -1,8 +1,8 @@
 /**
- * Promise Addition.
+ * Postponed Property Definition.
  *
- * API to add properties to objects as promises.
- * A promise means that the property will be evaluated upon first access.
+ * API to add properties to objects so that they won't get evaluated until
+ * first access.
  */
 /*global dessert, troop, console */
 (function () {
@@ -12,7 +12,7 @@
 
     troop.Base.addMethods.call(troop, /** @lends troop */{
         /**
-         * Promises a property definition (read-only).
+         * Adds a postponed property definition (read-only).
          * @param {object} host Host object.
          * @param {string} propertyName Property name.
          * @param {function} generator Generates (and returns) property value.

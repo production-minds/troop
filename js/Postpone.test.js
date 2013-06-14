@@ -7,9 +7,9 @@ var ns = {}; // global namespace
 (function () {
     "use strict";
 
-    module("Promise");
+    module("Postponed");
 
-    test("Promise", function () {
+    test("Postpone", function () {
         var ns = {};
 
         if (phil.hasGetterSetter()) {
