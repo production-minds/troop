@@ -58,7 +58,7 @@ var myInstance = MyClass.create("all");
 Check out these jsFiddles for more examples:
 
 - [Using Troop](http://jsfiddle.net/danstocker/n5jze/)
-- [Using Troop promises](http://jsfiddle.net/danstocker/YR374/)
+- [Postponed property definitions](http://jsfiddle.net/danstocker/YR374/)
 - [Surrogate classes in Troop](http://jsfiddle.net/danstocker/ZsZGy/)
 
 See the [Troop wiki](https://github.com/production-minds/troop/wiki) for further details.
