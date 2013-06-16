@@ -4,4 +4,4 @@
 /*global require */
 /** @namespace */
 var troop = {},
-    dessert = dessert || require('dessert').dessert;
+    dessert = dessert || require('dessert');

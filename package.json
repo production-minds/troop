@@ -16,7 +16,7 @@
         "url" : "git@github.com:production-minds/troop.git"
     },
     "dependencies"   : {
-        "dessert": "~0.2.9"
+        "dessert": "~0.3.0"
     },
     "devDependencies": {
         "phil"                : "~0.2.0",
