@@ -55,8 +55,7 @@
                 // dealing with preparation handler
                 preparationHandler = this.surrogateInfo.preparationHandler;
                 if (preparationHandler) {
-                    args = Array.prototype.slice.call(arguments);
-                    args.push(preparationHandler.apply(this, arguments));
+                    args = preparationHandler.apply(this, arguments) || arguments;
                 }
 
                 // going through descriptors and determining surrogate

@@ -27,11 +27,13 @@ var globalNs = {};
     });
 
     test("Surrogate preparation", function () {
-        expect(2);
+        expect(3);
 
         var base = troop.Base.extend()
                 .addMethods({
-                    init: function () {}
+                    init: function (bar) {
+                        equal(arguments.length, 1, "Original argument list passed to init");
+                    }
                 }),
             child = base.extend(),
             ns = {
@@ -40,8 +42,8 @@ var globalNs = {};
             };
 
         base
-            .prepareSurrogates(function () {
-                return 'foo';
+            .prepareSurrogates(function (bar) {
+                return [bar, 'foo'];
             })
             .addSurrogate(ns, 'child', function (bar, extry) {
                 equal(extry, 'foo', "Preparation handler result added");
