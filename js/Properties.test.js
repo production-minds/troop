@@ -275,9 +275,19 @@
 
         function testMethod() {}
 
+        raises(function () {
+            troop.Base.addMocks.call(tmp, {
+                foo: testMethod
+            });
+        }, "Testing is not on");
+
+        troop.testing = true;
+
         troop.Base.addMocks.call(tmp, {
             foo: testMethod
         });
+
+        troop.testing = false;
 
         deepEqual(tmp, {
             foo: testMethod

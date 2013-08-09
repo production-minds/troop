@@ -377,7 +377,9 @@
          * @returns {troop.Base}
          */
         addMocks: function (methods) {
-            dessert.isAllFunctions(methods, "Some mock methods are not functions.");
+            dessert
+                .assert(troop.testing, "Troop is not in testing mode.")
+                .isAllFunctions(methods, "Some mock methods are not functions.");
 
             self.addProperties.call(this, methods, false, true, true);
 
