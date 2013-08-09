@@ -62,6 +62,7 @@
          * Disposable method for adding further (public) methods.
          * Will be replaced by Properties.
          * @param {object} methods Object of methods.
+         * @ignore
          */
         addMethods: function (methods) {
             dessert.isAllFunctions(methods, "Some methods are not functions.");
@@ -86,10 +87,10 @@
 
     self.addMethods(/** @lends troop.Base */{
         /**
-         * Extends base class with methods.
-         * Extended class will have methods as read-only own properties.
-         * @function
-         * @this {troop.Base} Troop class.
+         * Extends class. Extended classes may override base class methods and properties according to
+         * regular OOP principles.
+         * @example
+         * var MyClass = troop.Base.extend();
          * @return {troop.Base}
          */
         extend: function () {
@@ -107,11 +108,9 @@
         },
 
         /**
-         * Determines target of property addition.
-         * In testing mode, each class has two prototype levels and
-         * methods should go to the lower one, so they may be covered on
-         * the other.
-         * @function
+         * Determines target object of method addition.
+         * In testing mode, each class has two prototype levels and methods should go to the lower one
+         * so they may be covered on the other. Do not use in production, only testing.
          * @return {troop.Base}
          */
         getTarget: function () {
@@ -121,8 +120,10 @@
         },
 
         /**
-         * Retrieves the immediate base class of a given child class.
-         * @function
+         * Retrieves the base class of the current class.
+         * @example
+         * var MyClass = troop.Base.extend();
+         * MyClass.getBase() === troop.Base; // true
          * @return {troop.Base}
          */
         getBase: function () {
@@ -132,8 +133,13 @@
         },
 
         /**
-         * Tests whether the current object is a descendant of base.
+         * Tests whether the current class or instance is a descendant of base.
+         * @example
+         * var MyClass = troop.Base.extend();
+         * MyClass.isA(troop.Base) // true
+         * MyClass.isA(MyClass) // false
          * @param {troop.Base} base
+         * @returns {boolean}
          */
         isA: function (base) {
             return base.isPrototypeOf(this);
@@ -142,12 +148,24 @@
         /**
          * Tests whether the current class is base of the provided object.
          * @function
+         * @example
+         * var MyClass = troop.Base.extend();
+         * MyClass.isA(troop.Base) // true
+         * MyClass.isA(MyClass) // false
+         * @returns {boolean}
          */
         isBaseOf: Object.prototype.isPrototypeOf,
 
         /**
-         * Tests whether the current object is the immediate descendant of base.
+         * Tests whether the current class or instance is the direct extension or instance
+         * of the specified class.
          * @param {troop.Base} base
+         * @example
+         * var ClassA = troop.Base.extend(),
+         *     ClassB = ClassA.extend();
+         * ClassA.instanceOf(troop.Base) // true
+         * ClassB.instanceOf(troop.Base) // false
+         * ClassB.instanceOf(ClassA) // true
          * @return {Boolean}
          */
         instanceOf: function (base) {
