@@ -92,7 +92,7 @@
      */
     troop.Properties = {
         /**
-         * Adds single value property.
+         * Adds single value property to the context.
          * @param {string} propertyName Property name.
          * @param value {*} Property value to be assigned.
          * @param {boolean} [isWritable]
@@ -115,7 +115,7 @@
         },
 
         /**
-         * Adds single accessor property.
+         * Adds single accessor property to the context.
          * @param {string} propertyName Property name.
          * @param {function} [getter] Property getter.
          * @param {function} [setter] Property setter.
@@ -139,8 +139,7 @@
         },
 
         /**
-         * Adds properties to object with the specified attributes.
-         * @this {object}
+         * Adds a block of properties to the context having the specified attributes.
          * @param {object|function} properties Property object or its generator function.
          * @param {boolean} [isWritable]
          * @param {boolean} [isEnumerable]
@@ -182,11 +181,20 @@
 
     var self = troop.Properties;
 
-    troop.Base.addMethods(/** @lends troop.Base */{
+    troop.Base.addMethods(/** @lends troop.Base# */{
         /**
-         * Adds public read-only methods to class.
-         * @this {troop.Base} Class object.
-         * @param {object} methods Methods.
+         * Adds a block of public read-only methods to the class it's called on.
+         * When troop.testing is on, methods will be placed on the class differently than other properties,
+         * therefore it is important to use .addMethods and .addPrivateMethods for method addition.
+         * @param {object} methods Name - value pairs of methods to apply. Values must be functions,
+         * or objects implementing a pair of get and set functions.
+         * @example
+         * var myClass = troop.extend()
+         *    .addMethods({
+         *        foo: function () {alert("Foo");},
+         *        bar: {get: function () {return "Bar";}
+         *    });
+         * @returns {troop.Base}
          */
         addMethods: function (methods) {
             dessert.isAllFunctions(methods);
@@ -197,9 +205,19 @@
         },
 
         /**
-         * Adds private read-only methods to class.
-         * @this {troop.Base} Class object.
-         * @param {object} methods Methods.
+         * Adds a block of private (non-enumerable) read-only methods to the class it's called on.
+         * Method names must match the private prefix rule set by `troop.privatePrefix`.
+         * When troop.testing is on, methods will be placed on the class differently than other properties,
+         * therefore it is important to use .addMethods and .addPrivateMethods for method addition.
+         * @param {object} methods Name - value pairs of methods to apply. Values must be functions,
+         * or objects implementing a pair of get and set functions.
+         * @example
+         * var myClass = troop.extend()
+         *    .addMethods({
+         *        _foo: function () {alert("Foo");},
+         *        _bar: {get: function () {return "Bar";}
+         *    });
+         * @returns {troop.Base}
          */
         addPrivateMethods: function (methods) {
             dessert
@@ -212,10 +230,26 @@
         },
 
         /**
-         * Copies properties and methods from an object
-         * and adds them preserving all property attributes.
-         * In testing mode, only copies methods!
-         * @param {object} trait Object containing traits.
+         * Adds a trait to the current class.
+         * A trait is similar to a class, in that it is a collection of properties and methods. In the process,
+         * all own properties and methods of the trait get copied to the current class, preserving their
+         * ES5 property attributes.
+         * Traits must satisfy an inheritance requirement, inasmuch as they must be either plain objects (extending
+         * Object.prototype), or direct extensions of troop.Base, or the trait and current class must share
+         * the same base class. Traits are not required to have an .init() method.
+         * In testing mode, copies methods only!
+         * @param {object|troop.Base} trait Trait object
+         * @example
+         * MyTrait = troop.Base.extend()
+         *    .addMethods({
+         *        foo: function () { alert("hello"); }
+         *    });
+         * MyClass = troop.Base.extend()
+         *    .addTrait(MyTrait)
+         *    .addMethods({ init: function () {} });
+         * myInstance = MyClass.create();
+         * myInstance.foo(); // alerts "hello"
+         * @returns {troop.Base}
          */
         addTrait: function (trait) {
             // obtaining all property names (including non-enumerable)
@@ -239,22 +273,21 @@
             return this;
         },
 
-        //////////////////////////////
-        // Class and instance-level
-
         /**
-         * Adds public writable members to class or instance.
-         * @this {troop.Base} Class or instance object.
-         * @param {object} properties Properties and methods.
+         * Adds a block of public (enumerable) writable properties to the current class or instance.
+         * @param {object} properties Name-value pairs of properties.
+         * @returns {troop.Base}
          */
         addPublic: function (properties) {
-            return self.addProperties.call(this, properties, true, true, false);
+            self.addProperties.call(this, properties, true, true, false);
+            return this;
         },
 
         /**
-         * Adds pseudo-private writable members to class or instance.
-         * @this {troop.Base} Class or instance object.
-         * @param {object} properties Properties and methods.
+         * Adds a block of private (non-enumerable) writable properties to the current class or instance.
+         * Property names must match the private prefix rule set by `troop.privatePrefix`.
+         * @param {object} properties Name-value pairs of properties.
+         * @returns {troop.base}
          */
         addPrivate: function (properties) {
             dessert.isAllPrefixed(properties, troop.privatePrefix, "Some private property names do not match the required prefix.");
@@ -265,18 +298,20 @@
         },
 
         /**
-         * Adds public constant (read-only) members to instance.
-         * @this {troop.Base} Instance object.
-         * @param {object} properties Constant properties.
+         * Adds a block of public (enumerable) constant (read-only) properties to the current class or instance.
+         * @param {object} properties Name-value pairs of constant properties
+         * @returns {troop.Base}
          */
         addConstants: function (properties) {
-            return self.addProperties.call(this, properties, false, true, false);
+            self.addProperties.call(this, properties, false, true, false);
+            return this;
         },
 
         /**
-         * Adds private constant (read-only & non-enumerable) members to instance.
-         * @this {troop.Base} Instance object.
-         * @param {object} properties Constant properties.
+         * Adds a block of private (non-enumerable) constant (read-only) properties to the current class or instance.
+         * Property names must match the private prefix rule set by `troop.privatePrefix`.
+         * @param {object} properties Name-value pairs of private constant properties.
+         * @returns {troop.Base}
          */
         addPrivateConstants: function (properties) {
             dessert.isAllPrefixed(properties, troop.privatePrefix, "Some private constant names do not match the required prefix.");
@@ -287,10 +322,25 @@
         },
 
         /**
-         * Elevates method from class level to instance level.
-         * (Or from base class to child class.)
-         * Ties context to the object it was elevated to.
+         * Elevates method from class level to instance level. (Or from base class to current class.)
+         * Ties context to the object it was elevated to, so methods may be safely passed as event handlers.
          * @param {string} methodName Name of method to elevate.
+         * @example
+         * ClassA = troop.Base.extend()
+         *    .addMethods({
+         *        init: function () {},
+         *        foo: function () { alert(this.bar); }
+         *    });
+         * ClassB = ClassA.extend()
+         *     .addMethods({
+         *         init: function () {
+         *             this.bar = "hello";
+         *             this.elevateMethod('foo');
+         *         }
+         *     });
+         * foo = ClassB.create().foo; // should lose context
+         * foo(); // alerts "hello", for context was preserved
+         * @returns {troop.Base}
          */
         elevateMethod: function (methodName) {
             dessert.isString(methodName, "Invalid method name");
@@ -309,9 +359,22 @@
         },
 
         /**
-         * Adds public mock methods (read-only, but removable) members to instance or class.
-         * @this {troop.Base} Instance or class object.
-         * @param {object} methods Mock methods.
+         * Adds a block of public (enumerable) mock methods (read-only, but removable) to the current instance or class.
+         * @param {object} methods Name-value pairs of methods. Values must be functions or getter-setter objects.
+         * @example
+         * troop.testing = true;
+         * MyClass = troop.Base.extend()
+         *      .addMethods({
+         *          init: function () {},
+         *          foo: function () {}
+         *      });
+         * myInstance = MyClass.create();
+         * MyClass.addMocks({
+         *     foo: function () {return 'FOO';}
+         * });
+         * myInstance.foo() // returns 'FOO'
+         * @see troop.Base#addMethods
+         * @returns {troop.Base}
          */
         addMocks: function (methods) {
             dessert.isAllFunctions(methods, "Some mock methods are not functions.");
@@ -322,7 +385,8 @@
         },
 
         /**
-         * Removes all mock methods from class or instance.
+         * Removes all mock methods from the current class or instance.
+         * @returns {troop.Base}
          */
         removeMocks: function () {
             var propertyNames = Object.keys(this),
