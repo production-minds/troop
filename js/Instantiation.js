@@ -11,12 +11,22 @@
 
     troop.Base.addMethods(/** @lends troop.Base */{
         /**
-         * Creates instance of a class.
-         * Class must implement an .init method
-         * which decorates the instance with necessary properties.
-         * @return {troop.Base} Instance.
+         * Creates a new instance of the class it was called on. Arguments passed to .create will be handed over
+         * to the user-defined .init method, which will decorate the new instance with properties.
+         * Class must implement .init method in order to be instantiable.
+         * Instantiation might return an existing instance of the same class if the class is memoized.
+         * @see troop.Base.setInstanceMapper
+         * Instantiation might create a new instance of a subclass if the current class has surrogates.
+         * @see troop.Base.addSurrogate
          * @example
-         * var instance = someClass.create(someArgs);
+         * var MyClass = troop.extend({
+         *         init: function (foo) {
+         *            this.foo = 'bar';
+         *         }
+         *     }),
+         *     myInstance = MyClass.create("bar");
+         * myInstance.foo // "bar"
+         * @return {troop.Base}
          */
         create: function () {
             var isMemoized = this.instanceMapper,
