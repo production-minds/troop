@@ -24,7 +24,7 @@
         /**
          * Fetches a memoized instance from the registry.
          * @param {string} key
-         * @return {troop.Base}
+         * @returns {troop.Base}
          */
         getInstance: function (key) {
             var instanceRegistry = this.instanceRegistry;
@@ -34,7 +34,7 @@
         /**
          * Maps instance to registry
          * Receives constructor arguments
-         * @return {string} Instance key
+         * @returns {string} Instance key
          */
         mapInstance: function () {
             return this.instanceMapper.apply(this, arguments);
@@ -45,7 +45,7 @@
         /**
          * Assigns instance key calculator to
          * @param {function} instanceMapper Instance key mapper function
-         * @return {troop.Base}
+         * @returns {troop.Base}
          */
         setInstanceMapper: function (instanceMapper) {
             dessert
@@ -55,7 +55,7 @@
             /**
              * Maps constructor arguments to instance keys in the registry.
              * @type {function}
-             * @return {string}
+             * @returns {string}
              */
             this.instanceMapper = instanceMapper;
 
@@ -71,7 +71,7 @@
 
         /**
          * Tells whether the current class (or any of its parents) is memoized
-         * @return {boolean}
+         * @returns {boolean}
          */
         isMemoized: function () {
             return typeof this.instanceMapper === 'function';

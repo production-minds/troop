@@ -15,7 +15,7 @@
          * own property.
          * @param {string} propertyName
          * @param {object} host
-         * @return {Boolean}
+         * @returns {Boolean}
          */
         isPropertyNameAvailable: function (propertyName, host) {
             return !hOP.call(host, propertyName);
@@ -25,7 +25,7 @@
          * Checks property names against prefix.
          * @param {object} expr Host object.
          * @param {string} prefix Prefix.
-         * @return {boolean} Whether all properties on the object satisfy the prefix condition.
+         * @returns {boolean} Whether all properties on the object satisfy the prefix condition.
          */
         isAllPrefixed: function (expr, prefix) {
             var propertyNames,
@@ -49,7 +49,7 @@
         /**
          * Tells whether an object holds a getter / setter pair.
          * @param {object} expr Host object.
-         * @return {boolean}
+         * @returns {boolean}
          */
         isAccessor: function (expr) {
             var accessorMethods = {

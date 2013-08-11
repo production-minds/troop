@@ -26,7 +26,7 @@
          *     }),
          *     myInstance = MyClass.create("bar");
          * myInstance.foo // "bar"
-         * @return {troop.Base}
+         * @returns {troop.Base}
          */
         create: function () {
             var isMemoized = this.instanceMapper,

@@ -12,7 +12,7 @@
         /**
          * Determines whether read-only properties may be
          * covered up by assignment.
-         * @return {boolean}
+         * @returns {boolean}
          */
         canAssignToReadOnly: function () {
             var base, child;

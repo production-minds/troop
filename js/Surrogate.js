@@ -37,7 +37,7 @@
         /**
          * Retrieves first surrogate fitting constructor arguments.
          * @this {troop.Base} Class
-         * @return {troop.Base}
+         * @returns {troop.Base}
          */
         getSurrogate: function () {
             var args = arguments,

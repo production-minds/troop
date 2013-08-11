@@ -14,7 +14,7 @@
         /**
          * Checks whether properties of `expr` are *all* functions.
          * @param {object} expr
-         * @return {Boolean}
+         * @returns {Boolean}
          */
         isAllFunctions: function (expr) {
             var methodNames,
@@ -37,7 +37,7 @@
         /**
          * Verifies if `expr` is a Troop class.
          * @param {troop.Base} expr
-         * @return {Boolean}
+         * @returns {Boolean}
          */
         isClass: function (expr) {
             return self.isPrototypeOf(expr);
@@ -46,7 +46,7 @@
         /**
          * Verifies if `expr` is a Troop class or is not defined.
          * @param {troop.Base} expr
-         * @return {Boolean}
+         * @returns {Boolean}
          */
         isClassOptional: function (expr) {
             return typeof expr === 'undefined' ||
@@ -91,7 +91,7 @@
          * regular OOP principles.
          * @example
          * var MyClass = troop.Base.extend();
-         * @return {troop.Base}
+         * @returns {troop.Base}
          */
         extend: function () {
             var result = Object.create(this);
@@ -111,7 +111,7 @@
          * Determines target object of method addition.
          * In testing mode, each class has two prototype levels and methods should go to the lower one
          * so they may be covered on the other. Do not use in production, only testing.
-         * @return {troop.Base}
+         * @returns {troop.Base}
          */
         getTarget: function () {
             return /** @type {troop.Base} */ troop.testing === true ?
@@ -124,7 +124,7 @@
          * @example
          * var MyClass = troop.Base.extend();
          * MyClass.getBase() === troop.Base; // true
-         * @return {troop.Base}
+         * @returns {troop.Base}
          */
         getBase: function () {
             return /** @type {troop.Base} */ troop.testing === true ?
@@ -166,7 +166,7 @@
          * ClassA.instanceOf(troop.Base) // true
          * ClassB.instanceOf(troop.Base) // false
          * ClassB.instanceOf(ClassA) // true
-         * @return {Boolean}
+         * @returns {Boolean}
          */
         instanceOf: function (base) {
             return self.getBase.call(this) === base;
