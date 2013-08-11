@@ -9,6 +9,7 @@
 
     /**
      * @class troop.Memoization
+     * @ignore
      */
     troop.Memoization = {
         /**

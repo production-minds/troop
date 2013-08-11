@@ -9,6 +9,7 @@
 
     /**
      * @class troop.Surrogate
+     * @ignore
      */
     troop.Surrogate = {
         /**
