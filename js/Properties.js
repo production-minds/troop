@@ -88,6 +88,8 @@
     });
 
     /**
+     * Allows properties to be added to arbitrary objects as if they were Troop classes.
+     * The Troop base class uses these methods internally. They are exposed however due to their usefulness in testing.
      * @class troop.Properties
      */
     troop.Properties = {

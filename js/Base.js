@@ -55,6 +55,7 @@
     });
 
     /**
+     * Base class. Implements tools for building, instantiating and testing classes.
      * @class troop.Base
      */
     troop.Base = {
