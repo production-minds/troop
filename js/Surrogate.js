@@ -13,6 +13,7 @@
     troop.Surrogate = {
         /**
          * Adds surrogates buffer to class.
+         * @this {troop.Base}
          */
         initSurrogates: function () {
             this.addConstants(/** @lends troop.Base */{
@@ -36,7 +37,7 @@
 
         /**
          * Retrieves first surrogate fitting constructor arguments.
-         * @this {troop.Base} Class
+         * @this {troop.Base}
          * @returns {troop.Base}
          */
         getSurrogate: function () {
@@ -77,10 +78,12 @@
 
     troop.Base.addMethods(/** @lends troop.Base */{
         /**
-         * Adds a handler to be called before evaluating any surrogates.
-         * Handler is expected to return a value that is passed to all
-         * surrogate filters.
+         * Adds a handler to be called before evaluating any of the surrogate filters.
+         * The specified handler receives the original constructor arguments and is expected to
+         * return a modified argument list (array) that will be passed to the surrogate filters.
          * @param {function} handler
+         * @returns {troop.Base}
+         * @see troop.Base.addSurrogate
          */
         prepareSurrogates: function (handler) {
             dessert.isFunction(handler, "Invalid handler");
@@ -95,13 +98,28 @@
         },
 
         /**
-         * Adds surrogate class to this class.
-         * When surrogate classes are present, instantiation is delegated
-         * to the first surrogate satisfying the filter argument.
-         * @param {object} namespace
-         * @param {string} className
-         * @param {function} filter
-         * @this {troop.Base} Class object.
+         * Adds a surrogate class to the current class. Instantiation is forwarded to the first surrogate where
+         * the filter returns true.
+         * @param {object} namespace Namespace in which the surrogate class resides.
+         * @param {string} className Surrogate class name. The class the namespace / class name point to does not
+         * have to exist (or be resolved when postponed) at the time of adding the filter.
+         * @param {function} filter Function evaluating whether the surrogate class specified by the namespace
+         * and class name fits the arguments.
+         * @example
+         * var ns = {}; // namespace
+         * ns.Horse = troop.Base.extend()
+         *     .prepareSurrogates(function (height) {
+         *         return [height < 5]; // isPony
+         *     })
+         *     .addSurrogate(ns, 'Pony', function (isPony) {
+         *         return isPony;
+         *     })
+         *     .addMethods({ init: function () {} });
+         * ns.Pony = ns.Horse.extend()
+         *     .addMethods({ init: function () {} });
+         * var myHorse = ns.Horse.create(10), // instance of ns.Horse
+         *     myPony = ns.Horse.create(3); // instance of ns.Pony
+         * @returns {troop.Base}
          */
         addSurrogate: function (namespace, className, filter) {
             dessert
