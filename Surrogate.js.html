@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Surrogate.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: Surrogate.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>/**
+ * Surrogate Class Feature
+ */
+/*global dessert, troop */
+(function () {
+    "use strict";
+
+    var hOP = Object.prototype.hasOwnProperty;
+
+    /**
+     * @class troop.Surrogate
+     * @ignore
+     */
+    troop.Surrogate = {
+        /**
+         * Adds surrogates buffer to class.
+         * @this {troop.Base}
+         */
+        initSurrogates: function () {
+            this.addConstants(/** @lends troop.Base */{
+                /**
+                 * Container for surrogate info. Added to class via .initSurrogates().
+                 * @type {object}
+                 */
+                surrogateInfo: {
+                    /**
+                     * @type {function}
+                     */
+                    preparationHandler: undefined,
+
+                    /**
+                     * @type {object[]}
+                     */
+                    descriptors: []
+                }
+            });
+        },
+
+        /**
+         * Retrieves first surrogate fitting constructor arguments.
+         * @this {troop.Base}
+         * @returns {troop.Base}
+         */
+        getSurrogate: function () {
+            var args = arguments,
+                preparationHandler,
+                descriptors,
+                i, descriptor;
+
+            /**
+             * Surrogate info property must be the class' own property
+             * otherwise surrogates would be checked on instantiating
+             * every descendant of the current class, too.
+             * This would be wasteful, unnecessary, and confusing.
+             */
+            if (hOP.call(this, 'surrogateInfo')) {
+                // dealing with preparation handler
+                preparationHandler = this.surrogateInfo.preparationHandler;
+                if (preparationHandler) {
+                    args = preparationHandler.apply(this, arguments) || arguments;
+                }
+
+                // going through descriptors and determining surrogate
+                descriptors = this.surrogateInfo.descriptors;
+                for (i = 0; i &lt; descriptors.length; i++) {
+                    descriptor = descriptors[i];
+
+                    // determining whether arguments fit next filter
+                    if (descriptor.filter.apply(this, args)) {
+                        return descriptor.namespace[descriptor.className];
+                    }
+                }
+            }
+
+            // returning caller as fallback
+            return this;
+        }
+    };
+
+    troop.Base.addMethods(/** @lends troop.Base */{
+        /**
+         * Adds a handler to be called before evaluating any of the surrogate filters.
+         * The specified handler receives the original constructor arguments and is expected to
+         * return a modified argument list (array) that will be passed to the surrogate filters.
+         * @param {function} handler
+         * @returns {troop.Base}
+         * @see troop.Base.addSurrogate
+         */
+        prepareSurrogates: function (handler) {
+            dessert.isFunction(handler, "Invalid handler");
+
+            if (!hOP.call(this, 'surrogateInfo')) {
+                troop.Surrogate.initSurrogates.call(this);
+            }
+
+            this.surrogateInfo.preparationHandler = handler;
+
+            return this;
+        },
+
+        /**
+         * Adds a surrogate class to the current class. Instantiation is forwarded to the first surrogate where
+         * the filter returns true.
+         * @param {object} namespace Namespace in which the surrogate class resides.
+         * @param {string} className Surrogate class name. The class the namespace / class name point to does not
+         * have to exist (or be resolved when postponed) at the time of adding the filter.
+         * @param {function} filter Function evaluating whether the surrogate class specified by the namespace
+         * and class name fits the arguments.
+         * @example
+         * var ns = {}; // namespace
+         * ns.Horse = troop.Base.extend()
+         *     .prepareSurrogates(function (height) {
+         *         return [height &lt; 5]; // isPony
+         *     })
+         *     .addSurrogate(ns, 'Pony', function (isPony) {
+         *         return isPony;
+         *     })
+         *     .addMethods({ init: function () {} });
+         * ns.Pony = ns.Horse.extend()
+         *     .addMethods({ init: function () {} });
+         * var myHorse = ns.Horse.create(10), // instance of ns.Horse
+         *     myPony = ns.Horse.create(3); // instance of ns.Pony
+         * @returns {troop.Base}
+         */
+        addSurrogate: function (namespace, className, filter) {
+            dessert
+                .isObject(namespace, "Invalid namespace object")
+                .isString(className, "Invalid class name")
+                .isFunction(filter, "Invalid filter function");
+
+            if (!hOP.call(this, 'surrogateInfo')) {
+                troop.Surrogate.initSurrogates.call(this);
+            }
+
+            this.surrogateInfo.descriptors.push({
+                namespace: namespace,
+                className: className,
+                filter   : filter
+            });
+
+            return this;
+        }
+    });
+}());
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="troop.Base.html">Base</a></li><li><a href="troop.Feature.html">Feature</a></li><li><a href="troop.Properties.html">Properties</a></li></ul><h3>Namespaces</h3><ul><li><a href="troop.html">troop</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sun Aug 11 2013 12:35:27 GMT+0200 (CEST)
+</footer>
+
+<script> prettyPrint(); </script>
+</body>
+</html>
