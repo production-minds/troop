@@ -10,6 +10,10 @@ Having a static structure leads to
 - applications scaling better
 - maintainable codebase
 
+[Wiki](https://github.com/production-minds/troop/wiki)
+
+[Reference](http://production-minds.github.io/troop/)
+
 Troop features
 --------------
 
@@ -31,27 +35,25 @@ Troop is distinguished from other OOP-related libs such as MooTools or Backbone 
 Example
 -------
 
-```javascript
-var MyClass = troop.Base.extend()
-    .addPrivate({
-        _secret: "ufo" // static private property
-    })
-    .addPublic({
-        hello: "world" // static public property
-    })
-    .addConstants({
-        pi: 3.14 // static public constant
-    })
-    .addMethods({
-        init: function (who) {
-            this.addPublic({
-                hello: who
-            });
-        }
-    });
+    var MyClass = troop.Base.extend()
+        .addPrivate({
+            _secret: "ufo" // static private property
+        })
+        .addPublic({
+            hello: "world" // static public property
+        })
+        .addConstants({
+            pi: 3.14 // static public constant
+        })
+        .addMethods({
+            init: function (who) {
+                this.addPublic({
+                    hello: who
+                });
+            }
+        });
 
-var myInstance = MyClass.create("all");
-```
+    var myInstance = MyClass.create("all");
 
 ![myInstance in console](https://dl.dropboxusercontent.com/u/9258903/myInstance-0.4.0.png)
 
