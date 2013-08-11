@@ -10,8 +10,7 @@
      */
     troop.Feature = {
         /**
-         * Determines whether read-only properties may be
-         * covered up by assignment.
+         * Determines whether read-only properties may be covered up by assignment.
          * @returns {boolean}
          */
         canAssignToReadOnly: function () {
@@ -39,7 +38,8 @@
         },
 
         /**
-         * Determines whether defineProperty is ES5 or polyfill.
+         * Determines whether ES5 property attributes are available.
+         * @returns {boolean}
          */
         hasPropertyAttributes: function () {
             // creating object with read-only property
@@ -63,11 +63,13 @@
 
     /**
      * Whether methods should be writable (environmental)
+     * @type {boolean}
      */
     troop.writable = !troop.Feature.canAssignToReadOnly();
 
     /**
      * Whether Troop is in testing mode (application state)
+     * @type {boolean}
      */
     troop.testing = false;
 }());
