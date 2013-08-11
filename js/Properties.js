@@ -93,6 +93,7 @@
     troop.Properties = {
         /**
          * Adds single value property to the context.
+         * @this {troop.Base}
          * @param {string} propertyName Property name.
          * @param value {*} Property value to be assigned.
          * @param {boolean} [isWritable]
@@ -116,6 +117,7 @@
 
         /**
          * Adds single accessor property to the context.
+         * @this {troop.Base}
          * @param {string} propertyName Property name.
          * @param {function} [getter] Property getter.
          * @param {function} [setter] Property setter.
@@ -140,10 +142,12 @@
 
         /**
          * Adds a block of properties to the context having the specified attributes.
+         * @this {troop.Base}
          * @param {object|function} properties Property object or its generator function.
          * @param {boolean} [isWritable]
          * @param {boolean} [isEnumerable]
          * @param {boolean} [isConfigurable]
+         * @returns {troop.Base}
          */
         addProperties: function (properties, isWritable, isEnumerable, isConfigurable) {
             var propertyNames = Object.keys(properties),
