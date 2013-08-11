@@ -18,7 +18,7 @@
         initSurrogates: function () {
             this.addConstants(/** @lends troop.Base */{
                 /**
-                 * Container for surrogate info
+                 * Container for surrogate info. Added to class via .initSurrogates().
                  * @type {object}
                  */
                 surrogateInfo: {

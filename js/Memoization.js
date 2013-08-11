@@ -62,19 +62,23 @@
                 .isFunction(instanceMapper, "Invalid instance key calculator")
                 .assert(!hOP.call(this, 'instanceMapper'), "Instance mapper already set");
 
-            /**
-             * Maps constructor arguments to instance keys in the registry.
-             * @type {function}
-             * @returns {string}
-             */
-            this.instanceMapper = instanceMapper;
+            this.addPublic(/** @lends troop.Base */{
+                /**
+                 * Maps constructor arguments to instance keys in the registry.
+                 * Added to class via .setInstanceMapper().
+                 * @function
+                 * @returns {string}
+                 */
+                instanceMapper: instanceMapper,
 
-            /**
-             * Lookup registry for instances of the memoized class.
-             * Has to be own property as child classes may put their instances here, too.
-             * @type {object}
-             */
-            this.instanceRegistry = {};
+                /**
+                 * Lookup registry for instances of the memoized class.
+                 * Has to be own property as child classes may put their instances here, too.
+                 * Added to class via .setInstanceMapper().
+                 * @type {object}
+                 */
+                instanceRegistry: {}
+            });
 
             return this;
         },
