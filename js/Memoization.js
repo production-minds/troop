@@ -43,8 +43,18 @@
 
     troop.Base.addMethods(/** @lends troop.Base */{
         /**
-         * Assigns instance key calculator to
-         * @param {function} instanceMapper Instance key mapper function
+         * Assigns instance key calculator to class. Makes class memoized.
+         * @param {function} instanceMapper Instance key mapper function.
+         * @example
+         * var MyClass = troop.Base.extend()
+         *     .setInstanceMapper(function (arg) {return '' + arg;})
+         *     .addMethods({
+         *         init: function () {}
+         *     }),
+         *     myInstance1 = MyClass.create('foo'),
+         *     myInstance2 = MyClass.create('foo');
+         * MyClass.isMemoized() // true
+         * myInstance 1 === myInstance2 // true
          * @returns {troop.Base}
          */
         setInstanceMapper: function (instanceMapper) {
@@ -70,16 +80,19 @@
         },
 
         /**
-         * Tells whether the current class (or any of its parents) is memoized
+         * Tells whether the current class (or any of its base classes) is memoized.
          * @returns {boolean}
+         * @see troop.Base.setInstanceMapper
          */
         isMemoized: function () {
             return typeof this.instanceMapper === 'function';
         },
 
         /**
-         * Clears instance registry and therefore frees memory.
-         * (Unless instances are still referenced from other objects & scopes.)
+         * Clears instance registry. After the registry is cleared, a new set of instances will be created
+         * for distinct constructor arguments.
+         * @returns {troop.Base}
+         * @see troop.Base.setInstanceMapper
          */
         clearInstanceRegistry: function () {
             dessert.assert(hOP.call(this, 'instanceRegistry'), "Class doesn't own an instance registry");
