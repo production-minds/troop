@@ -280,6 +280,19 @@
         },
 
         /**
+         * Adds trait to current class then extends it, allowing subsequently added methods to override
+         * the trait's methods.
+         * @param {object|troop.Base} trait
+         * @returns {troop.Base}
+         * @see troop.Base.addTrait
+         */
+        addTraitAndExtend: function (trait) {
+            return this
+                .addTrait(trait)
+                .extend();
+        },
+
+        /**
          * Adds a block of public (enumerable) writable properties to the current class or instance.
          * @param {object} properties Name-value pairs of properties.
          * @returns {troop.Base}

@@ -1,7 +1,4 @@
-/**
- * Property management unit tests
- */
-/*global phil, dessert, troop, module, test, expect, ok, equal, notEqual, deepEqual, raises */
+/*global phil, dessert, troop, module, test, expect, ok, equal, notEqual, strictEqual, deepEqual, raises */
 (function () {
     "use strict";
 
@@ -155,6 +152,33 @@
             },
             "Trait in testing mode"
         );
+
+        troop.testing = false;
+    });
+
+    test("Trait & extend", function () {
+        expect(2);
+
+        troop.testing = true;
+
+        var BaseClass = troop.Base.extend(),
+            HostClass = BaseClass.extend(),
+            MyTrait = troop.Base.extend();
+
+        BaseClass.addMocks({
+            addTrait: function (trait) {
+                strictEqual(trait, MyTrait, "Trait to be added");
+                return this;
+            },
+
+            extend: function () {
+                ok(true, "Extend called");
+            }
+        });
+
+        HostClass.addTraitAndExtend(MyTrait);
+
+        BaseClass.removeMocks();
 
         troop.testing = false;
     });
