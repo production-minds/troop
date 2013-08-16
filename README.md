@@ -3,13 +3,6 @@ Troop
 
 *Full-featured, testable OOP*
 
-Troop is an OOP layer aiming to provide static structure for JavaScript applications.
-
-Having a static structure leads to
-
-- applications scaling better
-- maintainable codebase
-
 [Wiki](https://github.com/production-minds/troop/wiki)
 
 [Reference](http://production-minds.github.io/troop/)
