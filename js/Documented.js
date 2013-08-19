@@ -25,7 +25,7 @@ troop.postpone(troop, 'Documented', function () {
              */
             extend: function (className) {
                 var base = this.getBase(),
-                    result = base.extend.call(this);
+                    result = /** @type {troop.Documented} */ base.extend.call(this);
 
                 result.addConstants(/** @lends troop.Documented */{
                     /**
