@@ -159,19 +159,6 @@
         equal(descriptor.configurable, true, "Configurable");
     });
 
-    test("Trait validation", function () {
-        var v = dessert.validators,
-            base = {},
-            child = Object.create(base),
-            trait = Object.create(base),
-            grandchild = Object.create(child);
-
-        equal(v.isTrait({}), true, "Simple object validates as trait");
-        equal(v.isTrait(trait), false, "Derived objects don't validate on their own");
-        equal(v.isTrait(trait, grandchild), true, "Object with immediate ancestor common with host validates");
-        equal(v.isTrait(trait, child), true, "Object with same base validates");
-    });
-
     test("Adding traits", function () {
         var hasPropertyAttributes = troop.Feature.hasPropertyAttributes(),
             base = {},
@@ -191,14 +178,6 @@
             enumerable  : false,
             configurable: false
         });
-
-        raises(
-            function () {
-                destination = Object.create({});
-                troop.Base.addTrait.call(destination, trait);
-            },
-            "Trait prototype must match host's"
-        );
 
         destination = Object.create(base);
         troop.Base.addTrait.call(destination, trait);
@@ -231,6 +210,40 @@
         );
 
         troop.testing = false;
+    });
+
+    test("Trait integration", function () {
+        expect(4);
+
+        var TraitBase = troop.Base.extend()
+                .addPrivateMethods({
+                    _hello: function () {
+                        ok(true, "Private method called");
+                    }
+                })
+                .addMethods({
+                    foo: function () {
+                        ok(true, "Base method called");
+                    }
+                }),
+            TraitChild = TraitBase.extend()
+                .addMethods({
+                    foo: function () {
+                        TraitBase.foo.call(this);
+                    }
+                }),
+            MyClass = troop.Base.extend()
+                .addTrait(TraitChild)
+                .addMethods({
+                    init: function () {}
+                }),
+            myInstance = MyClass.create();
+
+        strictEqual(myInstance._hello, TraitBase._hello);
+        strictEqual(myInstance.foo, TraitChild.foo);
+
+        myInstance._hello();
+        myInstance.foo();
     });
 
     test("Trait & extend", function () {

@@ -63,28 +63,6 @@
             return this.isPlainObject(expr) &&
                    this.isAllFunctions(expr) &&
                    Object.getOwnPropertyNames(expr).join(',') in accessorMethods;
-        },
-
-        /**
-         * Validates an object for being trait in the context of a host object.
-         * Compares the immediate base classes of the trait and the host.
-         * @param {object} trait Trait object.
-         * @param {object} [host] Host object.
-         */
-        isTrait: function (trait, host) {
-            if (this.isPlainObject(trait)) {
-                // plain object qualifies as trait in itself
-                return true;
-            } else if (!this.isObject(trait) || !this.isObject(host)) {
-                // otherwise both trait and host must be objects
-                return false;
-            }
-
-            var traitBase = troop.Base.getBase.call(trait),
-                hostBase = troop.Base.getBase.call(host);
-
-            return traitBase === hostBase ||
-                   traitBase.isPrototypeOf(hostBase);
         }
     });
 
@@ -299,12 +277,8 @@
         /**
          * Adds a trait to the current class.
          * A trait is similar to a class, in that it is a collection of properties and methods. In the process,
-         * all own properties and methods of the trait get copied to the current class, preserving their
+         * all properties and methods of the trait get copied to the current class, preserving their
          * ES5 property attributes.
-         * Traits must satisfy an inheritance requirement, inasmuch as they must be either plain objects (extending
-         * Object.prototype), or direct extensions of troop.Base, or the trait and current class must share
-         * the same base class. Traits are not required to have an .init() method.
-         * In testing mode, copies methods only!
          * @param {object|troop.Base} trait Trait object
          * @example
          * MyTrait = troop.Base.extend()
@@ -319,14 +293,13 @@
          * @returns {troop.Base}
          */
         addTrait: function (trait) {
+            dessert.isObject(trait, "Invalid trait descriptor");
+
             // obtaining all property names (including non-enumerable)
             var hostTarget = troop.Base.getTarget.call(this),
-                propertyNames,
+                propertyNames = troop.Properties.getPropertyNames(trait),
                 i, propertyName, property;
 
-            dessert.isTrait(trait, this, "Trait doesn't satisfy common ancestor requirement.");
-
-            propertyNames = troop.Properties.getPropertyNames(trait);
             for (i = 0; i < propertyNames.length; i++) {
                 propertyName = propertyNames[i];
                 property = trait[propertyName];
