@@ -7,7 +7,8 @@
 (function () {
     "use strict";
 
-    var hOP = Object.prototype.hasOwnProperty;
+    var hOP = Object.prototype.hasOwnProperty,
+        validators = dessert.validators;
 
     dessert.addTypes(/** @lends dessert */{
         /**
@@ -94,6 +95,40 @@
      */
     troop.Properties = {
         /**
+         * Retrieves the object from the host's prototype chain that owns the specified property.
+         * @param {string} propertyName
+         * @param {object} host
+         * @returns {object|undefined}
+         */
+        getOwnerOf: function (host, propertyName) {
+            var owner = host;
+
+            while (owner !== Object.prototype) {
+                if (hOP.call(owner, propertyName)) {
+                    return owner;
+                } else {
+                    owner = Object.getPrototypeOf(owner);
+                }
+            }
+        },
+
+        /**
+         * Retrieves the property descriptor of the specified property regardless of its position
+         * on the prototype chain.
+         * @param {object} host
+         * @param {string} propertyName
+         * @return {object|undefined}
+         * @see Object.getOwnPropertyDescriptor
+         */
+        getPropertyDescriptor: function (host, propertyName) {
+            var owner = this.getOwnerOf(host, propertyName);
+
+            if (owner) {
+                return Object.getOwnPropertyDescriptor(owner, propertyName);
+            }
+        },
+
+        /**
          * Adds single value property to the context.
          * @this {troop.Base}
          * @param {string} propertyName Property name.
@@ -162,7 +197,7 @@
 
                 // adding accessor / property
                 property = properties[propertyName];
-                if (dessert.validators.isAccessor(property)) {
+                if (validators.isAccessor(property)) {
                     self.addAccessor.call(this,
                         propertyName,
                         property.get,

@@ -38,6 +38,58 @@
         equal(v.isAccessor(derived), false, "Derived object fails (even w/ valid getter-setter)");
     });
 
+    test("Owner detection", function () {
+        var ClassA = troop.Base.extend()
+                .addPublic({
+                    foo: 'bar'
+                })
+                .addMethods({
+                    init: function () {}
+                }),
+            ClassB = ClassA.extend()
+                .addMethods({
+                    hello: function () {return "world";}
+                }),
+            ClassC = ClassB.extend(),
+            instance = ClassC.create();
+
+        equal(typeof troop.Properties.getOwnerOf(instance, 'invalid'), 'undefined');
+        strictEqual(troop.Properties.getOwnerOf(instance, 'foo'), ClassA);
+        strictEqual(troop.Properties.getOwnerOf(instance, 'init'), ClassA);
+        strictEqual(troop.Properties.getOwnerOf(instance, 'hello'), ClassB);
+        strictEqual(troop.Properties.getOwnerOf(ClassA, 'foo'), ClassA);
+    });
+
+    test("Property descriptor", function () {
+        var ClassA = troop.Base.extend()
+                .addPublic({
+                    foo: 'bar'
+                })
+                .addMethods({
+                    init: function () {}
+                }),
+            ClassB = ClassA.extend()
+                .addMethods({
+                    hello: function () {return "world";}
+                }),
+            ClassC = ClassB.extend(),
+            instance = ClassC.create();
+
+        equal(typeof troop.Properties.getPropertyDescriptor(instance, 'invalid'), 'undefined');
+        deepEqual(
+            troop.Properties.getPropertyDescriptor(instance, 'foo'),
+            Object.getOwnPropertyDescriptor(ClassA, 'foo')
+        );
+        deepEqual(
+            troop.Properties.getPropertyDescriptor(instance, 'init'),
+            Object.getOwnPropertyDescriptor(ClassA, 'init')
+        );
+        deepEqual(
+            troop.Properties.getPropertyDescriptor(instance, 'hello'),
+            Object.getOwnPropertyDescriptor(ClassB, 'hello')
+        );
+    });
+
     test("Property addition", function () {
         var tmp;
 
