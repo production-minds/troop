@@ -296,8 +296,14 @@
             dessert.isObject(trait, "Invalid trait descriptor");
 
             // obtaining all property names (including non-enumerable)
+            // for troop classes, only those above the base class will be considered
             var hostTarget = troop.Base.getTarget.call(this),
-                propertyNames = troop.Properties.getPropertyNames(trait),
+                propertyNames = troop.Properties.getPropertyNames(
+                    trait,
+                    troop.Base.isBaseOf(trait) ?
+                        troop.Base :
+                        Object.prototype
+                ),
                 i, propertyName, property;
 
             for (i = 0; i < propertyNames.length; i++) {
