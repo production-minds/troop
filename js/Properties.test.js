@@ -90,6 +90,31 @@
         );
     });
 
+    test("Property names", function () {
+        var ClassA = troop.Base.extend()
+                .addPublic({
+                    foo: 'bar'
+                })
+                .addMethods({
+                    init: function () {}
+                }),
+            ClassB = ClassA.extend()
+                .addPrivateMethods({
+                    _hello: function () {return "world";}
+                }),
+            ClassC = ClassB.extend(),
+            instance = ClassC.create();
+
+        deepEqual(
+            troop.Properties.getPropertyNames(instance).sort(),
+            ["_hello","addConstants","addMethods","addMocks","addPrivate","addPrivateConstants","addPrivateMethods","addPublic","addSurrogate","addTrait","addTraitAndExtend","clearInstanceRegistry","create","elevateMethod","extend","foo","getBase","getTarget","init","instanceOf","isA","isBaseOf","isMemoized","prepareSurrogates","removeMocks","setInstanceMapper"]
+        );
+        deepEqual(
+            troop.Properties.getPropertyNames(instance, troop.Base).sort(),
+            ["_hello","foo","init"]
+        );
+    });
+
     test("Property addition", function () {
         var tmp;
 

@@ -113,6 +113,32 @@
         },
 
         /**
+         * Collects all property names (including non-enumerable ones) from the entire prototype chain.
+         * Always excludes the properties of Object.prototype.
+         * @param {object} host
+         * @param {object} [base=Object.prototype]
+         */
+        getPropertyNames: function (host, base) {
+            base = base || Object.prototype;
+
+            var propertyNameLookup = {},
+                currentLevel = host,
+                propertyNames,
+                i;
+
+            while (currentLevel !== base) {
+                propertyNames = Object.getOwnPropertyNames(currentLevel);
+                for (i = 0; i < propertyNames.length; i++) {
+                    propertyNameLookup[propertyNames[i]] = true;
+                }
+                currentLevel = Object.getPrototypeOf(currentLevel);
+            }
+
+            // flipping lookup
+            return Object.keys(propertyNameLookup);
+        },
+
+        /**
          * Retrieves the property descriptor of the specified property regardless of its position
          * on the prototype chain.
          * @param {object} host
@@ -294,20 +320,22 @@
          */
         addTrait: function (trait) {
             // obtaining all property names (including non-enumerable)
-            var traitTarget = troop.Base.getTarget.call(trait),
-                hostTarget = troop.Base.getTarget.call(this),
+            var hostTarget = troop.Base.getTarget.call(this),
                 propertyNames,
-                i, propertyName;
+                i, propertyName, property;
 
             dessert.isTrait(trait, this, "Trait doesn't satisfy common ancestor requirement.");
 
-            propertyNames = Object.getOwnPropertyNames(traitTarget);
+            propertyNames = troop.Properties.getPropertyNames(trait);
             for (i = 0; i < propertyNames.length; i++) {
                 propertyName = propertyNames[i];
+                property = trait[propertyName];
                 Object.defineProperty(
-                    hostTarget,
+                    typeof property === 'function' ?
+                        hostTarget :
+                        this,
                     propertyName,
-                    Object.getOwnPropertyDescriptor(traitTarget, propertyName)
+                    troop.Properties.getPropertyDescriptor(trait, propertyName)
                 );
             }
 
