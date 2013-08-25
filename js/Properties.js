@@ -284,6 +284,7 @@
          * methods delegated by the trait class will be used the same way as if they were implemented on the current
          * class.
          * Trait addition preserves ES5 attributes of copied properties, but skips property named `init`.
+         * Each trait must be initialized manually.
          * @param {object|troop.Base} trait Trait object
          * @example
          * MyTrait = troop.Base.extend()
