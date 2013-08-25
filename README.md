@@ -10,9 +10,9 @@ Troop
 Troop features
 --------------
 
-- classic OO structures like classes, instances, traits
-- taking full advantage of ES5 property attributes
-    - pseudo-privates that are non-enumerable
+- multiple inheritance with traits
+- makes use of ES5 property attributes
+    - pseudo-privates are non-enumerable
     - constants are actually read-only
 - testing mode for applying mock methods
 - postponed, on-demand property definitions
