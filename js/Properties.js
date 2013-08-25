@@ -240,6 +240,7 @@
          *        bar: {get: function () {return "Bar";}
          *    });
          * @returns {troop.Base}
+         * @memberOf troop.Base
          */
         addMethods: function (methods) {
             dessert.isAllFunctions(methods);
@@ -263,6 +264,7 @@
          *        _bar: {get: function () {return "Bar";}
          *    });
          * @returns {troop.Base}
+         * @memberOf troop.Base
          */
         addPrivateMethods: function (methods) {
             dessert
@@ -295,6 +297,7 @@
          * myInstance = MyClass.create(); // alerts "trait init"
          * myInstance.foo(); // alerts "hello"
          * @returns {troop.Base}
+         * @memberOf troop.Base
          */
         addTrait: function (trait) {
             dessert.isObject(trait, "Invalid trait descriptor");
@@ -341,6 +344,7 @@
          * @param {object|troop.Base} trait
          * @returns {troop.Base}
          * @see troop.Base.addTrait
+         * @memberOf troop.Base
          */
         addTraitAndExtend: function (trait) {
             return this
