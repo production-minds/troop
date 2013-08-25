@@ -225,6 +225,293 @@ Added to class via .setInstanceMapper().
         <dl>
             
 <dt>
+    <h4 class="name" id="addMethods"><span class="type-signature">&lt;static> </span>addMethods<span class="signature">(methods)</span><span class="type-signature"> &rarr; {<a href="troop.Base.html">troop.Base</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Adds a block of public read-only methods to the class it's called on.
+When troop.testing is on, methods will be placed on the class differently than other properties,
+therefore it is important to use .addMethods and .addPrivateMethods for method addition.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>methods</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Name - value pairs of methods to apply. Values must be functions,
+or objects implementing a pair of get and set functions.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Properties.js.html">Properties.js</a>, line 245
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="troop.Base.html">troop.Base</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>var myClass = troop.extend()
+   .addMethods({
+       foo: function () {alert("Foo");},
+       bar: {get: function () {return "Bar";}
+   });</code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="addPrivateMethods"><span class="type-signature">&lt;static> </span>addPrivateMethods<span class="signature">(methods)</span><span class="type-signature"> &rarr; {<a href="troop.Base.html">troop.Base</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Adds a block of private (non-enumerable) read-only methods to the class it's called on.
+Method names must match the private prefix rule set by `troop.privatePrefix`.
+When troop.testing is on, methods will be placed on the class differently than other properties,
+therefore it is important to use .addMethods and .addPrivateMethods for method addition.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>methods</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Name - value pairs of methods to apply. Values must be functions,
+or objects implementing a pair of get and set functions.</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Properties.js.html">Properties.js</a>, line 269
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="troop.Base.html">troop.Base</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>var myClass = troop.extend()
+   .addMethods({
+       _foo: function () {alert("Foo");},
+       _bar: {get: function () {return "Bar";}
+   });</code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
     <h4 class="name" id="addSurrogate"><span class="type-signature">&lt;static> </span>addSurrogate<span class="signature">(namespace, className, filter)</span><span class="type-signature"> &rarr; {<a href="troop.Base.html">troop.Base</a>}</span></h4>
     
     
@@ -416,6 +703,302 @@ ns.Pony = ns.Horse.extend()
 var myHorse = ns.Horse.create(10), // instance of ns.Horse
     myPony = ns.Horse.create(3); // instance of ns.Pony</code></pre>
 
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="addTrait"><span class="type-signature">&lt;static> </span>addTrait<span class="signature">(trait)</span><span class="type-signature"> &rarr; {<a href="troop.Base.html">troop.Base</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Adds a trait to the current class.
+A trait may be as simple as a plain object holding properties and methods to be copied over to the
+current class. More often however, a trait is a Troop class, through which, Troop realizes a form of
+multiple inheritance. There will still be just one prototype from which the current class stems, but
+methods delegated by the trait class will be used the same way as if they were implemented on the current
+class.
+Trait addition preserves ES5 attributes of copied properties, but skips property named `init`.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>trait</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+|
+
+<span class="param-type"><a href="troop.Base.html">troop.Base</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last">Trait object</td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Properties.js.html">Properties.js</a>, line 302
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    
+    
+</dl>
+
+    
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="troop.Base.html">troop.Base</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>MyTrait = troop.Base.extend()
+   .addMethods({
+       init: function () { alert("trait init"); }
+       foo: function () { alert("hello"); }
+   });
+MyClass = troop.Base.extend()
+   .addTrait(MyTrait)
+   .addMethods({ init: function () { MyTrait.init.call(this); } });
+myInstance = MyClass.create(); // alerts "trait init"
+myInstance.foo(); // alerts "hello"</code></pre>
+
+    
+</dd>
+
+        
+            
+<dt>
+    <h4 class="name" id="addTraitAndExtend"><span class="type-signature">&lt;static> </span>addTraitAndExtend<span class="signature">(trait)</span><span class="type-signature"> &rarr; {<a href="troop.Base.html">troop.Base</a>}</span></h4>
+    
+    
+</dt>
+<dd>
+    
+    
+    <div class="description">
+        Adds trait to current class then extends it, allowing subsequently added methods to override
+the trait's methods.
+    </div>
+    
+
+    
+    
+    
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params">
+    <thead>
+	<tr>
+		
+		<th>Name</th>
+		
+		
+		<th>Type</th>
+		
+		
+		
+		
+		
+		<th class="last">Description</th>
+	</tr>
+	</thead>
+	
+	<tbody>
+	
+	
+        <tr>
+            
+                <td class="name"><code>trait</code></td>
+            
+            
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+|
+
+<span class="param-type"><a href="troop.Base.html">troop.Base</a></span>
+
+
+            
+            </td>
+            
+            
+            
+            
+            
+            <td class="description last"></td>
+        </tr>
+	
+	
+	</tbody>
+</table>
+    
+    
+    
+<dl class="details">
+    
+        
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Properties.js.html">Properties.js</a>, line 349
+    </li></ul></dd>
+    
+    
+    
+    
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="troop.Base.html#addTrait">troop.Base.addTrait</a></li>
+        </ul>
+    </dd>
+    
+    
+    
+</dl>
+
+    
+    
+    
+    
+    
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+	<dt>
+		Type
+	</dt>
+	<dd>
+		
+<span class="param-type"><a href="troop.Base.html">troop.Base</a></span>
+
+
+	</dd>
+</dl>
+
+        
+    
     
 </dd>
 
@@ -1799,7 +2382,7 @@ myInstance 1 === myInstance2 // true</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Properties.js.html">Properties.js</a>, line 311
+        <a href="Properties.js.html">Properties.js</a>, line 384
     </li></ul></dd>
     
     
@@ -1835,149 +2418,6 @@ myInstance 1 === myInstance2 // true</code></pre>
 
         
     
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="addMethods"><span class="type-signature"></span>addMethods<span class="signature">(methods)</span><span class="type-signature"> &rarr; {<a href="troop.Base.html">troop.Base</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Adds a block of public read-only methods to the class it's called on.
-When troop.testing is on, methods will be placed on the class differently than other properties,
-therefore it is important to use .addMethods and .addPrivateMethods for method addition.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>methods</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Name - value pairs of methods to apply. Values must be functions,
-or objects implementing a pair of get and set functions.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Properties.js.html">Properties.js</a>, line 205
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="troop.Base.html">troop.Base</a></span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>var myClass = troop.extend()
-   .addMethods({
-       foo: function () {alert("Foo");},
-       bar: {get: function () {return "Bar";}
-   });</code></pre>
-
     
 </dd>
 
@@ -2073,7 +2513,7 @@ or objects implementing a pair of get and set functions.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Properties.js.html">Properties.js</a>, line 385
+        <a href="Properties.js.html">Properties.js</a>, line 458
     </li></ul></dd>
     
     
@@ -2083,7 +2523,7 @@ or objects implementing a pair of get and set functions.</td>
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="troop.Base.html#addMethods">troop.Base#addMethods</a></li>
+            <li>troop.Base#addMethods</li>
         </ul>
     </dd>
     
@@ -2227,7 +2667,7 @@ Property names must match the private prefix rule set by `troop.privatePrefix`.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Properties.js.html">Properties.js</a>, line 298
+        <a href="Properties.js.html">Properties.js</a>, line 371
     </li></ul></dd>
     
     
@@ -2359,7 +2799,7 @@ Property names must match the private prefix rule set by `troop.privatePrefix`.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Properties.js.html">Properties.js</a>, line 322
+        <a href="Properties.js.html">Properties.js</a>, line 395
     </li></ul></dd>
     
     
@@ -2395,150 +2835,6 @@ Property names must match the private prefix rule set by `troop.privatePrefix`.
 
         
     
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="addPrivateMethods"><span class="type-signature"></span>addPrivateMethods<span class="signature">(methods)</span><span class="type-signature"> &rarr; {<a href="troop.Base.html">troop.Base</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Adds a block of private (non-enumerable) read-only methods to the class it's called on.
-Method names must match the private prefix rule set by `troop.privatePrefix`.
-When troop.testing is on, methods will be placed on the class differently than other properties,
-therefore it is important to use .addMethods and .addPrivateMethods for method addition.
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>methods</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Name - value pairs of methods to apply. Values must be functions,
-or objects implementing a pair of get and set functions.</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Properties.js.html">Properties.js</a>, line 228
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="troop.Base.html">troop.Base</a></span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>var myClass = troop.extend()
-   .addMethods({
-       _foo: function () {alert("Foo");},
-       _bar: {get: function () {return "Bar";}
-   });</code></pre>
-
     
 </dd>
 
@@ -2634,7 +2930,7 @@ or objects implementing a pair of get and set functions.</td>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Properties.js.html">Properties.js</a>, line 287
+        <a href="Properties.js.html">Properties.js</a>, line 360
     </li></ul></dd>
     
     
@@ -2670,160 +2966,6 @@ or objects implementing a pair of get and set functions.</td>
 
         
     
-    
-</dd>
-
-        
-            
-<dt>
-    <h4 class="name" id="addTrait"><span class="type-signature"></span>addTrait<span class="signature">(trait)</span><span class="type-signature"> &rarr; {<a href="troop.Base.html">troop.Base</a>}</span></h4>
-    
-    
-</dt>
-<dd>
-    
-    
-    <div class="description">
-        Adds a trait to the current class.
-A trait is similar to a class, in that it is a collection of properties and methods. In the process,
-all own properties and methods of the trait get copied to the current class, preserving their
-ES5 property attributes.
-Traits must satisfy an inheritance requirement, inasmuch as they must be either plain objects (extending
-Object.prototype), or direct extensions of troop.Base, or the trait and current class must share
-the same base class. Traits are not required to have an .init() method.
-In testing mode, copies methods only!
-    </div>
-    
-
-    
-    
-    
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params">
-    <thead>
-	<tr>
-		
-		<th>Name</th>
-		
-		
-		<th>Type</th>
-		
-		
-		
-		
-		
-		<th class="last">Description</th>
-	</tr>
-	</thead>
-	
-	<tbody>
-	
-	
-        <tr>
-            
-                <td class="name"><code>trait</code></td>
-            
-            
-            <td class="type">
-            
-                
-<span class="param-type">object</span>
-|
-
-<span class="param-type"><a href="troop.Base.html">troop.Base</a></span>
-
-
-            
-            </td>
-            
-            
-            
-            
-            
-            <td class="description last">Trait object</td>
-        </tr>
-	
-	
-	</tbody>
-</table>
-    
-    
-    
-<dl class="details">
-    
-        
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Properties.js.html">Properties.js</a>, line 260
-    </li></ul></dd>
-    
-    
-    
-    
-    
-    
-    
-</dl>
-
-    
-    
-    
-    
-    
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-	<dt>
-		Type
-	</dt>
-	<dd>
-		
-<span class="param-type"><a href="troop.Base.html">troop.Base</a></span>
-
-
-	</dd>
-</dl>
-
-        
-    
-    
-        <h5>Example</h5>
-        
-    <pre class="prettyprint"><code>MyTrait = troop.Base.extend()
-   .addMethods({
-       foo: function () { alert("hello"); }
-   });
-MyClass = troop.Base.extend()
-   .addTrait(MyTrait)
-   .addMethods({ init: function () {} });
-myInstance = MyClass.create();
-myInstance.foo(); // alerts "hello"</code></pre>
-
     
 </dd>
 
@@ -2920,7 +3062,7 @@ Ties context to the object it was elevated to, so methods may be safely passed a
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Properties.js.html">Properties.js</a>, line 351
+        <a href="Properties.js.html">Properties.js</a>, line 424
     </li></ul></dd>
     
     
@@ -3021,7 +3163,7 @@ foo(); // alerts "hello", for context was preserved</code></pre>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Properties.js.html">Properties.js</a>, line 399
+        <a href="Properties.js.html">Properties.js</a>, line 472
     </li></ul></dd>
     
     
@@ -3082,7 +3224,7 @@ foo(); // alerts "hello", for context was preserved</code></pre>
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sun Aug 11 2013 12:35:28 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sun Aug 25 2013 17:48:06 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>

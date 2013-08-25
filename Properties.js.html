@@ -34,7 +34,8 @@
 (function () {
     "use strict";
 
-    var hOP = Object.prototype.hasOwnProperty;
+    var hOP = Object.prototype.hasOwnProperty,
+        validators = dessert.validators;
 
     dessert.addTypes(/** @lends dessert */{
         /**
@@ -89,28 +90,6 @@
             return this.isPlainObject(expr) &&
                    this.isAllFunctions(expr) &&
                    Object.getOwnPropertyNames(expr).join(',') in accessorMethods;
-        },
-
-        /**
-         * Validates an object for being trait in the context of a host object.
-         * Compares the immediate base classes of the trait and the host.
-         * @param {object} trait Trait object.
-         * @param {object} [host] Host object.
-         */
-        isTrait: function (trait, host) {
-            if (this.isPlainObject(trait)) {
-                // plain object qualifies as trait in itself
-                return true;
-            } else if (!this.isObject(trait) || !this.isObject(host)) {
-                // otherwise both trait and host must be objects
-                return false;
-            }
-
-            var traitBase = troop.Base.getBase.call(trait),
-                hostBase = troop.Base.getBase.call(host);
-
-            return traitBase === hostBase ||
-                   traitBase.isPrototypeOf(hostBase);
         }
     });
 
@@ -120,6 +99,66 @@
      * @class troop.Properties
      */
     troop.Properties = {
+        /**
+         * Retrieves the object from the host's prototype chain that owns the specified property.
+         * @param {string} propertyName
+         * @param {object} host
+         * @returns {object|undefined}
+         */
+        getOwnerOf: function (host, propertyName) {
+            var owner = host;
+
+            while (owner !== Object.prototype) {
+                if (hOP.call(owner, propertyName)) {
+                    return owner;
+                } else {
+                    owner = Object.getPrototypeOf(owner);
+                }
+            }
+        },
+
+        /**
+         * Collects all property names (including non-enumerable ones) from the entire prototype chain.
+         * Always excludes the properties of Object.prototype.
+         * @param {object} host
+         * @param {object} [base=Object.prototype]
+         */
+        getPropertyNames: function (host, base) {
+            base = base || Object.prototype;
+
+            var propertyNameLookup = {},
+                currentLevel = host,
+                propertyNames,
+                i;
+
+            while (currentLevel !== base) {
+                propertyNames = Object.getOwnPropertyNames(currentLevel);
+                for (i = 0; i &lt; propertyNames.length; i++) {
+                    propertyNameLookup[propertyNames[i]] = true;
+                }
+                currentLevel = Object.getPrototypeOf(currentLevel);
+            }
+
+            // flipping lookup
+            return Object.keys(propertyNameLookup);
+        },
+
+        /**
+         * Retrieves the property descriptor of the specified property regardless of its position
+         * on the prototype chain.
+         * @param {object} host
+         * @param {string} propertyName
+         * @return {object|undefined}
+         * @see Object.getOwnPropertyDescriptor
+         */
+        getPropertyDescriptor: function (host, propertyName) {
+            var owner = this.getOwnerOf(host, propertyName);
+
+            if (owner) {
+                return Object.getOwnPropertyDescriptor(owner, propertyName);
+            }
+        },
+
         /**
          * Adds single value property to the context.
          * @this {troop.Base}
@@ -189,7 +228,7 @@
 
                 // adding accessor / property
                 property = properties[propertyName];
-                if (dessert.validators.isAccessor(property)) {
+                if (validators.isAccessor(property)) {
                     self.addAccessor.call(this,
                         propertyName,
                         property.get,
@@ -228,6 +267,7 @@
          *        bar: {get: function () {return "Bar";}
          *    });
          * @returns {troop.Base}
+         * @memberOf troop.Base
          */
         addMethods: function (methods) {
             dessert.isAllFunctions(methods);
@@ -251,6 +291,7 @@
          *        _bar: {get: function () {return "Bar";}
          *    });
          * @returns {troop.Base}
+         * @memberOf troop.Base
          */
         addPrivateMethods: function (methods) {
             dessert
@@ -264,46 +305,78 @@
 
         /**
          * Adds a trait to the current class.
-         * A trait is similar to a class, in that it is a collection of properties and methods. In the process,
-         * all own properties and methods of the trait get copied to the current class, preserving their
-         * ES5 property attributes.
-         * Traits must satisfy an inheritance requirement, inasmuch as they must be either plain objects (extending
-         * Object.prototype), or direct extensions of troop.Base, or the trait and current class must share
-         * the same base class. Traits are not required to have an .init() method.
-         * In testing mode, copies methods only!
+         * A trait may be as simple as a plain object holding properties and methods to be copied over to the
+         * current class. More often however, a trait is a Troop class, through which, Troop realizes a form of
+         * multiple inheritance. There will still be just one prototype from which the current class stems, but
+         * methods delegated by the trait class will be used the same way as if they were implemented on the current
+         * class.
+         * Trait addition preserves ES5 attributes of copied properties, but skips property named `init`.
          * @param {object|troop.Base} trait Trait object
          * @example
          * MyTrait = troop.Base.extend()
          *    .addMethods({
+         *        init: function () { alert("trait init"); }
          *        foo: function () { alert("hello"); }
          *    });
          * MyClass = troop.Base.extend()
          *    .addTrait(MyTrait)
-         *    .addMethods({ init: function () {} });
-         * myInstance = MyClass.create();
+         *    .addMethods({ init: function () { MyTrait.init.call(this); } });
+         * myInstance = MyClass.create(); // alerts "trait init"
          * myInstance.foo(); // alerts "hello"
          * @returns {troop.Base}
+         * @memberOf troop.Base
          */
         addTrait: function (trait) {
+            dessert.isObject(trait, "Invalid trait descriptor");
+
             // obtaining all property names (including non-enumerable)
-            var traitTarget = troop.Base.getTarget.call(trait),
-                hostTarget = troop.Base.getTarget.call(this),
-                propertyNames,
-                i, propertyName;
+            // for troop classes, only those above the base class will be considered
+            var hostTarget = troop.Base.getTarget.call(this),
+                propertyNames = troop.Properties.getPropertyNames(
+                    trait,
+                    troop.Base.isBaseOf(trait) ?
+                        troop.Base :
+                        Object.prototype
+                ),
+                i, propertyName, property;
 
-            dessert.isTrait(trait, this, "Trait doesn't satisfy common ancestor requirement.");
-
-            propertyNames = Object.getOwnPropertyNames(traitTarget);
             for (i = 0; i &lt; propertyNames.length; i++) {
                 propertyName = propertyNames[i];
+
+                if (propertyName === 'init') {
+                    // skipping 'init'
+                    continue;
+                }
+
+                // trait properties must not collide w/ host's
+                dessert.isPropertyNameAvailable(propertyName, this, "Direct property conflict");
+
+                // copying property over w/ original attributes
+                property = trait[propertyName];
                 Object.defineProperty(
-                    hostTarget,
+                    typeof property === 'function' ?
+                        hostTarget :
+                        this,
                     propertyName,
-                    Object.getOwnPropertyDescriptor(traitTarget, propertyName)
+                    troop.Properties.getPropertyDescriptor(trait, propertyName)
                 );
             }
 
             return this;
+        },
+
+        /**
+         * Adds trait to current class then extends it, allowing subsequently added methods to override
+         * the trait's methods.
+         * @param {object|troop.Base} trait
+         * @returns {troop.Base}
+         * @see troop.Base.addTrait
+         * @memberOf troop.Base
+         */
+        addTraitAndExtend: function (trait) {
+            return this
+                .addTrait(trait)
+                .extend();
         },
 
         /**
@@ -476,7 +549,7 @@
 <br clear="both">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sun Aug 11 2013 12:35:27 GMT+0200 (CEST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.0-dev</a> on Sun Aug 25 2013 17:48:06 GMT+0200 (CEST)
 </footer>
 
 <script> prettyPrint(); </script>
