@@ -308,6 +308,16 @@
 
             for (i = 0; i < propertyNames.length; i++) {
                 propertyName = propertyNames[i];
+
+                if (propertyName === 'init') {
+                    // skipping 'init'
+                    continue;
+                }
+
+                // trait properties must not collide w/ host's
+                dessert.isPropertyNameAvailable(propertyName, this, "Direct property conflict");
+
+                // copying property over w/ original attributes
                 property = trait[propertyName];
                 Object.defineProperty(
                     typeof property === 'function' ?

@@ -179,9 +179,18 @@
             configurable: false
         });
 
+        Object.defineProperty(trait, 'init', {
+            value       : function () {},
+            writable    : false,
+            enumerable  : false,
+            configurable: false
+        });
+
         destination = Object.create(base);
         troop.Base.addTrait.call(destination, trait);
 
+        ok(!destination.hasOwnProperty('init'), "Init was not copied over");
+        ok(destination.hasOwnProperty('foo'), "Regular property gets copied over");
         deepEqual(
             Object.getOwnPropertyDescriptor(destination, 'foo'),
             {
@@ -192,6 +201,10 @@
             },
             "Property added as trait"
         );
+
+        raises(function () {
+            troop.Base.addTrait.call(destination, trait);
+        }, "Re-adding trait causes collision");
 
         troop.testing = true;
 
