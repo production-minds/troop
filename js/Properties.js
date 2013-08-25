@@ -276,19 +276,23 @@
 
         /**
          * Adds a trait to the current class.
-         * A trait is similar to a class, in that it is a collection of properties and methods. In the process,
-         * all properties and methods of the trait get copied to the current class, preserving their
-         * ES5 property attributes.
+         * A trait may be as simple as a plain object holding properties and methods to be copied over to the
+         * current class. More often however, a trait is a Troop class, through which, Troop realizes a form of
+         * multiple inheritance. There will still be just one prototype from which the current class stems, but
+         * methods delegated by the trait class will be used the same way as if they were implemented on the current
+         * class.
+         * Trait addition preserves ES5 attributes of copied properties, but skips property named `init`.
          * @param {object|troop.Base} trait Trait object
          * @example
          * MyTrait = troop.Base.extend()
          *    .addMethods({
+         *        init: function () { alert("trait init"); }
          *        foo: function () { alert("hello"); }
          *    });
          * MyClass = troop.Base.extend()
          *    .addTrait(MyTrait)
-         *    .addMethods({ init: function () {} });
-         * myInstance = MyClass.create();
+         *    .addMethods({ init: function () { MyTrait.init.call(this); } });
+         * myInstance = MyClass.create(); // alerts "trait init"
          * myInstance.foo(); // alerts "hello"
          * @returns {troop.Base}
          */
