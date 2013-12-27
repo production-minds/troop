@@ -10,6 +10,32 @@
 
     var hOP = Object.prototype.hasOwnProperty;
 
+    dessert.addTypes(/** @lends dessert */{
+        /**
+         * Determines whether a property descriptor is a getter-setter.
+         * @param {object} propertyDescriptor
+         */
+        isSetterGetterDescriptor: function (propertyDescriptor) {
+            return propertyDescriptor instanceof Object &&
+                   hOP.call(propertyDescriptor, 'get') &&
+                   hOP.call(propertyDescriptor, 'set') &&
+                   hOP.call(propertyDescriptor, 'enumerable') &&
+                   hOP.call(propertyDescriptor, 'configurable');
+        },
+
+        /**
+         * Determines whether a property descriptor is a value property.
+         * @param {object} propertyDescriptor
+         */
+        isValueDescriptor: function (propertyDescriptor) {
+            return propertyDescriptor instanceof Object &&
+                   hOP.call(propertyDescriptor, 'value') &&
+                   hOP.call(propertyDescriptor, 'writable') &&
+                   hOP.call(propertyDescriptor, 'enumerable') &&
+                   hOP.call(propertyDescriptor, 'configurable');
+        }
+    });
+
     troop.Base.addMethods.call(troop, /** @lends troop */{
         /**
          * Postpones a property definition on the specified object until first access.
@@ -81,6 +107,45 @@
                 enumerable  : true,
                 configurable: true  // must be configurable in order to be re-defined
             });
+        },
+
+        /**
+         * Applies a modifier to the postponed property to be called AFTER the property is resolved.
+         * Amendments are resolved in the order they were applied.
+         * @param {object} host Host object.
+         * @param {string} propertyName Property name.
+         * @param {function} modifier Amends property value. Arguments: host object, property name,
+         * plus all extra arguments passed to .amendPostponed(). Return value is discarded.
+         */
+        amendPostponed: function (host, propertyName, modifier) {
+            dessert
+                .isObject(host, "Host is not an Object")
+                .isString(propertyName, "Invalid property name")
+                .isFunction(modifier, "Invalid generator function");
+
+            var sliceArguments = Array.prototype.slice.bind(arguments),
+                modifierArguments = sliceArguments(0, 2).concat(sliceArguments(3)),
+                propertyDescriptor = Object.getOwnPropertyDescriptor(host, propertyName),
+                propertyGetter,
+                amendments;
+
+            if (dessert.validators.isSetterGetterDescriptor(propertyDescriptor)) {
+                // property is setter-getter, ie. unresolved
+                propertyGetter = propertyDescriptor.get;
+                dessert.isFunction(propertyGetter, "Invalid postponed property");
+
+                // adding generator to amendment functions
+                amendments = propertyGetter.amendments = propertyGetter.amendments || [];
+                amendments.push({
+                    modifier: modifier,
+                    args    : modifierArguments
+                });
+            } else {
+                // property is value, assumed to be a resolved postponed property
+
+                // calling modifier immediately
+                modifier.apply(this, modifierArguments);
+            }
         }
     });
 }());

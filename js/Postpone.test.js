@@ -1,7 +1,4 @@
-/**
- * Property management unit tests
- */
-/*global phil, troop, module, test, expect, ok, equal, notEqual, deepEqual, raises */
+/*global phil, troop, module, test, expect, ok, equal, notEqual, strictEqual, deepEqual, raises */
 var ns = {}; // global namespace
 
 (function () {
@@ -51,5 +48,48 @@ var ns = {}; // global namespace
             troop.postpone(ns, 'bar', "bar");
         }, "Invalid generator function passed");
         equal(ns.bar, "foo", "Property value after second attempt to replace placeholder");
+    });
+
+    test("Amendment", function () {
+        var ns = {},
+            propertyDescriptor;
+
+        troop.postpone(ns, 'foo', function () {
+            return 'bar';
+        });
+
+        propertyDescriptor = Object.getOwnPropertyDescriptor(ns, 'foo');
+
+        ok(!propertyDescriptor.get.amendments, "No amendments yet");
+
+        var modifier = function (ns, propertyName, extraParam) {
+            equal(extraParam, 'extraParam');
+            ns.foo = ns.foo + 'baz';
+        };
+
+        troop.amendPostponed(ns, 'foo', modifier, 'extraParam');
+
+        ok(propertyDescriptor.get.amendments instanceof Array, "Amendment container is array");
+        equal(propertyDescriptor.get.amendments.length, 1, "One amendment in container");
+
+        var amendment = propertyDescriptor.get.amendments[0];
+
+        ok(typeof amendment, 'object', "Amendment is object");
+        strictEqual(amendment.modifier, modifier, "Modifier function");
+        deepEqual(amendment.args, [ns, 'foo', 'extraParam'], "Modifier arguments");
+
+        // TODO: amendment resolution
+    });
+
+    test("Amending resolved property", function () {
+        var ns = {
+            foo: 'bar'
+        };
+
+        troop.amendPostponed(ns, 'foo', function () {
+            ns.foo += 'baz';
+        });
+
+        equal(ns.foo, 'barbaz', "Amendment applied immediately");
     });
 }());
