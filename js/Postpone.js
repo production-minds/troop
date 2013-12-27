@@ -121,11 +121,22 @@
 
         /**
          * Applies a modifier to the postponed property to be called AFTER the property is resolved.
-         * Amendments are resolved in the order they were applied.
+         * Amendments are resolved in the order they were applied. Amendments should not expect other amendments
+         * to be applied.
          * @param {object} host Host object.
          * @param {string} propertyName Property name.
          * @param {function} modifier Amends property value. Arguments: host object, property name,
          * plus all extra arguments passed to .amendPostponed(). Return value is discarded.
+         * @example
+         * var ns = {};
+         * troop.postpone(ns, 'foo', function () {
+         *  ns.foo = {hello: "World"};
+         * });
+         * //...
+         * troop.amendPostponed(ns, 'foo', function () {
+         *  ns.foo.howdy = "Fellas";
+         * });
+         * // howdy is not added until first access to `ns.foo`
          */
         amendPostponed: function (host, propertyName, modifier) {
             dessert
