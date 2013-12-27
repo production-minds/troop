@@ -8,7 +8,9 @@
 (function () {
     "use strict";
 
-    var hOP = Object.prototype.hasOwnProperty;
+    var hOP = Object.prototype.hasOwnProperty,
+        slice = Array.prototype.slice,
+        splice = Array.prototype.splice;
 
     dessert.addTypes(/** @lends dessert */{
         /**
@@ -59,16 +61,14 @@
                 .isString(propertyName, "Invalid property name")
                 .isFunction(generator, "Invalid generator function");
 
-            var sliceArguments = Array.prototype.slice.bind(arguments),
-                generatorArguments;
-
             // checking whether property is already defined
             if (hOP.call(host, propertyName)) {
                 return;
             }
 
-            // rounding up rest of the arguments
-            generatorArguments = sliceArguments(0, 2).concat(sliceArguments(3));
+            // preparing generator argument list
+            var generatorArguments = slice.call(arguments);
+            splice.call(generatorArguments, 2, 1);
 
             // placing class placeholder on namespace as getter
             Object.defineProperty(host, propertyName, {
@@ -123,11 +123,13 @@
                 .isString(propertyName, "Invalid property name")
                 .isFunction(modifier, "Invalid generator function");
 
-            var sliceArguments = Array.prototype.slice.bind(arguments),
-                modifierArguments = sliceArguments(0, 2).concat(sliceArguments(3)),
+            var modifierArguments = slice.call(arguments),
                 propertyDescriptor = Object.getOwnPropertyDescriptor(host, propertyName),
                 propertyGetter,
                 amendments;
+
+            // removing modifier from argument list
+            splice.call(modifierArguments, 2, 1);
 
             if (dessert.validators.isSetterGetterDescriptor(propertyDescriptor)) {
                 // property is setter-getter, ie. unresolved
