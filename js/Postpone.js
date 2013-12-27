@@ -72,9 +72,11 @@
 
             // placing class placeholder on namespace as getter
             Object.defineProperty(host, propertyName, {
-                get: function () {
+                get: function getter () {
                     // obtaining property value
-                    var value = generator.apply(this, generatorArguments);
+                    var value = generator.apply(this, generatorArguments),
+                        amendments = getter.amendments,
+                        i, amendment;
 
                     if (typeof value !== 'undefined') {
                         // generator returned a property value
@@ -89,6 +91,14 @@
                         // no return value
                         // generator supposedly assigned value to property
                         value = host[propertyName];
+                    }
+
+                    // applying amendments
+                    if (amendments) {
+                        for (i = 0; i < amendments.length; i++) {
+                            amendment = amendments[i];
+                            amendment.modifier.apply(this, amendment.args);
+                        }
                     }
 
                     return value;

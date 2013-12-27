@@ -51,11 +51,13 @@ var ns = {}; // global namespace
     });
 
     test("Amendment", function () {
+        expect(8);
+
         var ns = {},
             propertyDescriptor;
 
         troop.postpone(ns, 'foo', function () {
-            return 'bar';
+            return {bar: 'bar'};
         });
 
         propertyDescriptor = Object.getOwnPropertyDescriptor(ns, 'foo');
@@ -64,7 +66,7 @@ var ns = {}; // global namespace
 
         var modifier = function (ns, propertyName, extraParam) {
             equal(extraParam, 'extraParam');
-            ns.foo = ns.foo + 'baz';
+            ns.foo.bar += 'baz';
         };
 
         troop.amendPostponed(ns, 'foo', modifier, 'extraParam');
@@ -78,18 +80,21 @@ var ns = {}; // global namespace
         strictEqual(amendment.modifier, modifier, "Modifier function");
         deepEqual(amendment.args, [ns, 'foo', 'extraParam'], "Modifier arguments");
 
-        // TODO: amendment resolution
+        // amendment resolution
+        var value = ns.foo;
+
+        equal(ns.foo.bar, 'barbaz', "Object property after being fully resolved");
     });
 
     test("Amending resolved property", function () {
         var ns = {
-            foo: 'bar'
+            foo: {bar: 'bar'}
         };
 
         troop.amendPostponed(ns, 'foo', function () {
-            ns.foo += 'baz';
+            ns.foo.bar += 'baz';
         });
 
-        equal(ns.foo, 'barbaz', "Amendment applied immediately");
+        equal(ns.foo.bar, 'barbaz', "Amendment applied immediately");
     });
 }());
