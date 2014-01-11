@@ -31,7 +31,9 @@
         create: function () {
             var isMemoized = this.instanceMapper,
                 instanceKey,
-                result;
+                result,
+                self,
+                that;
 
             // attempting to fetch memoized instance
             if (isMemoized) {
@@ -43,10 +45,10 @@
             }
 
             // instantiating class or surrogate
-            var self = this.surrogateInfo ?
-                    Surrogate.getSurrogate.apply(this, arguments) :
-                    this,
-                that = Base.extend.call(self);
+            self = this.surrogateInfo ?
+                Surrogate.getSurrogate.apply(this, arguments) :
+                this;
+            that = Base.extend.call(self);
 
             // initializing instance properties
             if (typeof self.init === 'function') {
