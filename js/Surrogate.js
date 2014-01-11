@@ -45,7 +45,8 @@
             var args = arguments,
                 preparationHandler,
                 descriptors,
-                i, descriptor;
+                i, descriptor,
+                result;
 
             /**
              * Surrogate info property must be the class' own property
@@ -66,8 +67,18 @@
                     descriptor = descriptors[i];
 
                     // determining whether arguments fit next filter
-                    if (descriptor.filter.apply(this, args)) {
-                        return descriptor.namespace[descriptor.className];
+                    result = descriptor.filter.apply(this, args);
+                    if (result) {
+                        // when descriptor has className: positive response activates that class
+                        // when descriptor is ambiguous: response is either a class name or class definition
+                        if (result === true && hOP.call(descriptor, 'className')) {
+                            return descriptor.namespace[descriptor.className];
+                        } else if (typeof result === 'string') {
+                            return descriptor.namespace[result];
+                        } else if (troop.Base.isPrototypeOf(result)) {
+                            return result;
+                        }
+                        dessert.assert(false, "Invalid return type from surrogate filter:", typeof result);
                     }
                 }
             }
@@ -84,7 +95,7 @@
          * return a modified argument list (array) that will be passed to the surrogate filters.
          * @param {function} handler
          * @returns {troop.Base}
-         * @see troop.Base.addSurrogate
+         * @see troop.Base#addSurrogate
          */
         prepareSurrogates: function (handler) {
             dessert.isFunction(handler, "Invalid handler");
@@ -103,7 +114,7 @@
          * the filter returns true.
          * @param {object} namespace Namespace in which the surrogate class resides.
          * @param {string} className Surrogate class name. The class the namespace / class name point to does not
-         * have to exist (or be resolved when postponed) at the time of adding the filter.
+         *        Has to exist (or be resolved when postponed) at the time of adding the filter.
          * @param {function} filter Function evaluating whether the surrogate class specified by the namespace
          * and class name fits the arguments.
          * @example
@@ -120,6 +131,7 @@
          *     .addMethods({ init: function () {} });
          * var myHorse = ns.Horse.create(10), // instance of ns.Horse
          *     myPony = ns.Horse.create(3); // instance of ns.Pony
+         * @see troop.Base#addSurrogates
          * @returns {troop.Base}
          */
         addSurrogate: function (namespace, className, filter) {
@@ -135,6 +147,54 @@
             this.surrogateInfo.descriptors.push({
                 namespace: namespace,
                 className: className,
+                filter   : filter
+            });
+
+            return this;
+        },
+
+        /**
+         * Adds one or more surrogate classes to the current class. Instantiation is forwarded to the
+         * class (name or definition) returned from the filter. Return falsey to fall through.
+         *
+         * @param {object} namespace
+         *        Namespace in which the surrogate classes reside.
+         *        Has to exist (or be resolved when postponed) at the time of adding the filter.
+         * @param {function} filter
+         *        Function evaluating whether the surrogate class specified by the namespace
+         *        and class name fits the arguments.
+         * @example
+         * var ns = {}; // namespace
+         * ns.Vehicle = troop.Base.extend()
+         *     .addSurrogate(ns, function (type) {
+         *         switch (type) {
+         *         case 'truck':
+         *         case 'sedan':
+         *             return 'FourWheeler';
+         *         case 'bike':
+         *             return 'TwoWheeler';
+         *         default:
+         *             return false;
+         *         }
+         *     })
+         *     .addMethods(…);
+         * var myTruck = ns.Vehicle.create('truck'), // instance of ns.FourWheeler
+         *     myBike = ns.Vehicle.create('bike'),   // instance of ns.TwoWheeler
+         *     myBoat = ns.Vehicle.create('boat');   // instance of ns.Vehicle
+         * @see troop.Base#addSurrogate
+         * @returns {troop.Base}
+         */
+        addSurrogates: function (namespace, filter) {
+            dessert
+                .isObject(namespace, "Invalid namespace object")
+                .isFunction(filter, "Invalid filter function");
+
+            if (!hOP.call(this, 'surrogateInfo')) {
+                troop.Surrogate.initSurrogates.call(this);
+            }
+
+            this.surrogateInfo.descriptors.push({
+                namespace: namespace,
                 filter   : filter
             });
 
