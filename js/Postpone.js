@@ -73,6 +73,10 @@
             // placing class placeholder on namespace as getter
             Object.defineProperty(host, propertyName, {
                 get: function getter () {
+                    // NOTE: some browsers (like Firefox 11) can't handle the configurable property setting,
+                    //       so remove the temporary property before overriding it
+                    delete host[propertyName];
+
                     // obtaining property value
                     var value = generator.apply(this, generatorArguments),
                         amendments = getter.amendments,
